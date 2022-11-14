@@ -1,0 +1,202 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+*{
+  box-sizing:border-box;
+}
+body{
+  margin:0;
+}
+.tooltip-component__body, [data-tooltip]::after{
+  font-family:Helvetica, sans-serif;
+  background:rgba(55, 61, 73, 0.95);
+  border-radius:3px;
+  bottom:100%;
+  color:#fff;
+  content:attr(data-tooltip);
+  display:block;
+  font-size:12px;
+  left:50%;
+  line-height:normal;
+  max-width:32rem;
+  opacity:0;
+  overflow:hidden;
+  padding:8px 16px;
+  pointer-events:none;
+  position:absolute;
+  text-overflow:ellipsis;
+  transform:translate(-50%, 0);
+  transition:opacity 0.25s, transform 0.25s;
+  white-space:nowrap;
+  box-sizing:border-box;
+  z-index:10;
+}
+[data-tooltip-visible=true]::after, [data-tooltip]:focus::after, [data-tooltip]:hover::after{
+  opacity:1;
+  transform:translate(-50%, -0.5rem);
+}
+[data-tooltip-pos=right]::after{
+  bottom:50%;
+  left:100%;
+  transform:translate(0, 50%);
+}
+[data-tooltip-pos=right]:focus::after, [data-tooltip-pos=right]:hover::after, [data-tooltip-visible=true][data-tooltip-pos=right]::after{
+  transform:translate(0.5rem, 50%);
+}
+[data-tooltip-pos=bottom]::after{
+  bottom:auto;
+  top:100%;
+  transform:translate(-50%, 0);
+}
+[data-tooltip-pos=bottom]:focus::after, [data-tooltip-pos=bottom]:hover::after, [data-tooltip-visible=true][data-tooltip-pos=bottom]::after{
+  transform:translate(-50%, 0.5rem);
+}
+[data-tooltip-pos=left]::after{
+  bottom:50%;
+  left:auto;
+  right:100%;
+  transform:translate(0, 50%);
+}
+[data-tooltip-pos=left]:focus::after, [data-tooltip-pos=left]:hover::after, [data-tooltip-visible=true][data-tooltip-pos=left]::after{
+  transform:translate(-0.5rem, 50%);
+}
+[data-tooltip-length=small]::after{
+  white-space:normal;
+  width:80px;
+}
+[data-tooltip-length=medium]::after{
+  white-space:normal;
+  width:150px;
+}
+[data-tooltip-length=large]::after{
+  white-space:normal;
+  width:300px;
+}
+[data-tooltip-length=fit]::after{
+  white-space:normal;
+  width:100%;
+}
+// IE 11 bugfix
+button[data-tooltip]{
+  overflow:visible;
+}
+table{
+  font-family:arial, sans-serif;
+  border-collapse:collapse;
+  width:100%;
+}
+td, th{
+  border:1px solid #ffffff;
+  text-align:left;
+  padding:8px;
+}
+tr:nth-child(even){
+  background-color:#ffffff;
+}
+// IE 11 bugfix
+button[data-tooltip]{
+  overflow:visible;
+}
+.time{
+  width:10%;
+  border:1px solid #ffffff;
+}
+.row5{
+  height:100px;
+  background-color:#ddf1ff;
+}
+.row6{
+  height:100px;
+  background-color:#ddf1ff;
+}
+.row8{
+  height:100px;
+  background-color:#ddf1ff;
+}
+.row1{
+  backround-color:#d09182;
+  background-color:#d09182;
+}
+.row2{
+  background-color:#ecd3cd;
+}
+.row3{
+  background-color:#f6e9e6;
+}
+.row4{
+  background-color:#f6e9e6;
+}
+.row7{
+  background-color:#ecd3cd;
+}
+.infomation{
+  background-color:#ffcd69;
+}
+.row9{
+  background-color:#ebdadc;
+}
+.row10{
+  background-color:#ccccff;
+}
+.row11{
+  background-color:#ccecff;
+}
+.freiarbeit{
+  background-color:#b8e2fe;
+  width:10%;
+}
+#i6vrkg{
+  width:100%;
+  height:100%;
+}
+#ijq9q1{
+  color:black;
+}
+#imqxtn{
+  width:750px;
+}
+#iu7ei{
+  width:60%;
+}
+#iujr9{
+  width:60%;
+}
+#ilevf{
+  width:90%;
+}
+#i44lnl{
+  height:50px;
+}
+#iav6la{
+  text-align:center;
+}
+#iaf2g3{
+  text-align:center;
+}
+#ig18zd{
+  text-align:center;
+}
+#i63fsb{
+  text-align:center;
+}
+#id39e8{
+  text-align:center;
+}
+#idhtq4{
+  width:100px;
+}
+#ieof0d{
+  width:100px;
+}
+#im074r{
+  width:100px;
+}
+#ilk2bi{
+  width:100px;
+}
+#iffmyf{
+  width:100px;
+}

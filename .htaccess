@@ -1,0 +1,19 @@
+ErrorDocument 400 /wochenplan/400
+
+ErrorDocument 401 /wochenplan/401
+
+ErrorDocument 403 /wochenplan/403
+
+ErrorDocument 404 /wochenplan/404
+
+ErrorDocument 500 /wochenplan/500
+
+DirectoryIndex index.php
+
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+Options All -Indexes
+ 
