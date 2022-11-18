@@ -1,12 +1,12 @@
-ErrorDocument 400 /wochenplan/400
+ErrorDocument 400 https://nauren.de/wochenplan/400
 
-ErrorDocument 401 /wochenplan/401
+ErrorDocument 401 https://nauren.de/wochenplan/401
 
-ErrorDocument 403 /wochenplan/403
+ErrorDocument 403 https://nauren.de/wochenplan/403
 
-ErrorDocument 404 /wochenplan/404
+ErrorDocument 404 https://nauren.de/wochenplan/404
 
-ErrorDocument 500 /wochenplan/500
+ErrorDocument 500 https://nauren.de/wochenplan/500
 
 DirectoryIndex index.php
 

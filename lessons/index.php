@@ -28,38 +28,14 @@
     <link rel="stylesheet" href="<?php echo $path; ?>/css/app-dark.css" id="darkTheme" disabled>
 	<!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $path; ?>/css/customstyle.css">
-  </head>
-  <body class="vertical  light  ">
+</head>
+<body class="vertical  light  ">
     <div class="wrapper">
       
 	  <?php 
 		$keep_pdo = true;
 		include $include_path. "/nav.php";
-		
-		
-		
-		
-		if(isset($_POST['date'])) {
-			
-			
-			
-			$date = $_POST['date'];
-			$single_date = explode("/", $date);
-			$new_date = $single_date[2] . "-" . $single_date[1] . "-" . $single_date[0];			
-			
-			$new_name = $_POST['name'];
-			$new_description = $_POST['description'];
-			$new_location = $_POST['location'];
-			$new_time =  $_POST['time'];
-			$new_notes = $_POST['notes'];
-			$new_assigned_user_id = $_POST['creator'];
-			
 
-			
-			$save_lesson = $pdo->prepare("INSERT INTO angebot (date, name, description, location, time, notes, assigned_user_id) VALUES (:date, :name, :description, :location, :time, :notes, :assigned_user_id)");
-			$save_lesson->execute(array('date' => $new_date, 'name' => $new_name, 'description' => $new_description, 'location' => $new_location, 'time' => $new_time, 'notes' => $new_notes, 'assigned_user_id' => $new_assigned_user_id));
-
-		}
 	  ?>
 	  
 	  
@@ -92,6 +68,21 @@
                         </thead>
                         <tbody>
 							<?php
+								
+								
+								
+								//update_lesson_with_id
+								
+								if (isset($_GET["remove_lesson_with_id"])) {
+								$delete_lesson = $pdo->prepare("DELETE FROM angebot WHERE id = ?");
+								$delete_lesson->execute(array($_GET["remove_lesson_with_id"])); 
+								redirect("./");	
+								}
+								
+								
+								
+								
+								
 								
 								
 								$lessons = $pdo->prepare("SELECT * FROM angebot");
@@ -128,8 +119,8 @@
 												<span class="text-muted sr-only">Action</span>
 											  </button>
 											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="#">Edit</a>
-												<a class="dropdown-item" href="#">Remove</a>
+												<a class="dropdown-item" href="./details?id=' . $sl['id'] . '">Edit</a>
+												<a class="dropdown-item" href="./?remove_lesson_with_id=' . $sl['id'] . '">Remove</a>
 											  </div>
 										  </td>
 										  </tr>';
@@ -146,7 +137,7 @@
             </div> <!-- .col-12 -->
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <?php include ("../include/footer.php"); ?>
+        <?php include $include_path. "/footer.php"; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="<?php echo $path; ?>/js/jquery.min.js"></script>
@@ -159,5 +150,17 @@
     <script src="<?php echo $path; ?>/js/tinycolor-min.js"></script>
     <script src="<?php echo $path; ?>/js/config.js"></script>
     <script src="<?php echo $path; ?>/js/apps.js"></script>
+    <script src="<?php echo $path; ?>/js/jquery.dataTables.min.js"></script>
+    <script src="<?php echo $path; ?>/js/dataTables.bootstrap4.min.js"></script>
+	<script>
+      $('#dataTable-1').DataTable(
+      {
+        autoWidth: true,
+        "lengthMenu": [
+          [4, 8, 16, 32, 64, -1],
+          [4, 8, 16, 32, 64, "All"]
+        ]
+      });
+    </script>
   </body>
 </html>

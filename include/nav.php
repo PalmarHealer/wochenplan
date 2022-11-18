@@ -2,17 +2,18 @@
 
 
 if ($_GET["logout"] == "true") { //Logout script
-session_start();
-session_destroy();
+	session_start();
+	session_destroy();
 
-//Cookies entfernen
-setcookie("asl_identifier","",time() - 3600, "/wochenplan/login");
-setcookie("asl_securitytoken","",time() - 3600, "/wochenplan/login");
+	//Cookies entfernen
+	setcookie("asl_identifier","",time() - 3600, "/wochenplan/login");
+	setcookie("asl_securitytoken","",time() - 3600, "/wochenplan/login");
 
-header('Location: /wochenplan');
-die();
+	redirect($webroot);
 
 }
+
+
 
 session_start();
 
@@ -134,7 +135,6 @@ if (!$keep_pdo) {
 
          </a>
          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="<?php echo $path; ?>/profile">Profile</a>
             <a class="dropdown-item" href="<?php echo $path; ?>/profile/settings">Settings</a>
             <a class="dropdown-item" href="./?logout=true">Logout</a>
          </div>
@@ -172,8 +172,9 @@ if (!$keep_pdo) {
             <span>Apps</span>
           </p>
           <ul class="navbar-nav flex-fill w-100 mb-2">
+		  
             
-            <li class="nav-item dropdown"> <!-- Profile -->
+            <!-- <li class="nav-item dropdown">
               <a href="#profile" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                 <i class="fe fe-user fe-16"></i>
                 <span class="ml-3 item-text">Profile</span>
@@ -182,7 +183,7 @@ if (!$keep_pdo) {
                 <a class="nav-link pl-3" href="<?php echo $path; ?>/profile"><span class="ml-1">Overview</span></a>
                 <a class="nav-link pl-3" href="<?php echo $path; ?>/profile/settings"><span class="ml-1">Settings</span></a>
               </ul>
-            </li>
+            </li> -->
 			
 			
 			<li class="nav-item dropdown"> <!-- Lessons -->
@@ -192,7 +193,7 @@ if (!$keep_pdo) {
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="lessons">
                 <a class="nav-link pl-3" href="<?php echo $path; ?>/lessons"><span class="ml-1">Overview</span></a>
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/lessons/details?type=new"><span class="ml-1">Angebot erstellen</span></a>
+                <a class="nav-link pl-3" href="<?php echo $path; ?>/lessons/details"><span class="ml-1">Angebot erstellen</span></a>
               </ul>
             </li>
 
@@ -227,7 +228,7 @@ if (!$keep_pdo) {
 
 
           </ul>
-
+<!--
           <p class="text-muted nav-heading mt-4 mb-1">
             <span>Support</span>
           </p>
@@ -243,7 +244,7 @@ if (!$keep_pdo) {
                 <a class="nav-link pl-3" href="<?php echo $path; ?>/support-faqs.html"><span class="ml-1">FAQs</span></a>
               </ul>
             </li>
-          </ul>
+          </ul> -->
           
         </nav>
       </aside>

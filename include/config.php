@@ -46,6 +46,38 @@ $keep_dpo = false;
 
 //---------- DO NOT TOUCH (general software infomation) ----------
 
-$version = "Beta-0.1";
+$version = "Beta-0.2";
 $header = "true";
+
+
+function redirect($newURL) {
+	header("Location: $newURL");
+    echo "<script>window.location.href='$newURL';</script>";
+	$pdo = null;
+	exit();
+}
+
+function checkUrlHasntChanged() {
+		
+	//Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
+    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') 
+         $current_url = "https://";
+    else  
+         $current_url = "http://";   
+    // Append the host(domain name, ip) to the URL.   
+    $current_url.= $_SERVER['HTTP_HOST'];   
+    
+    // Append the requested resource location to the URL   
+    $current_url.= $_SERVER['REQUEST_URI'];    
+	
+	
+	return $current_url;
+}
+$old_url_array = explode("?", checkUrlHasntChanged());
+$new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
+$old_url = $old_url_array[0];
+$new_url = $new_url_array[0];
+function alert($msg) {
+    echo "<script type='text/javascript'>alert('$msg');</script>";
+}
 ?>

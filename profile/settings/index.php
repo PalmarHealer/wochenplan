@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="<?php echo $path; ?>/favicon.ico">
 	
-    <title>Settings</title>
+    <title>Dashboard</title>
 	
 	
     <!-- Simple bar CSS -->
@@ -29,7 +29,7 @@
 	<!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $path; ?>/css/customstyle.css">
   </head>
-  <body class="vertical  light  ">
+  <body class="vertical light">
     <div class="wrapper">
       
 	  <?php 
@@ -94,18 +94,18 @@
             </div> <!-- /.col-12 -->
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <?php include ("../../include/footer.php"); ?>
+        <?php include $include_path. "/footer.php"; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
-	<script src="../../js/jquery.min.js"></script>
-    <script src="../../js/popper.min.js"></script>
-    <script src="../../js/moment.min.js"></script>
-    <script src="../../js/bootstrap.min.js"></script>
-    <script src="../../js/simplebar.min.js"></script>
-    <script src='../../js/daterangepicker.js'></script>
-    <script src='../../js/jquery.stickOnScroll.js'></script>
-    <script src="../../js/tinycolor-min.js"></script>
-    <script src="../../js/config.js"></script>
-    <script src="../../js/apps.js"></script>
+    <script src="<?php echo $path; ?>/js/jquery.min.js"></script>
+    <script src="<?php echo $path; ?>/js/popper.min.js"></script>
+    <script src="<?php echo $path; ?>/js/moment.min.js"></script>
+    <script src="<?php echo $path; ?>/js/bootstrap.min.js"></script>
+    <script src="<?php echo $path; ?>/js/simplebar.min.js"></script>
+    <script src='<?php echo $path; ?>/js/daterangepicker.js'></script>
+    <script src='<?php echo $path; ?>/js/jquery.stickOnScroll.js'></script>
+    <script src="<?php echo $path; ?>/js/tinycolor-min.js"></script>
+    <script src="<?php echo $path; ?>/js/config.js"></script>
+    <script src="<?php echo $path; ?>/js/apps.js"></script>
   </body>
 </html>
