@@ -189,7 +189,7 @@
 											  </button>
 											  <div class="dropdown-menu dropdown-menu-right">
 												<a class="dropdown-item" href="../lessons/details?id=' . $sl['id'] . '">Edit</a>
-												<a class="dropdown-item" href="./?remove_lesson_with_id=' . $sl['id'] . '">Remove</a>
+												<a class="dropdown-item" href="../lessons?remove_lesson_with_id=' . $sl['id'] . '">Remove</a>
 											  </div>
 										  </td>
 										  </tr>';
