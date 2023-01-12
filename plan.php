@@ -1,5 +1,49 @@
+<style type="text/css">
+    body {
+        margin: 0;
+    }
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+		border-radius: 0px 0px 0px 0px;
+        margin: 0px auto;
+        border-color: #ffffff;
+        border-style: solid;
+        border-width: 0.15vw;
+        overflow: hidden;
+        padding: 10px 5px;
+    }
+    .color-1 {
+        background-color: #ecd3cd;
+    }
+    .color-2 {
+        background-color: #f6e9e6;
+    }
+    .color-3 {
+        background-color: #d09182;
+    }
+    .color-4 {
+        background-color: #e5f4d4;
+    }
+    .color-5 {
+        background-color: #f8e9be;
+    }
+    .full {
+        width: 100%;
+		height: 100%;
+    }
+    .piece {
+        width: 10%;
+    }
+    .tmp {
+        width: 20%;
+    }
+</style>
+
+
+
 	<?php
-		$include_path = __DIR__ . "./include";
+		$include_path = __DIR__ . "/include";
 		include $include_path . "/config.php";
 	?>
 <!doctype html>
@@ -9,25 +53,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="<?php echo $path; ?>/favicon.ico">
+    <link rel="icon" href="<?php $pdo = null; echo $path; ?>/favicon.ico">
 	
-    <title>Plan</title>
+    <title>Dashboard</title>
 	
-	
-    <!-- Simple bar CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/simplebar.css">
-    <!-- Fonts CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <!-- Icons CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/feather.css">
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/dataTables.bootstrap4.css">
-    <!-- Date Range Picker CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/daterangepicker.css">
-    <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/app-light.css" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/app-dark.css" id="darkTheme" disabled>
-	<!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/customstyle.css">
   </head>
   <body class="full">
 	

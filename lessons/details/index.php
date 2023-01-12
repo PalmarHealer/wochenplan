@@ -31,6 +31,8 @@
     <link rel="stylesheet" href="<?php echo $path; ?>/css/app-dark.css" id="darkTheme" disabled>
 	<!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $path; ?>/css/customstyle.css">
+	<!-- Site Css -->
+    <link rel="stylesheet" href="<?php echo $path; ?>/css/select2.css">
   </head>
   <body class="vertical  light  ">
     <div class="wrapper">
@@ -98,7 +100,6 @@
 			}
 		}
 		
-		$pdo = null;
 	  ?>
 	<main role="main" class="main-content">
         <div class="container-fluid">
@@ -128,7 +129,7 @@
 					
                       <div class="form-group mb-3">
                         <label for="simpleinput">Name des Angebotes</label>
-                        <input name="name" type="text" id="simpleinput" class="form-control" placeholder="Name des Angebotes" maxlength="10" value="<?php if(isset($lesson_details['name'])) { echo $lesson_details['name']; }?>">
+                        <input name="name" type="text" id="simpleinput" class="form-control" placeholder="Name des Angebotes" maxlength="10" value="<?php if(isset($lesson_details['name'])) { echo $lesson_details['name']; }?>" required>
 						</input>
                       </div>
 					  
@@ -136,7 +137,7 @@
                     <div class="col-md-6">
                       <div class="form-group mb-3">
                         <label for="example-helping">Weitere Beschreibung</label>
-                        <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest kannst du das einfach hier machen." maxlength="30" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>">
+                        <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest kannst du das einfach hier machen." maxlength="30" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>" required>
 						</input>
                       </div>
                     </div>
@@ -178,7 +179,7 @@
                     <div class="card-body">
                       <div class="form-group mb-3">
                         <label for="custom-select">Zeitpunkt des Angebotes</label>
-                        <select name="time" class="form-control" id="type-select">
+                        <select name="time" class="form-control" id="type-select" required>
 						  <?php if(isset($lesson_details['time'])) { 
 							  $selected_time = array();
 							  $selected_time[$lesson_details['time']] = "selected";
@@ -240,21 +241,47 @@
                     <div class="card-body">
                       <div class="form-group mb-3">
                         <label for="custom-select">Wer macht diese Angebot?</label>
-                        <select name="creator" class="form-control" id="custom-select">
-                          <option value="<?php echo $id; ?>" selected><?php
+                            <select name="creator" class="form-control select2" required
+								<?php
+									if($permission_level < $create_lessons_for_others) {
+										echo "disabled";
+									}
+								?>
+							>
+							
+                              <option value="<?php echo $id; ?>" selected><?php
 								echo $vorname;
 								echo " ";
 								echo $nachname;
-							?> (Du selbst)</option>
-                          <option value="1">Andere Person 1</option>
-                          <option value="2">Andere Person 2</option>
-                          <option value="3">Andere Person 3</option>
-                        </select>
+								?> (Du selbst)</option>
+							  <?php
+								$get_usernames = "SELECT * FROM users ORDER BY permission_level";
+								foreach ($pdo->query($get_usernames) as $row) {
+									
+									if($id == $row['id']) {
+										continue;
+									}
+									
+									
+									echo "<option value='";
+									echo $row['id'];
+									echo "'>";
+									echo $row['vorname']." ".$row['nachname'];
+									echo "</option>";
+									
+								}
+								$pdo = null;
+							  ?>
+							  
+                            </select>
+						
+						
+						
+						
                       </div>
                     </div>
                   </div>
                 </div>
-				
 				
                 <div class="col-md-12 mb-4">
                   <div class="card shadow">
@@ -338,8 +365,17 @@
 	
 	
 	  <!-- Custom JS code -->
+    <script>
+      $('.select2').select2(
+      {
+        theme: 'bootstrap4',
+      });
+      $('.select2-multi').select2(
+      {
+        multiple: true,
+        theme: 'bootstrap4',
+      });
 	  
-	  <script>
       $('.drgpicker').daterangepicker(
       {
         singleDatePicker: true,

@@ -19,12 +19,17 @@ $path = $webroot;
 $theme = "light"; //default light
 
 
-//Standart Permission to access websites
+//Standard Permission to access websites
 //0 no permission, 1 default permission, 10 and above for admins
 $permission_needed = 1; //default 1
 
 
 
+//Default permission level to create lessons
+$create_lessons = 5; //default 5
+
+//Default permission level to create lessons for other people
+$create_lessons_for_others = 6; //default 6
 
 //---------- MySQL connection Infomation: ----------
 
@@ -45,6 +50,11 @@ $keep_dpo = false;
 
 
 //---------- DO NOT TOUCH (general software infomation) ----------
+//If you do some changes here, some or hole parts of the 
+//website are not able to work properly
+//
+//
+
 
 $version = "Beta-0.2";
 $header = "true";
@@ -77,6 +87,7 @@ $old_url_array = explode("?", checkUrlHasntChanged());
 $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
 $old_url = $old_url_array[0];
 $new_url = $new_url_array[0];
+
 function alert($msg) {
     echo "<script type='text/javascript'>alert('$msg');</script>";
 }

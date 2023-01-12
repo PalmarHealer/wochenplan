@@ -136,7 +136,12 @@
               </div> <!-- end section -->
             </div> <!-- .col-12 -->
           </div> <!-- .row -->
+		<div class="btn-box w-100 mt-4 mb-1">
+			<a href="<?php echo $path; ?>/lessons/details" type="button" class="right btn mb-2 btn-primary">Angebot Erstellen</a>
+        </div>
         </div> <!-- .container-fluid -->
+		
+		
         <?php include $include_path. "/footer.php"; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
