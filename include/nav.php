@@ -174,18 +174,6 @@ if (!$keep_pdo) {
           <ul class="navbar-nav flex-fill w-100 mb-2">
 		  
             
-            <!-- <li class="nav-item dropdown">
-              <a href="#profile" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="fe fe-user fe-16"></i>
-                <span class="ml-3 item-text">Profile</span>
-              </a>
-              <ul class="collapse list-unstyled pl-4 w-100" id="profile">
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/profile"><span class="ml-1">Overview</span></a>
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/profile/settings"><span class="ml-1">Settings</span></a>
-              </ul>
-            </li> -->
-			
-			
 			<li class="nav-item dropdown"> <!-- Lessons -->
               <a href="#lessons" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                 <i class="fe fe-calendar fe-16"></i>
@@ -193,29 +181,42 @@ if (!$keep_pdo) {
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="lessons">
                 <a class="nav-link pl-3" href="<?php echo $path; ?>/lessons"><span class="ml-1">Overview</span></a>
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/lessons/details"><span class="ml-1">Angebot erstellen</span></a>
-              </ul>
+				<?php 
+
+					if ($permission_level >= $create_lessons) {
+						echo '
+							<a class="nav-link pl-3" href="' . $path . '/lessons/details"><span class="ml-1">Angebot erstellen</span></a>
+						';
+					}
+				?>
+            </ul>
+			<ul class="navbar-nav flex-fill w-100 mb-2">
+				<li class="nav-item w-100">
+					<a class="nav-link" href="<?php echo $path; ?>/lessons/sig">
+						<i class="fe fe-user-x fe-16"></i>
+						<span class="ml-3 item-text">Krank</span>
+					</a>
+				</li>
+			</ul>
             </li>
 
 
 			<?php 
 
-			if ($permission_level > 10) {
+			if ($permission_level >= $manage_other_users) {
 				echo '
 					<p class="text-muted nav-heading mt-4 mb-1">
 						<span>Admin</span>
 					</p>
 
-
-
-					<li class="nav-item dropdown"> <!-- Lessons -->
+					<li class="nav-item dropdown">
 						<a href="#admin" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
 							<i class="fe fe-unlock fe-16"></i>
 							<span class="ml-3 item-text">Administration</span>
 						</a>
 						<ul class="collapse list-unstyled pl-4 w-100" id="admin">
-							<a class="nav-link pl-3" href="'; echo $path; echo '/admin/accounts"><span class="ml-1">Accounts</span></a>
-							<a class="nav-link pl-3" href="#not-yet-implemented"><span class="ml-1">Wochenplan vorlagen</span></a>
+							<a class="nav-link pl-3" href="' . $path . '/admin/accounts"><span class="ml-1">Accounts</span></a>
+							<a class="nav-link pl-3" href="' . $path . '/admin/settings"><span class="ml-1">Settings</span></a>
 						</ul>
 					</li>
 

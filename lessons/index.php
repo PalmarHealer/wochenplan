@@ -90,10 +90,26 @@
 								
 								while($sl = $lessons->fetch()) {
 															
-									$date1 = $sl['date'];
-									$single_date1 = explode("-", $date1);
-									$date_fomatted = $single_date1[2] . "." . $single_date1[1] . "." . $single_date1[0];	
-									
+									if ($sl['date_type'] == "2") {
+										$date1 = $sl['date'];
+										$single_date1 = explode("-", $date1);
+										$date_fomatted = $single_date1[2] . "." . $single_date1[1] . "." . $single_date1[0];	
+									} else {
+										$date_day = $sl['date_repeating'];
+										if ($date_day == "1") {
+										$date_fomatted = "Jeden Montag";
+										} elseif ($date_day == "2") {
+										$date_fomatted = "Jeden Dienstag";
+										} elseif ($date_day == "3") {
+										$date_fomatted = "Jeden Mittwoch";
+										} elseif ($date_day == "4") {
+										$date_fomatted = "Jeden Donnerstag";
+										} elseif ($date_day == "5") {
+										$date_fomatted = "Jeden Freitag";
+										} else {
+										$date_fomatted = "Fehler beim Laden des Datums";
+										}
+									}
 									
 									
 									

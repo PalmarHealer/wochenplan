@@ -31,6 +31,9 @@ $create_lessons = 5; //default 5
 //Default permission level to create lessons for other people
 $create_lessons_for_others = 6; //default 6
 
+//Default permission level to manage other users (this also include creating and deleting)
+$manage_other_users = 10; //default 10
+
 //---------- MySQL connection Infomation: ----------
 
 //This is where the credentials for the code come in.
