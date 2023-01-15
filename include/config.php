@@ -67,6 +67,13 @@ function redirect($newURL) {
 	exit();
 }
 
+function goPageBack($URLaddition) {
+	header("Location: " . $_SERVER['HTTP_REFERER'] . $URLaddition);
+    echo "<script>history.back()</script>";
+	$pdo = null;
+	exit();
+}
+
 function checkUrlHasntChanged() {
 		
 	//Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
