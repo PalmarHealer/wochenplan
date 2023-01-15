@@ -59,7 +59,7 @@ $keep_dpo = false;
 //
 
 
-$version = "Beta-0.2";
+$version = "Beta-1.0";
 $header = "true";
 
 
