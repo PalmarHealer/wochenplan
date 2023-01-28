@@ -1,5 +1,6 @@
 <?php
 $include_path = __DIR__ . "/..";
+$page = "external";
 include $include_path . "/dependencies/config.php";
 include $include_path . "/dependencies/mysql.php";
 include $include_path . "/dependencies/framework.php";
@@ -35,14 +36,15 @@ if(!isset($_SESSION['asl_userid'])) {
 	
 	if(isset($_GET['login'])) {
 		$email = $_POST['email'];
-		$passwort = $_POST['passwort'];
+        $password = $_POST['password'];
+
    
 		$statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
 		$result = $statement->execute(array('email' => $email));
 		$user = $statement->fetch();
       
 		//Überprüfung des Passworts
-		if ($user !== false && password_verify($passwort, $user['passwort'])) {
+		if ($user !== false && password_verify($password, $user['passwort'])) {
 			$_SESSION['asl_userid'] = $user['id'];
       
 			//Möchte der Nutzer angemeldet beleiben?
@@ -67,7 +69,10 @@ if(!isset($_SESSION['asl_userid'])) {
 	exit;
 }
 if($_GET["message"] == "register-success") {
-	$getMessage = "Du wurdest erfolgreich Registriert. Bitte melde dich jetzt mit den gerade eingegebenen Zugangsdaten an.";
+    $getMessage = "Du wurdest erfolgreich Registriert. Bitte melde dich jetzt mit den gerade eingegebenen Zugangsdaten an.";
+}
+if($_GET["message"] == "please-login") {
+    $getMessage = "Du musst dich anmelden um diese Seite sehen zu können.";
 }
 $pdo = null;
 ?>
@@ -80,7 +85,7 @@ $pdo = null;
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../favicon.ico">
-    <title>Login</title>
+    <title>Login <?php echo $url; ?></title>
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
     <!-- Fonts CSS -->
@@ -117,7 +122,7 @@ $pdo = null;
           </div>
           <div class="form-group">
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required="" maxlength="250" name="passwort">
+            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required="" maxlength="250" name="password">
           </div>
           <div class="checkbox mb-3">
             <label>

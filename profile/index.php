@@ -31,7 +31,7 @@ include $include_path . "/dependencies/framework.php";
 	<!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
   </head>
-  <body class="vertical  light  ">
+  <body class="vertical light">
     <div class="wrapper">
       
 	  <?php 

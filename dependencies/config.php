@@ -8,8 +8,8 @@ $default_user_permission_level = 0; //default 0
 
 
 //Where is the Webroot from this Software
-//ex. if its reachable from myhost.com/test that its "/test"
-//or if its on a subdomain installed that simply enter "/"
+//ex. if it's reachable from my-host.com/test that its "/test"
+//or if it's on a subdomain installed that simply enter "/"
 $webroot = "/";  //default /wochenplan
 $relative_path = ""; //Set this to "" when / is the webroot
 
@@ -43,9 +43,9 @@ $db_user = "wochenplan";
 $db_password = "Og347$@xgi$*";
 
 
-//If you don't want to use the default port you have to write it in the db_ip variable. For ex.: "myhost.com:3306"
+//If you don't want to use the default port you have to write it in the db_ip variable. For ex.: "my-host.com:3306"
 //and if the database is on the same server as the website then you can use "localhost"
-//specifiy the database to save everything like lessons and users.
+//specify the database to save everything like lessons and users.
 $pdo = new PDO('mysql:host=localhost;dbname=wochenplan', $db_user, $db_password);
 
 $keep_dpo = false;

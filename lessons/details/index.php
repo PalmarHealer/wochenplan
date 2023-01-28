@@ -12,7 +12,11 @@ include $include_path . "/dependencies/framework.php";
       <meta name="description" content="">
       <meta name="author" content="">
       <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
+
+
       <title>Angebot Verwalten</title>
+
+
       <!-- Simple bar CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
       <!-- Fonts CSS -->
@@ -30,16 +34,16 @@ include $include_path . "/dependencies/framework.php";
       <!-- Site Css -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/select2.css">
    </head>
-   <body class="vertical  light  ">
+   <body class="vertical light">
       <div class="wrapper">
          <?php 
             $keep_pdo = true;
             include $include_path. "/include/nav.php";
-            
-            if($permission_level < $create_lessons) {
-            	goPageBack("?message=unauthorized");
-            	die();
-            }
+
+             if($permission_level < $create_lessons) {
+                 goPageBack("?message=unauthorized");
+                die();
+             }
             
             if($new_url = $old_url) {
             	
@@ -160,7 +164,6 @@ include $include_path . "/dependencies/framework.php";
                                     <div class="form-group mb-3">
                                        <label for="helping">Weitere Beschreibung</label>
                                        <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest kannst du das einfach hier machen." maxlength="30" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>" required>
-                                       </input>
                                     </div>
                                  </div>
                               </div>
@@ -290,12 +293,7 @@ include $include_path . "/dependencies/framework.php";
 							  <!-- /.card -->
                            </div>
 						   <!-- /.col -->
-						  
-						  
-						  
-						  
-					  
-						  
+
 						   
                            <div class="col-md-6 mb-4">
                               <div class="card shadow">
@@ -345,21 +343,22 @@ include $include_path . "/dependencies/framework.php";
                                  <div class="card-body">
                                     <div class="form-group">
                                        <input name="notes" class="form-control form-control-lg" type="text" placeholder="Notizen" maxlength="255" value="<?php if(isset($lesson_details['notes'])) { echo $lesson_details['notes']; }?>">
-                                       </input>
                                     </div>
                                  </div>
                               </div>
                            </div>
+                            /*
+                            TODO: The PHP/HTML stops executing after this line randomly... idk maybe some relations wrong or so
+                            */
                            <div class="col-md-12 mb-4">
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
-                                 if(!isset($_GET['id'])) {
-                                 	echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot Löschen</button>';
-                                 	echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
-                                 } elseif (isset($_GET['id'])) {
-                                 	
-                                 	echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="../?remove_lesson_with_id=' . $_GET['id'] . '">Angebot Löschen</button>';
-                                 	echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                 if(isset($_GET['id'])) {
+                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="../?remove_lesson_with_id=' . $_GET['id'] . '">Angebot Löschen</button>';
+                                     echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                 } else {
+                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot Löschen</button>';
+                                     echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
                                  }
                                  ?>
                            </div>
@@ -372,7 +371,7 @@ include $include_path . "/dependencies/framework.php";
                <!-- .row -->
             </div>
             <!-- .container-fluid -->
-            <?php include $include_path. "/footer.php"; ?>
+            <?php include $include_path. "/include/footer.php"; ?>
          </main>
          <!-- main -->
       </div>

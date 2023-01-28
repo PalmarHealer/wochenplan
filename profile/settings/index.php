@@ -13,7 +13,7 @@ include $include_path . "/dependencies/framework.php";
     <meta name="author" content="">
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 	
-    <title>Dashboard</title>
+    <title>Settings</title>
 	
 	
     <!-- Simple bar CSS -->
@@ -48,6 +48,8 @@ include $include_path . "/dependencies/framework.php";
 			
 			header('Location: ./');
 		}
+
+
 		$pdo = null;
 	  ?>
 	  

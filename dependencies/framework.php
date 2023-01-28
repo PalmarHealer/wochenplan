@@ -1,5 +1,6 @@
 <?php
 
+
 function random_string() {
     if(function_exists('random_bytes')) {
         $bytes = random_bytes(16);
@@ -54,5 +55,88 @@ $new_url = $new_url_array[0];
 
 function alert($msg) {
     echo "<script type='text/javascript'>alert('$msg');</script>";
+}
+
+if (!isset($page)) {
+    $page = "";
+}
+
+if (!$page == "external") {
+
+    if ($_GET["logout"] == "true") { //Logout script
+        session_start();
+        session_destroy();
+
+        //Cookies entfernen
+        setcookie("asl_identifier", "", time() - 3600, "/login");
+        setcookie("asl_securitytoken", "", time() - 3600, "/login");
+
+        redirect($webroot);
+
+    }
+
+    session_start();
+
+//Überprüfe auf den 'Angemeldet bleiben'-Cookie
+    if (!isset($_SESSION['asl_userid']) && isset($_COOKIE['asl_identifier']) && isset($_COOKIE['asl_securitytoken'])) {
+        $identifier = $_COOKIE['asl_identifier'];
+        $securitytoken = $_COOKIE['asl_securitytoken'];
+
+        $statement = $pdo->prepare("SELECT * FROM securitytokens WHERE identifier = ?");
+        $result = $statement->execute(array($identifier));
+        $securitytoken_row = $statement->fetch();
+
+        if (sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
+            die('Ein vermutlich gestohlener Security Token wurde identifiziert');
+        } else { //Token war korrekt
+            //Setze neuen Token
+            $neuer_securitytoken = random_string();
+            $insert = $pdo->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
+            $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
+            setcookie("asl_identifier", $identifier, time() + (3600 * 24 * 365)); //1 Jahr Gültigkeit
+            setcookie("asl_securitytoken", $neuer_securitytoken, time() + (3600 * 24 * 365)); //1 Jahr Gültigkeit
+
+            //Logge den Benutzer ein
+            $_SESSION['asl_userid'] = $securitytoken_row['user_id'];
+        }
+    }
+
+
+    if (!isset($_SESSION['asl_userid'])) {
+        header('Location: /login/?message=please-login');
+        exit;
+    }
+
+
+    $permission_needed = $permission_needed + 1;
+    if (!$permission_needed > $permission_level) {
+        header('Location: /dashboard/?message=unauthorized');
+        exit;
+    }
+
+
+
+
+
+    if (!isset($_SESSION['asl_userid'])) {
+        header('Location: /login/?message=please-login');
+        exit;
+    }
+
+
+    $id = $_SESSION['asl_userid'];
+    $statement2 = $pdo->prepare("SELECT * FROM users WHERE id = ?"); //get userdata
+    $statement2->execute(array($id));
+    while ($row2 = $statement2->fetch()) {
+        $id = $row2['id'];
+
+        $permission_level = $row2['permission level'];
+        settype($permission_level, "int"); //Convert perm level in INT
+
+        $email = $row2['email'];
+        $vorname = $row2['vorname'];
+        $nachname = $row2['nachname'];
+
+    }
 }
 ?>
