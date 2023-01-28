@@ -6,8 +6,8 @@ if ($_GET["logout"] == "true") { //Logout script
 	session_destroy();
 
 	//Cookies entfernen
-	setcookie("asl_identifier","",time() - 3600, "/wochenplan/login");
-	setcookie("asl_securitytoken","",time() - 3600, "/wochenplan/login");
+	setcookie("asl_identifier","",time() - 3600, "/login");
+	setcookie("asl_securitytoken","",time() - 3600, "/login");
 
 	redirect($webroot);
 
@@ -16,23 +16,6 @@ if ($_GET["logout"] == "true") { //Logout script
 
 
 session_start();
-
-
-function random_string() {
-   if(function_exists('random_bytes')) {
-      $bytes = random_bytes(16);
-      $str = bin2hex($bytes);
-   } else if(function_exists('openssl_random_pseudo_bytes')) {
-      $bytes = openssl_random_pseudo_bytes(16);
-      $str = bin2hex($bytes);
-   } else if(function_exists('mcrypt_create_iv')) {
-      $bytes = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
-      $str = bin2hex($bytes);
-   } else {
-      $str = md5(uniqid('kA5Ql0s2M2hveb7uEoTrj7vOFwrLsWDe', true));
-   }
-   return $str;
-}
 
 //Überprüfe auf den 'Angemeldet bleiben'-Cookie
 if(!isset($_SESSION['asl_userid']) && isset($_COOKIE['asl_identifier']) && isset($_COOKIE['asl_securitytoken'])) {
@@ -60,38 +43,22 @@ if(!isset($_SESSION['asl_userid']) && isset($_COOKIE['asl_identifier']) && isset
 
 
 if(!isset($_SESSION['asl_userid'])) {
-	header('Location: /wochenplan/login/?message=please-login');
+	header('Location: /login/?message=please-login');
 	exit;
-}
-
-
-$id = $_SESSION['asl_userid'];
-$statement2 = $pdo->prepare("SELECT * FROM users WHERE id = ?"); //get userdata
-$statement2->execute(array($id));
-while($row2 = $statement2->fetch()) {
-	$id = $row2['id'];
-
-	$permission_level = $row2['permission_level'];
-	settype($permission_level, "int"); //Convert perm level in INT
-
-	$email = $row2['email'];
-	$vorname = $row2['vorname'];
-	$nachname = $row2['nachname'];
-
 }
 
 
 
 $permission_needed = $permission_needed + 1;
-if ($permission_needed > $permission_level) {
-	header('Location: /wochenplan/dashboard/?message=unauthorized');
+if (!$permission_needed > $permission_level) {
+	header('Location: /dashboard/?message=unauthorized');
 	exit;
 }
 
 
 
 if(!isset($_SESSION['asl_userid'])) {   
-	header('Location: /wochenplan/login/?message=please-login');
+	header('Location: /login/?message=please-login');
 	exit;
 }
 
@@ -135,7 +102,7 @@ if (!$keep_pdo) {
 
          </a>
          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="<?php echo $path; ?>/profile/settings">Settings</a>
+            <a class="dropdown-item" href="<?php echo $relative_path; ?>/profile/settings">Settings</a>
             <a class="dropdown-item" href="./?logout=true">Logout</a>
          </div>
       </li>
@@ -149,7 +116,7 @@ if (!$keep_pdo) {
         <nav class="vertnav navbar navbar-light">
           <!-- nav bar -->
           <div class="w-100 mb-4 d-flex">
-            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?php echo $path; ?>/dashboard">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?php echo $relative_path; ?>/dashboard">
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="38" viewBox="0,0,36,38">
    <g transform="translate(-222,-161)">
       <g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill="none" fill-rule="nonzero" stroke="none" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal">
@@ -162,7 +129,7 @@ if (!$keep_pdo) {
           </div>
           <ul class="navbar-nav flex-fill w-100 mb-2">
             <li class="nav-item w-100">
-              <a class="nav-link" href="<?php echo $path; ?>/dashboard">
+              <a class="nav-link" href="<?php echo $relative_path; ?>/dashboard">
                 <i class="fe fe-home fe-16"></i>
                 <span class="ml-3 item-text">Dashboard</span>
               </a>
@@ -180,19 +147,19 @@ if (!$keep_pdo) {
                 <span class="ml-3 item-text">Angebote</span>
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="lessons">
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/lessons"><span class="ml-1">Overview</span></a>
+                <a class="nav-link pl-3" href="<?php echo $relative_path; ?>/lessons"><span class="ml-1">Overview</span></a>
 				<?php 
 
 					if ($permission_level >= $create_lessons) {
 						echo '
-							<a class="nav-link pl-3" href="' . $path . '/lessons/details"><span class="ml-1">Angebot erstellen</span></a>
+							<a class="nav-link pl-3" href="' . $relative_path . '/lessons/details"><span class="ml-1">Angebot erstellen</span></a>
 						';
 					}
 				?>
             </ul>
 			<ul class="navbar-nav flex-fill w-100 mb-2">
 				<li class="nav-item w-100">
-					<a class="nav-link" href="<?php echo $path; ?>/lessons/sig">
+					<a class="nav-link" href="<?php echo $relative_path; ?>/lessons/sig">
 						<i class="fe fe-user-x fe-16"></i>
 						<span class="ml-3 item-text">Krank</span>
 					</a>
@@ -215,8 +182,8 @@ if (!$keep_pdo) {
 							<span class="ml-3 item-text">Administration</span>
 						</a>
 						<ul class="collapse list-unstyled pl-4 w-100" id="admin">
-							<a class="nav-link pl-3" href="' . $path . '/admin/accounts"><span class="ml-1">Accounts</span></a>
-							<a class="nav-link pl-3" href="' . $path . '/admin/settings"><span class="ml-1">Settings</span></a>
+							<a class="nav-link pl-3" href="' . $relative_path . '/admin/accounts"><span class="ml-1">Accounts</span></a>
+							<a class="nav-link pl-3" href="' . $relative_path . '/admin/settings"><span class="ml-1">Settings</span></a>
 						</ul>
 					</li>
 
@@ -240,9 +207,9 @@ if (!$keep_pdo) {
                 <span class="ml-3 item-text">Support</span>
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="support">
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/support"><span class="ml-1">Home</span></a>
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/support-tickets.html"><span class="ml-1">Tickets</span></a>
-                <a class="nav-link pl-3" href="<?php echo $path; ?>/support-faqs.html"><span class="ml-1">FAQs</span></a>
+                <a class="nav-link pl-3" href="<?php echo $relative_path; ?>/support"><span class="ml-1">Home</span></a>
+                <a class="nav-link pl-3" href="<?php echo $relative_path; ?>/support-tickets.html"><span class="ml-1">Tickets</span></a>
+                <a class="nav-link pl-3" href="<?php echo $relative_path; ?>/support-faqs.html"><span class="ml-1">FAQs</span></a>
               </ul>
             </li>
           </ul> -->

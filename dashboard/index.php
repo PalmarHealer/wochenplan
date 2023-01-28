@@ -1,6 +1,8 @@
 	<?php
-		$include_path = __DIR__ . "/../include";
-		include $include_path . "/config.php";
+		$include_path = __DIR__ . "/..";
+        include $include_path . "/dependencies/config.php";
+        include $include_path . "/dependencies/mysql.php";
+        include $include_path . "/dependencies/framework.php";
 	?>
 <!doctype html>
 <html lang="de">
@@ -9,32 +11,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="<?php echo $path; ?>/favicon.ico">
+    <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 	
     <title>Dashboard</title>
 	
 	
     <!-- Simple bar CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/simplebar.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
     <!-- Fonts CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Icons CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/feather.css">
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
     <!-- Date Range Picker CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/daterangepicker.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/app-light.css" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/app-dark.css" id="darkTheme" disabled>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
 	<!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/customstyle.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
   </head>
   <body class="vertical  light  ">
     <div class="wrapper">
       
 	  <?php 
 		$keep_pdo = true;
-		include $include_path. "/nav.php";
+		include $include_path . "/include/nav.php";
 		
 		if (isset($_GET["remove_lesson_with_id"])) {
 			$delete_lesson = $pdo->prepare("DELETE FROM angebot WHERE id = ?");
@@ -106,6 +108,7 @@
                     </div> <!-- .card-footer -->
                   </div> <!-- .card -->
                 </div> <!-- .col-md-->
+				
 				
 				
 				<div class="center col-md-4">
@@ -224,15 +227,15 @@
         <?php include $include_path. "/footer.php"; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
-    <script src="<?php echo $path; ?>/js/jquery.min.js"></script>
-    <script src="<?php echo $path; ?>/js/popper.min.js"></script>
-    <script src="<?php echo $path; ?>/js/moment.min.js"></script>
-    <script src="<?php echo $path; ?>/js/bootstrap.min.js"></script>
-    <script src="<?php echo $path; ?>/js/simplebar.min.js"></script>
-    <script src='<?php echo $path; ?>/js/daterangepicker.js'></script>
-    <script src='<?php echo $path; ?>/js/jquery.stickOnScroll.js'></script>
-    <script src="<?php echo $path; ?>/js/tinycolor-min.js"></script>
-    <script src="<?php echo $path; ?>/js/config.js"></script>
-    <script src="<?php echo $path; ?>/js/apps.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/popper.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/moment.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js"></script>
+    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js'></script>
+    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js'></script>
+    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/config.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
   </body>
 </html>

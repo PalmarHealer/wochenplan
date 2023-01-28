@@ -1,22 +1,10 @@
-<?php 
-include __DIR__ . "/../include/config.php";
+<?php
+$include_path = __DIR__ . "/..";
+include $include_path . "/dependencies/config.php";
+include $include_path . "/dependencies/mysql.php";
+include $include_path . "/dependencies/framework.php";
+
 session_start();
- 
-function random_string() {
-   if(function_exists('random_bytes')) {
-      $bytes = random_bytes(16);
-      $str = bin2hex($bytes); 
-   } else if(function_exists('openssl_random_pseudo_bytes')) {
-      $bytes = openssl_random_pseudo_bytes(16);
-      $str = bin2hex($bytes); 
-   } else if(function_exists('mcrypt_create_iv')) {
-      $bytes = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
-      $str = bin2hex($bytes); 
-   } else {
-      $str = md5(uniqid('jBPiXq8GI3aW7LOCepu3VlE63mhWh8CX', true));
-   }   
-   return $str;
-}
 
 //Überprüfe ob Nutzer vielleicht schon eingeloggt ist. 
 //Überprüfe auf den 'Angemeldet bleiben'-Cookie
@@ -94,17 +82,17 @@ $pdo = null;
     <link rel="icon" href="../favicon.ico">
     <title>Login</title>
     <!-- Simple bar CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/simplebar.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
     <!-- Fonts CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Icons CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/feather.css">
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
     <!-- Date Range Picker CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/daterangepicker.css">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/app-light.css" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $path; ?>/css/app-dark.css" id="darkTheme" disabled>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
   </head>
   <body class="light ">
     <div class="wrapper vh-100">

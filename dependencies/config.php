@@ -10,8 +10,8 @@ $default_user_permission_level = 0; //default 0
 //Where is the Webroot from this Software
 //ex. if its reachable from myhost.com/test that its "/test"
 //or if its on a subdomain installed that simply enter "/"
-$webroot = "/wochenplan";  //default /wochenplan
-$path = $webroot;
+$webroot = "/";  //default /wochenplan
+$relative_path = ""; //Set this to "" when / is the webroot
 
 //Default website theming - CURRENTLY NOT FUNCTIONAL - 
 //"light" for light, "dark" for dark...
@@ -39,8 +39,8 @@ $manage_other_users = 10; //default 10
 //This is where the credentials for the code come in.
 //So that it then connects to the database.
 //DO NOT USE ROOT OR ADMIN ACCOUNTS FOR THIS
-$db_user = "";
-$db_password = "";
+$db_user = "wochenplan";
+$db_password = "Og347$@xgi$*";
 
 
 //If you don't want to use the default port you have to write it in the db_ip variable. For ex.: "myhost.com:3306"
@@ -59,46 +59,6 @@ $keep_dpo = false;
 //
 
 
-$version = "Beta-1.0";
+$version = "Beta-0.2";
 $header = "true";
-
-
-function redirect($newURL) {
-	header("Location: $newURL");
-    echo "<script>window.location.href='$newURL';</script>";
-	$pdo = null;
-	exit();
-}
-
-function goPageBack($URLaddition) {
-	header("Location: " . $_SERVER['HTTP_REFERER'] . $URLaddition);
-    echo "<script>history.back()</script>";
-	$pdo = null;
-	exit();
-}
-
-function checkUrlHasntChanged() {
-		
-	//Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
-    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') 
-         $current_url = "https://";
-    else  
-         $current_url = "http://";   
-    // Append the host(domain name, ip) to the URL.   
-    $current_url.= $_SERVER['HTTP_HOST'];   
-    
-    // Append the requested resource location to the URL   
-    $current_url.= $_SERVER['REQUEST_URI'];    
-	
-	
-	return $current_url;
-}
-$old_url_array = explode("?", checkUrlHasntChanged());
-$new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
-$old_url = $old_url_array[0];
-$new_url = $new_url_array[0];
-
-function alert($msg) {
-    echo "<script type='text/javascript'>alert('$msg');</script>";
-}
 ?>
