@@ -36,7 +36,9 @@ include $include_path . "/dependencies/framework.php";
    </head>
    <body class="vertical light">
       <div class="wrapper">
-         <?php 
+         <?php
+
+
             $keep_pdo = true;
             include $include_path. "/include/nav.php";
 
@@ -44,9 +46,9 @@ include $include_path . "/dependencies/framework.php";
                  goPageBack("?message=unauthorized");
                 die();
              }
-            
+
             if($new_url = $old_url) {
-            	
+
 
             	//Get form data
 				if (isset($_POST['date-repeat'])) {
@@ -58,23 +60,23 @@ include $include_path . "/dependencies/framework.php";
 					$new_date = $single_date[2] . "-" . $single_date[1] . "-" . $single_date[0];
 					$date_type = "2";
 				}
-            	
+
             	$new_name = $_POST['name'];
             	$new_description = $_POST['description'];
             	$new_location = $_POST['location'];
             	$new_time =  $_POST['time'];
             	$new_notes = $_POST['notes'];
             	$new_assigned_user_id = $_POST['creator'];
-            	
-            	
+
+
             	if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
             		$new_assigned_user_id = $id;
             	}
-            	
-				
+
+
 				if ($date_type == "1") {
 					//Update lesson
-					if (isset($_POST["update_lesson_with_id"])) {			
+					if (isset($_POST["update_lesson_with_id"])) {
 						$update_lesson = $pdo->prepare("UPDATE angebot SET date_type = 1, date_repeating = :date_neu, name = :name_neu, description = :description_neu, location = :location_neu, time = :time_neu, notes = :notes_neu, assigned_user_id = :assigned_user_id_neu WHERE id = :id");
 						$update_lesson->execute(array('id' => $_POST["update_lesson_with_id"], 'date_neu' => $new_date, 'name_neu' => $new_name, 'description_neu' => $new_description, 'location_neu' => $new_location, 'time_neu' => $new_time, 'notes_neu' => $new_notes, 'assigned_user_id_neu' => $new_assigned_user_id));
 						redirect("../");
@@ -137,8 +139,8 @@ include $include_path . "/dependencies/framework.php";
 					
             	}
             }
-            
-             ?>
+?>
+
          <main role="main" class="main-content">
             <div class="container-fluid">
                <div class="row justify-content-center">
@@ -309,47 +311,42 @@ include $include_path . "/dependencies/framework.php";
                                              echo " ";
                                              echo $nachname;
                                              ?> (Du selbst)</option>
-                                          <?php
-                                             if($permission_level >= $create_lessons_for_others) {
-                                             	$get_usernames = "SELECT * FROM users ORDER BY permission_level";
-                                             	foreach ($pdo->query($get_usernames) as $row) {
-                                             	
-                                             		if($id == $row['id']) {
-                                             			continue;
-                                             		}
-                                             	
-                                             		echo "<option value='";
-                                             		echo $row['id'];
-                                             		echo "'>";
-                                             		echo $row['vorname']." ".$row['nachname'];
-                                             		echo "</option>";
-                                             	}
-                                             }
-                                             $pdo = null;
-                                              ?>
+                                           <?php
+
+                                           if ($permission_level >= $create_lessons_for_others) {
+                                               $get_usernames = "SELECT * FROM users ORDER BY permission_level";
+                                               foreach ($pdo->query($get_usernames) as $other_users) {
+                                                   if ($id != $other_users['id']) {
+                                                       echo "<option value='";
+                                                       echo $other_users['id'];
+                                                       echo "'>";
+                                                       echo $other_users['vorname'] . " " . $other_users['nachname'];
+                                                       echo "</option>";
+                                                   }
+                                               }
+                                               $pdo = null;
+                                           }
+                                           ?>
                                        </select>
                                     </div>
                                  </div>
                               </div>
                            </div>
-						   
-						   
-						   
-                           <div class="col-md-12 mb-4">
-                              <div class="card shadow">
-                                 <div class="card-header">
-                                    <strong class="card-title">Zusätsliche Infomationen (Sind nur hier sichtbar und werden nicht auf dem Plan gezeigt)</strong>
-                                 </div>
-                                 <div class="card-body">
-                                    <div class="form-group">
-                                       <input name="notes" class="form-control form-control-lg" type="text" placeholder="Notizen" maxlength="255" value="<?php if(isset($lesson_details['notes'])) { echo $lesson_details['notes']; }?>">
+
+
+                            <div class="col-md-12 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <strong class="card-title">Zusätsliche Infomationen (Sind nur hier sichtbar und werden nicht auf dem Plan gezeigt)</strong>
                                     </div>
-                                 </div>
-                              </div>
-                           </div>
-                            /*
-                            TODO: The PHP/HTML stops executing after this line randomly... idk maybe some relations wrong or so
-                            */
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <input name="notes" class="form-control form-control-lg" type="text" placeholder="Notizen" maxlength="255" value="<?php if(isset($lesson_details['notes'])) { echo $lesson_details['notes']; }?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                            <div class="col-md-12 mb-4">
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php

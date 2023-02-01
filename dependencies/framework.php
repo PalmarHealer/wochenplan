@@ -130,7 +130,7 @@ if (!$page == "external") {
     while ($row2 = $statement2->fetch()) {
         $id = $row2['id'];
 
-        $permission_level = $row2['permission level'];
+        $permission_level = $row2['permission_level'];
         settype($permission_level, "int"); //Convert perm level in INT
 
         $email = $row2['email'];
@@ -139,4 +139,3 @@ if (!$page == "external") {
 
     }
 }
-?>

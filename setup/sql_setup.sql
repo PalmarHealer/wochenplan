@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `securitytokens` (
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `permission level` int(11) NOT NULL DEFAULT 1,
+  `permission_level` int(11) NOT NULL DEFAULT 1,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `passwort` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `vorname` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
