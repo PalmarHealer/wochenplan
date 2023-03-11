@@ -35,44 +35,38 @@ function GetLesson($day, $time, $room, $info, $pdo) {
 
     $lessons = $pdo->prepare("SELECT * FROM angebot ORDER BY id ASC");
     $lessons->execute();
+    $repeating_day = date('N', strtotime($day));
 
     while($sl = $lessons->fetch()) {
 
         if (!isset($sl)) {
             continue;
         }
-        if ($day == $sl['date'] AND $time == $sl['location'] AND $room ==$sl['location'] AND $info == "name") {
-            return $sl['name'];
-        } elseif ($day == $sl['date'] AND $time == $sl['location'] AND $room ==$sl['location'] AND $info == "description") {
-            return $sl['description'];
-        } elseif ($day == $sl['date'] AND $time == $sl['location'] AND $room ==$sl['location'] AND $info == "userid") {
-            return $sl['assigned_user_id'];
-        } else {
-            return "Error loading data";
+        if ($day == $sl['date'] OR $repeating_day == $sl['date_repeating']) {
+            if ($time == $sl['time'] AND $room == $sl['location']) {
+                if ($info == "name") {
+                    return $sl['name'];
+                }
+                if ($info == "description") {
+                    return $sl['description'];
+                }
+                if ($info == "userid") {
+                    return $sl['assigned_user_id'];
+                }
+                if ($info == "available") {
+                    return true;
+                }
+            }
         }
 
     }
-
-}
-
-function IsThereALesson($day, $time, $room, $pdo) {
-
-
-    $lessons = $pdo->prepare("SELECT * FROM angebot ORDER BY id ASC");
-    $lessons->execute();
-
-    while($sl = $lessons->fetch()) {
-        if (!isset($sl)) {
-            continue;
-        }
-        if ($day == $sl['date'] AND $time == $sl['location'] AND $room ==$sl['location']) {
-            return true;
-            exit();
-        }  else {
-            return false;
-        }
+    if ($info == "available") {
+        return false;
+    } else {
+        return "Error loading data";
     }
 }
+
 
 function GetNameOfUser($userid, $pdo) {
     if (!is_numeric($userid)) {

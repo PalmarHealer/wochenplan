@@ -71,7 +71,8 @@ $room_names = array(
     5 => "Gesprächsraum",
     6 => "SZ/Praxisber.",
     7 => "Sport</option",
-    8 => "Ausflug"
+    8 => "Ausflug",
+    9 => "Freiarbeit"
 );
 
 //Available times
@@ -86,7 +87,7 @@ $times = array(
 
 
 
-//---------- DO NOT TOUCH (general software infomation) ----------
+//---------- DO NOT TOUCH (general software information) ----------
 //If you do some changes here, some or hole parts of the 
 //website are not able to work properly
 //

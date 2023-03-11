@@ -1,7 +1,6 @@
 <?php
-
-
 use JetBrains\PhpStorm\NoReturn;
+
 
 function random_string() {
     if(function_exists('random_bytes')) {
@@ -21,7 +20,7 @@ function random_string() {
 
 
 function PrintLesson($date, $time, $room, $pdo) {
-    if (!IsThereALesson($date, $time, $room, $pdo)) {
+    if (!GetLesson($date, $time, $room, "available", $pdo)) {
         return;
     }
     echo "<p><b>" . GetLesson($date, $time, $room, "name", $pdo) . "</b></p>";
