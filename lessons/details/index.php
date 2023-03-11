@@ -1,8 +1,8 @@
 <?php
 $include_path = __DIR__ . "/../..";
-include $include_path . "/dependencies/config.php";
-include $include_path . "/dependencies/mysql.php";
-include $include_path . "/dependencies/framework.php";
+require $include_path . "/dependencies/config.php";
+require $include_path . "/dependencies/mysql.php";
+require $include_path . "/dependencies/framework.php";
 ?>
 <!doctype html>
 <html lang="de">
@@ -39,106 +39,112 @@ include $include_path . "/dependencies/framework.php";
          <?php
 
 
-            $keep_pdo = true;
-            include $include_path. "/include/nav.php";
+         $keep_pdo = true;
+         require $include_path. "/include/nav.php";
 
-             if($permission_level < $create_lessons) {
-                 goPageBack("?message=unauthorized");
-                die();
+         if($permission_level < $create_lessons) {
+             goPageBack("?message=unauthorized");
+             die();
+         }
+
+         if(isset($old_url) AND $new_url = $old_url) {
+
+
+             //Get form data
+             if (isset($_POST['date-repeat'])) {
+                 $new_date = $_POST['date-repeat'];
+                 $date_type = "1";
+             } elseif (isset($_POST['date'])) {
+                 $date = $_POST['date'];
+                 $single_date = explode("/", $date);
+                 $new_date = $single_date[2] . "-" . $single_date[1] . "-" . $single_date[0];
+                 $date_type = "2";
+             } else {
+                 $new_date = "0";
+                 $date_type = "0";
              }
 
-            if($new_url = $old_url) {
+             $new_name = Setvalue($_POST['name']);
+             $new_description = Setvalue($_POST['description']);
+             $new_location = Setvalue($_POST['location']);
+             $new_time =  Setvalue($_POST['time']);
+             $new_notes = Setvalue($_POST['notes']);
+             $new_assigned_user_id = Setvalue($_POST['creator']);
 
 
-            	//Get form data
-				if (isset($_POST['date-repeat'])) {
-					$new_date = $_POST['date-repeat'];
-					$date_type = "1";
-				} else {
-					$date = $_POST['date'];
-					$single_date = explode("/", $date);
-					$new_date = $single_date[2] . "-" . $single_date[1] . "-" . $single_date[0];
-					$date_type = "2";
-				}
+             if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
+                 $new_assigned_user_id = $id;
+             }
 
-            	$new_name = $_POST['name'];
-            	$new_description = $_POST['description'];
-            	$new_location = $_POST['location'];
-            	$new_time =  $_POST['time'];
-            	$new_notes = $_POST['notes'];
-            	$new_assigned_user_id = $_POST['creator'];
+             // Update Lesson
+             if (isset($_POST["update_lesson_with_id"])) {
+
+                 update_or_insert_lesson("update", $pdo, $_POST["update_lesson_with_id"],
+                     $date_type,
+                     $new_date,
+                     $new_name,
+                     $new_description,
+                     $new_location,
+                     $new_time,
+                     $new_notes,
+                     $new_assigned_user_id
+                 );
+
+                 redirect("../");
+
+                 // Create Lesson
+             } elseif ($_POST['save'] == "1") {
+
+                 update_or_insert_lesson("create", $pdo, "",
+                     $date_type,
+                     $new_date,
+                     $new_name,
+                     $new_description,
+                     $new_location,
+                     $new_time,
+                     $new_notes,
+                     $new_assigned_user_id
+                 );
+                 redirect("../");
+             }
+
+         }
+
+         //Get lesson
+         if (isset($_GET['id'])) {
+             $lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = :id");
+             $lessons->execute(array('id' => $_GET['id']));
+
+             while($sl = $lessons->fetch()) {
+
+                 $creator_id = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+                 $creator_id->execute(array($sl['assigned_user_id']));
+                 while ($creator_name = $creator_id->fetch()) {
+                     $creator_fomatted = $creator_name['vorname'] . " " . $creator_name['nachname'];
+                 }
+
+                 $lesson_details = array();
+                 $lesson_details['id'] = $sl['id'];
+                 $lesson_details['name'] = $sl['name'];
+                 $lesson_details['description'] = $sl['description'];
+                 $lesson_details['location'] = $sl['location'];
+                 $lesson_details['time'] = $sl['time'];
+                 $lesson_details['creator'] = $creator_fomatted;
+                 $lesson_details['notes'] = $sl['notes'];
+
+                 $lesson_details['date-type'] = $sl['date_type'];
+                 if ($lesson_details['date-type'] == "1") {
+                     $lesson_details['date'] = $sl['date_repeating'];
+                 } else {
+                     $date1 = $sl['date'];
+                     $single_date1 = explode("-", $date1);
+                     $date_fomatted = $single_date1[2] . "/" . $single_date1[1] . "/" . $single_date1[0];
+                     $lesson_details['date'] = $date_fomatted;
+                 }
 
 
-            	if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
-            		$new_assigned_user_id = $id;
-            	}
-
-
-				if ($date_type == "1") {
-					//Update lesson
-					if (isset($_POST["update_lesson_with_id"])) {
-						$update_lesson = $pdo->prepare("UPDATE angebot SET date_type = 1, date_repeating = :date_neu, name = :name_neu, description = :description_neu, location = :location_neu, time = :time_neu, notes = :notes_neu, assigned_user_id = :assigned_user_id_neu WHERE id = :id");
-						$update_lesson->execute(array('id' => $_POST["update_lesson_with_id"], 'date_neu' => $new_date, 'name_neu' => $new_name, 'description_neu' => $new_description, 'location_neu' => $new_location, 'time_neu' => $new_time, 'notes_neu' => $new_notes, 'assigned_user_id_neu' => $new_assigned_user_id));
-						redirect("../");
-            	
-					//Create lesson
-					} elseif ($_POST['save'] == "1") {
-						$save_lesson = $pdo->prepare("INSERT INTO angebot (date_type, date_repeating, name, description, location, time, notes, assigned_user_id) VALUES (1, :date_repeating, :name, :description, :location, :time, :notes, :assigned_user_id)");
-						$save_lesson->execute(array('date_repeating' => $new_date, 'name' => $new_name, 'description' => $new_description, 'location' => $new_location, 'time' => $new_time, 'notes' => $new_notes, 'assigned_user_id' => $new_assigned_user_id));
-						redirect("../");
-					}
-				
-				} else {
-					//Update lesson
-					if (isset($_POST["update_lesson_with_id"])) {			
-						$update_lesson = $pdo->prepare("UPDATE angebot SET date_type = 2, date = :date_neu, name = :name_neu, description = :description_neu, location = :location_neu, time = :time_neu, notes = :notes_neu, assigned_user_id = :assigned_user_id_neu WHERE id = :id");
-						$update_lesson->execute(array('id' => $_POST["update_lesson_with_id"], 'date_neu' => $new_date, 'name_neu' => $new_name, 'description_neu' => $new_description, 'location_neu' => $new_location, 'time_neu' => $new_time, 'notes_neu' => $new_notes, 'assigned_user_id_neu' => $new_assigned_user_id));
-						redirect("../");
-            	
-					//Create lesson
-					} elseif ($_POST['save'] == "1") {
-						$save_lesson = $pdo->prepare("INSERT INTO angebot (date_type, date, name, description, location, time, notes, assigned_user_id) VALUES (2, :date, :name, :description, :location, :time, :notes, :assigned_user_id)");
-						$save_lesson->execute(array('date' => $new_date, 'name' => $new_name, 'description' => $new_description, 'location' => $new_location, 'time' => $new_time, 'notes' => $new_notes, 'assigned_user_id' => $new_assigned_user_id));
-						redirect("../");
-					}	
-				}				
-            }
-            
-            //Get lesson
-            if (isset($_GET['id'])) {
-            	$lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = :id");
-            	$lessons->execute(array('id' => $_GET['id']));   
-            		
-            	while($sl = $lessons->fetch()) {
-            			
-            		$creator_id = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-            		$creator_id->execute(array($sl['assigned_user_id']));
-            		while ($creator_name = $creator_id->fetch()) {
-            			$creator_fomatted = $creator_name['vorname'] . " " . $creator_name['nachname'];
-            		}
-            		
-            		$lesson_details = array();
-            		$lesson_details['id'] = $sl['id'];
-            		$lesson_details['name'] = $sl['name'];
-            		$lesson_details['description'] = $sl['description'];
-            		$lesson_details['location'] = $sl['location'];
-            		$lesson_details['time'] = $sl['time'];
-            		$lesson_details['creator'] = $creator_fomatted;
-            		$lesson_details['notes'] = $sl['notes'];
-            		
-            		$lesson_details['date-type'] = $sl['date_type'];
-					if ($lesson_details['date-type'] == "1") {
-						$lesson_details['date'] = $sl['date_repeating'];
-					} else {
-            		$date1 = $sl['date'];
-            		$single_date1 = explode("-", $date1);
-            		$date_fomatted = $single_date1[2] . "/" . $single_date1[1] . "/" . $single_date1[0];
-            		$lesson_details['date'] = $date_fomatted;	
-					}
-
-					
-            	}
-            }
+             }
+         }
 ?>
 
          <main role="main" class="main-content">
@@ -183,13 +189,15 @@ include $include_path . "/dependencies/framework.php";
                                              $selected_location = array();
                                              $selected_location[$lesson_details['location']] = "selected";
                                              }?>
-                                          <option value="1" <?php if(isset($selected_location[1])) { echo $selected_location[1]; }?>>Raum 1</option>
-                                          <option value="2" <?php if(isset($selected_location[2])) { echo $selected_location[2]; }?>>Raum 2</option>
-                                          <option value="3" <?php if(isset($selected_location[3])) { echo $selected_location[3]; }?>>Raum 3 (HS)</option>
-                                          <option value="4" <?php if(isset($selected_location[4])) { echo $selected_location[4]; }?>>Raum 4 (RS)</option>
-                                          <option value="5" <?php if(isset($selected_location[5])) { echo $selected_location[5]; }?>>Garten</option>
-                                          <option value="6" <?php if(isset($selected_location[6])) { echo $selected_location[6]; }?>>Sport/Ausflug</option>
-                                          <option value="7" <?php if(isset($selected_location[7])) { echo $selected_location[7]; }?>>Sonnenzimmer/Sonstiges</option>
+                                          <?php
+                                          for ($i = 1; $i < count($room_names); $i++) {
+                                              $option_value = $i + 1; // Wert um 1 erhöhen, da der Index bei 0 beginnt
+                                              $option_selected = $selected_location[$option_value] ?? '';
+                                              $option_text = $room_names[$i];
+                                              echo '<option value="' . $option_value . '" ' . $option_selected . '>' . $option_text . '</option>';
+                                          }
+                                          ?>
+
                                        </select>
                                     </div>
                                  </div>
@@ -208,13 +216,14 @@ include $include_path . "/dependencies/framework.php";
                                              $selected_time = array();
                                              $selected_time[$lesson_details['time']] = "selected";
                                              }?>
-                                          <option value="1" <?php if(isset($selected_time[1])) { echo $selected_time[1]; }?>>Zeit 1</option>
-                                          <option value="2" <?php if(isset($selected_time[2])) { echo $selected_time[2]; }?>>Zeit 2</option>
-                                          <option value="3" <?php if(isset($selected_time[3])) { echo $selected_time[3]; }?>>Zeit 3</option>
-                                          <option value="4" <?php if(isset($selected_time[4])) { echo $selected_time[4]; }?>>Zeit 4</option>
-                                          <option value="5" <?php if(isset($selected_time[5])) { echo $selected_time[5]; }?>>Zeit 5</option>
-                                          <option value="6" <?php if(isset($selected_time[6])) { echo $selected_time[6]; }?>>Zeit 6</option>
-                                          <option value="7" <?php if(isset($selected_time[7])) { echo $selected_time[7]; }?>>Zeit 7</option>
+                                          <?php
+                                          for ($i = 1; $i < count($times); $i++) {
+                                              $option_value = $i + 1; // Wert um 1 erhöhen, da der Index bei 0 beginnt
+                                              $option_selected = $selected_location[$option_value] ?? '';
+                                              $option_text = $times[$i];
+                                              echo '<option value="' . $option_value . '" ' . $option_selected . '>' . $option_text . '</option>';
+                                          }
+                                          ?>
                                        </select>
                                     </div>
                                  </div>
@@ -249,13 +258,13 @@ include $include_path . "/dependencies/framework.php";
 
                                                 <label for="custom-select">Zeitpunkt des Angebotes</label>
 												
-												<div class="repeating" <?php if($lesson_details['date-type'] == "2") { echo "style='display: none;'"; } ?>>
+												<div class="repeating" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") echo "style='display: none;'"; ?>>
                                                 <div class="input-group">
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
                                                    </div>
                                                    <select name="date-repeat" class="form-control toggle_date_input1" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
-                                                      <?php if($lesson_details['date-type'] == "1") { 
+                                                      <?php if($lesson_details['date-type'] == "1") {
                                                          $selected_date = array();
                                                          $selected_date[$lesson_details['date']] = "selected";
                                                          }?>
@@ -267,14 +276,14 @@ include $include_path . "/dependencies/framework.php";
                                                    </select>
                                                 </div>
 												</div>
-												<div class="once" <?php if($lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "style='display: none;'"; } ?>>
+												<div class="once" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "style='display: none;'"; } ?>>
                                                 <div class="input-group">
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
                                                    </div>
-                                                   <input name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if($lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
+                                                   <input name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
-                                                         if($lesson_details['date-type'] == "2") { 
+                                                         if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
                                                          	echo $lesson_details['date']; 
                                                          } else {
                                                          	echo date("d");

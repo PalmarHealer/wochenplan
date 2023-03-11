@@ -1,8 +1,8 @@
 <?php
 $include_path = __DIR__ . "/../..";
-include $include_path . "/dependencies/config.php";
-include $include_path . "/dependencies/mysql.php";
-include $include_path . "/dependencies/framework.php";
+require $include_path . "/dependencies/config.php";
+require $include_path . "/dependencies/mysql.php";
+require $include_path . "/dependencies/framework.php";
 ?>
 <!doctype html>
 <html lang="de">
@@ -45,8 +45,7 @@ include $include_path . "/dependencies/framework.php";
 		
 			$rstatement = $pdo->prepare("UPDATE users SET vorname = :vorname_neu, email = :email_neu, nachname = :nachname_neu WHERE id = :id");
 			$rstatement->execute(array('id' => $id, 'email_neu' => $email_neu, 'vorname_neu' => $vorname_neu, 'nachname_neu' => $nachname_neu));
-			
-			header('Location: ./');
+			redirect("./");
 		}
 
 
@@ -98,7 +97,7 @@ include $include_path . "/dependencies/framework.php";
             </div> <!-- /.col-12 -->
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <?php include $include_path. "/footer.php"; ?>
+        <?php include $include_path. "/include/footer.php"; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>

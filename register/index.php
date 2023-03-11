@@ -1,9 +1,9 @@
 <?php
 $include_path = __DIR__ . "/..";
 $page = "external";
-include $include_path . "/dependencies/config.php";
-include $include_path . "/dependencies/mysql.php";
-include $include_path . "/dependencies/framework.php";
+require $include_path . "/dependencies/config.php";
+require $include_path . "/dependencies/mysql.php";
+require $include_path . "/dependencies/framework.php";
 
 
 session_start();

@@ -4,6 +4,7 @@ body {
 
 .tg * {
     border-color: #ffffff;
+    color: black;
     border-style: solid;
     border-width: 0.56vh;
     overflow: hidden;
@@ -12,6 +13,43 @@ body {
     border-spacing: 0;
 	border-radius: 0px 0px 0px 0px;
     margin: 0px auto;
+    text-align: left;
+    table-layout: fixed;
+    font-size: 105%;
+}
+
+.db_text * {
+    border: none;
+    margin-left: -6px;
+    margin-top: -18px
+}
+
+.heading {
+    font-size: 140%;
+}
+
+.modt {
+    font-size: 200%;
+}
+
+.no_border * {
+    border: none;
+}
+
+.white_text {
+    color: white;
+}
+
+.author {
+    margin-left: -7px;
+    margin-top: -30px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.description {
 }
 
 .color-1 {
@@ -41,15 +79,32 @@ body {
 
 .piece {
     width: 10%;
+    height: 10%;
+}
+
+.small_piece {
+    height: 1px;
+    max-height: 6px;
+    width: 10%;
+}
+
+.big_piece {
+    height: 25%;
+    width: 10%;
+}
+
+.breakfast {
+    height: 5%;
 }
 
 .name-badge {
 	margin-top: -5%;
 }
 
-.center {
+.center * {
 	margin-left: auto;
 	margin-right: auto;
+    text-align: center;
 }
 
 .profilename {
@@ -66,4 +121,7 @@ body {
 
 .tmp {
     width: 20%;
+}
+.bold {
+    margin-left: -5px;
 }

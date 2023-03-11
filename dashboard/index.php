@@ -1,8 +1,8 @@
 	<?php
 		$include_path = __DIR__ . "/..";
-        include $include_path . "/dependencies/config.php";
-        include $include_path . "/dependencies/mysql.php";
-        include $include_path . "/dependencies/framework.php";
+        require $include_path . "/dependencies/config.php";
+        require $include_path . "/dependencies/mysql.php";
+        require $include_path . "/dependencies/framework.php";
 	?>
 <!doctype html>
 <html lang="de">
@@ -14,22 +14,22 @@
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 	
     <title>Dashboard</title>
-	
-	
-    <!-- Simple bar CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
-    <!-- Fonts CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <!-- Icons CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
-    <!-- Date Range Picker CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
-    <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
-	<!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+
+
+      <!-- Simple bar CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
+      <!-- Fonts CSS -->
+      <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+      <!-- Icons CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
+      <!-- Date Range Picker CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
+      <!-- App CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
   </head>
   <body class="vertical  light  ">
     <div class="wrapper">
@@ -168,7 +168,7 @@
 								while($sl = $lessons->fetch()) {
 									
 									if (isset($sl['date'])) {
-										if (date("Y-m-d",$t) > $sl['date'] OR $counter > 4) {
+										if (date("Y-m-d",time()) > $sl['date'] OR $counter > 4) {
 											continue;
 										}	
 									}
@@ -201,8 +201,8 @@
 										  </td>
 										  <td>' . $sl['name'] . '</td>
 										  <td>' . $sl['description'] . '</td>
-										  <td>' . $sl['location'] . '</td>
-										  <td>' . $sl['time'] . '</td>
+										  <td>' . $room_names[$sl['location']] . '</td>
+										  <td>' . $times[$sl['time']] . '</td>
 										  <td>' . $date_fomatted . '</td>
 										  <td>' . $sl['notes'] . '</td>
 										
@@ -210,7 +210,7 @@
 												<span class="text-muted sr-only">Action</span>
 											  </button>
 											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="../lessons/details?id=' . $sl['id'] . '">Edit</a>
+												<a class="dropdown-item" href="../lessons/details/?id=' . $sl['id'] . '">Edit</a>
 												<a class="dropdown-item" href="./?remove_lesson_with_id=' . $sl['id'] . '">Remove</a>
 											  </div>
 										  </td>
@@ -224,7 +224,7 @@
             </div> <!-- /.col-12 -->
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <?php include $include_path. "/footer.php"; ?>
+        <?php include $include_path. "/include/footer.php"; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>

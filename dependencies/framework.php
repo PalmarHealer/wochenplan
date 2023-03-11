@@ -1,6 +1,8 @@
 <?php
 
 
+use JetBrains\PhpStorm\NoReturn;
+
 function random_string() {
     if(function_exists('random_bytes')) {
         $bytes = random_bytes(16);
@@ -18,6 +20,17 @@ function random_string() {
 }
 
 
+function PrintLesson($date, $time, $room, $pdo) {
+    if (!IsThereALesson($date, $time, $room, $pdo)) {
+        return;
+    }
+    echo "<p><b>" . GetLesson($date, $time, $room, "name", $pdo) . "</b></p>";
+    echo "<br>";
+    echo "<p class='author'>(" . GetNameOfUser(GetLesson($date, $time, $room, "userid", $pdo), $pdo) . ")</p>";
+    echo "<br><br>";
+    echo "<p class='description'>" . GetLesson($date, $time, $room, "description", $pdo) . "</p>";
+}
+
 function redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
@@ -25,11 +38,18 @@ function redirect($newURL) {
     exit();
 }
 
-function goPageBack($Parameter) {
+#[NoReturn] function goPageBack($Parameter) {
     header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
     echo "<script>history.back()</script>";
     $pdo = null;
     exit();
+}
+
+function Setvalue($value_to_set) {
+    return $value_to_set ?? "Unkown Error";
+}
+function GetValue($value_to_set) {
+    return $value_to_set ?? "Value is empty";
 }
 
 function checkUrlHasntChanged() {
@@ -48,11 +68,15 @@ function checkUrlHasntChanged() {
 
     return $current_url;
 }
-$old_url_array = explode("?", checkUrlHasntChanged());
-$new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
-$old_url = $old_url_array[0];
-$new_url = $new_url_array[0];
 
+$old_url_array = explode("?", checkUrlHasntChanged());
+$old_url = $old_url_array[0];
+if (isset($_SERVER['HTTP_REFERER'])) {
+    $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
+    $new_url = $new_url_array[0];
+} else {
+    $new_url = "";
+}
 function alert($msg) {
     echo "<script type='text/javascript'>alert('$msg');</script>";
 }
@@ -60,20 +84,24 @@ function alert($msg) {
 if (!isset($page)) {
     $page = "";
 }
+function Logout() {
+    session_start();
+    session_destroy();
+
+    //Cookies entfernen
+    setcookie("asl_identifier", "", time() - 3600, "/login");
+    setcookie("asl_securitytoken", "", time() - 3600, "/login");
+
+    redirect($webroot);
+    die();
+}
+if(isset($_GET["logout"])) {
+    if ($_GET["logout"] == "true") { //Logout script
+        Logout();
+    }
+}
 
 if (!$page == "external") {
-
-    if ($_GET["logout"] == "true") { //Logout script
-        session_start();
-        session_destroy();
-
-        //Cookies entfernen
-        setcookie("asl_identifier", "", time() - 3600, "/login");
-        setcookie("asl_securitytoken", "", time() - 3600, "/login");
-
-        redirect($webroot);
-
-    }
 
     session_start();
 
@@ -103,7 +131,7 @@ if (!$page == "external") {
 
 
     if (!isset($_SESSION['asl_userid'])) {
-        header('Location: /login/?message=please-login');
+        redirect($webroot . "/login/?message=please-login");
         exit;
     }
 
@@ -119,7 +147,7 @@ if (!$page == "external") {
 
 
     if (!isset($_SESSION['asl_userid'])) {
-        header('Location: /login/?message=please-login');
+        redirect($webroot . "/login/?message=please-login");
         exit;
     }
 

@@ -1,9 +1,9 @@
 <?php
 $include_path = __DIR__ . "/..";
 $page = "external";
-include $include_path . "/dependencies/config.php";
-include $include_path . "/dependencies/mysql.php";
-include $include_path . "/dependencies/framework.php";
+require $include_path . "/dependencies/config.php";
+require $include_path . "/dependencies/mysql.php";
+require $include_path . "/dependencies/framework.php";
 
 session_start();
 
@@ -68,11 +68,15 @@ if(!isset($_SESSION['asl_userid'])) {
 	header('Location: ../dashboard');
 	exit;
 }
-if($_GET["message"] == "register-success") {
-    $getMessage = "Du wurdest erfolgreich Registriert. Bitte melde dich jetzt mit den gerade eingegebenen Zugangsdaten an.";
-}
-if($_GET["message"] == "please-login") {
-    $getMessage = "Du musst dich anmelden um diese Seite sehen zu können.";
+if (isset($_GET["message"])) {
+    $message = $_GET["message"];
+
+    if ($_GET["message"] == "register-success") {
+        $getMessage = "Du wurdest erfolgreich Registriert. Bitte melde dich jetzt mit den gerade eingegebenen Zugangsdaten an.";
+    }
+    if ($_GET["message"] == "please-login") {
+        $getMessage = "Du musst dich anmelden um diese Seite sehen zu können.";
+    }
 }
 $pdo = null;
 ?>
@@ -85,7 +89,7 @@ $pdo = null;
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../favicon.ico">
-    <title>Login <?php echo $url; ?></title>
+    <title>Login</title>
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
     <!-- Fonts CSS -->

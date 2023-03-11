@@ -1,8 +1,8 @@
 <?php
     $include_path = __DIR__ . "/..";
-    include $include_path . "/dependencies/config.php";
-    include $include_path . "/dependencies/mysql.php";
-    include $include_path . "/dependencies/framework.php";
+require $include_path . "/dependencies/config.php";
+require $include_path . "/dependencies/mysql.php";
+require $include_path . "/dependencies/framework.php";
 ?>
 <!doctype html>
 <html lang="de">
@@ -125,8 +125,8 @@
 										  </td>
 										  <td>' . $sl['name'] . '</td>
 										  <td>' . $sl['description'] . '</td>
-										  <td>' . $sl['location'] . '</td>
-										  <td>' . $sl['time'] . '</td>
+										  <td>' . $room_names[$sl['location']] . '</td>
+										  <td>' . $times[$sl['time']] . '</td>
 										  <td>' . $date_fomatted . '</td>
 										  <td>' . $creator_fomatted . '</td>
 										  <td>' . $sl['notes'] . '</td>
@@ -135,7 +135,7 @@
 												<span class="text-muted sr-only">Action</span>
 											  </button>
 											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="./details?id=' . $sl['id'] . '">Edit</a>
+												<a class="dropdown-item" href="./details/?id=' . $sl['id'] . '">Edit</a>
 												<a class="dropdown-item" href="./?remove_lesson_with_id=' . $sl['id'] . '">Remove</a>
 											  </div>
 										  </td>
@@ -158,7 +158,7 @@
         </div> <!-- .container-fluid -->
 		
 		
-        <?php include $include_path. "/footer.php"; ?>
+        <?php include $include_path. "/include/footer.php"; ?>
       </main> <!-- main -->
     </div> <!-- .wrapper -->
     <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
