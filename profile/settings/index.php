@@ -37,19 +37,15 @@ require $include_path . "/dependencies/framework.php";
 	  <?php 
 	    $keep_pdo = true;
 		include $include_path. "/include/nav.php";
-		
-		if(isset($_GET['save'])) {
-			$vorname_neu = $_POST['vorname'];
-			$nachname_neu = $_POST['nachname'];
-			$email_neu = $_POST['email'];
-		
-			$rstatement = $pdo->prepare("UPDATE users SET vorname = :vorname_neu, email = :email_neu, nachname = :nachname_neu WHERE id = :id");
-			$rstatement->execute(array('id' => $id, 'email_neu' => $email_neu, 'vorname_neu' => $vorname_neu, 'nachname_neu' => $nachname_neu));
-			redirect("./");
-		}
+
+      if (isset($_GET['save'])) {
+          $vorname_neu = $_POST['vorname'];
+          $nachname_neu = $_POST['nachname'];
+          $email_neu = $_POST['email'];
+          echo updateUser($id, $vorname_neu, $nachname_neu, $email_neu, $permission_level, $pdo);
+      }
 
 
-		$pdo = null;
 	  ?>
 	  
       <main role="main" class="main-content">
@@ -57,6 +53,7 @@ require $include_path . "/dependencies/framework.php";
           <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">
               <h2 class="h3 mb-4 page-title">Settings</h2>
+
               <div class="my-4">
                 
                 <form action="?save=1" method="post">

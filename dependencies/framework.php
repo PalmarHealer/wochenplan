@@ -25,12 +25,12 @@ function PrintLesson($date, $time, $room, $pdo) {
     }
     echo "<p><b>" . GetLesson($date, $time, $room, "name", $pdo) . "</b></p>";
     echo "<br>";
-    echo "<p class='author'>(" . GetNameOfUser(GetLesson($date, $time, $room, "userid", $pdo), $pdo) . ")</p>";
+    echo "<p class='author'>(" . GetInfomationOfUser(GetLesson($date, $time, $room, "userid", $pdo), "vorname", $pdo) . ")</p>";
     echo "<br><br>";
     echo "<p class='description'>" . GetLesson($date, $time, $room, "description", $pdo) . "</p>";
 }
 
-function redirect($newURL) {
+#[NoReturn] function redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
     $pdo = null;
@@ -44,7 +44,8 @@ function redirect($newURL) {
     exit();
 }
 
-function checkUrlHasntChanged() {
+function getCurrentUrl(): string
+{
 
     //Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
     if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
@@ -61,7 +62,7 @@ function checkUrlHasntChanged() {
     return $current_url;
 }
 
-$old_url_array = explode("?", checkUrlHasntChanged());
+$old_url_array = explode("?", getCurrentUrl());
 $old_url = $old_url_array[0];
 if (isset($_SERVER['HTTP_REFERER'])) {
     $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
@@ -69,14 +70,15 @@ if (isset($_SERVER['HTTP_REFERER'])) {
 } else {
     $new_url = "";
 }
-function alert($msg) {
+function alert($msg): void
+{
     echo "<script type='text/javascript'>alert('$msg');</script>";
 }
 
 if (!isset($page)) {
     $page = "";
 }
-function Logout() {
+#[NoReturn] function Logout() {
     session_start();
     session_destroy();
 
@@ -123,39 +125,22 @@ if (!$page == "external") {
 
 
     if (!isset($_SESSION['asl_userid'])) {
-        redirect($webroot . "/login/?message=please-login");
+        redirect($webroot . "/login/?message=please-login&url=" . getCurrentUrl());
         exit;
     }
 
-
-    $permission_needed = $permission_needed + 1;
-    if (!$permission_needed > $permission_level) {
-        header('Location: /dashboard/?message=unauthorized');
-        exit;
-    }
-
-
-
-
-
-    if (!isset($_SESSION['asl_userid'])) {
-        redirect($webroot . "/login/?message=please-login");
+    if (!$permission_needed > GetInfomationOfUser($_SESSION['asl_userid'], "permission_level", $pdo)) {
+        redirect($webroot . "/dashboard/?message=unauthorized");
         exit;
     }
 
 
     $id = $_SESSION['asl_userid'];
-    $statement2 = $pdo->prepare("SELECT * FROM users WHERE id = ?"); //get userdata
-    $statement2->execute(array($id));
-    while ($row2 = $statement2->fetch()) {
-        $id = $row2['id'];
+    $permission_level = GetInfomationOfUser($id, "permission_level", $pdo);
+    settype($permission_level, "int"); //Convert perm level in INT
 
-        $permission_level = $row2['permission_level'];
-        settype($permission_level, "int"); //Convert perm level in INT
+    $email = GetInfomationOfUser($id, "email", $pdo);
+    $vorname = GetInfomationOfUser($id, "vorname", $pdo);
+    $nachname = GetInfomationOfUser($id, "nachname", $pdo);
 
-        $email = $row2['email'];
-        $vorname = $row2['vorname'];
-        $nachname = $row2['nachname'];
-
-    }
 }

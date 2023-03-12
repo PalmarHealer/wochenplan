@@ -219,7 +219,7 @@ require $include_path . "/dependencies/framework.php";
                                           $count = 0;
                                           foreach ($times as $i) {
                                               $count++;
-                                              echo '<option value="' . $count . '" ' . ($selected_location[$count] ?? '') . '>' . $i . '</option>';
+                                              echo '<option value="' . $count . '" ' . ($selected_time[$count] ?? '') . '>' . $i . '</option>';
                                           }
                                           ?>
                                        </select>

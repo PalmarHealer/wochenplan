@@ -68,12 +68,38 @@ function GetLesson($day, $time, $room, $info, $pdo) {
 }
 
 
-function GetNameOfUser($userid, $pdo) {
-    if (!is_numeric($userid)) {
-        return "Error loading username";
+function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
+    if (!is_numeric($UserID)) {
+        return "Error loading user information";
     }
     $lessons = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-    $lessons->execute(array($userid));
-    return $lessons->fetch()["vorname"];
+    $lessons->execute(array(1));
+    if ($InfomationType == "vorname") {
+        return $lessons->fetch()["vorname"];
+    }
+    if ($InfomationType == "nachname") {
+        return $lessons->fetch()["nachname"];
+    }
+    if ($InfomationType == "email") {
+        return $lessons->fetch()["email"];
+    }
+    if ($InfomationType == "permission_level") {
+        return $lessons->fetch()["permission_level"];
+    } else {
+        return "Error loading user information. You probably set the wrong information type (there is: vorname, nachname, email and permission_level";
+    }
 
 }
+
+function updateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
+    $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname, email = :email, permission_level = :permission_level WHERE id = :id");
+    $statement->execute(array(
+        'id' => $id,
+        'vorname' => $vorname,
+        'nachname' => $nachname,
+        'email' => $email,
+        'permission_level' => $permission_level
+    ));
+    return $statement->rowCount(); // gibt zurück, wie viele Zeilen aktualisiert wurden, danke ChatGPT
+}
+

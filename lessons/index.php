@@ -13,7 +13,7 @@ require $include_path . "/dependencies/framework.php";
     <meta name="author" content="">
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 	
-    <title>Angebote</title>
+    <title>Angebote - <?php echo GetInfomationOfUser($id, "vorname", $pdo) ?></title>
 	
 	
     <!-- Simple bar CSS -->
