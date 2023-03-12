@@ -64,12 +64,12 @@ require $include_path . "/dependencies/framework.php";
                  $date_type = "0";
              }
 
-             $new_name = Setvalue($_POST['name']);
-             $new_description = Setvalue($_POST['description']);
-             $new_location = Setvalue($_POST['location']);
-             $new_time =  Setvalue($_POST['time']);
-             $new_notes = Setvalue($_POST['notes']);
-             $new_assigned_user_id = Setvalue($_POST['creator']);
+             $new_name = ($_POST['name'] ?? '');
+             $new_description = ($_POST['description'] ?? '');
+             $new_location = ($_POST['location'] ?? '');
+             $new_time = ($_POST['time'] ?? '');
+             $new_notes = ($_POST['notes'] ?? '');
+             $new_assigned_user_id = ($_POST['creator'] ?? '');
 
 
              if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
@@ -93,7 +93,7 @@ require $include_path . "/dependencies/framework.php";
                  redirect("../");
 
                  // Create Lesson
-             } elseif ($_POST['save'] == "1") {
+             } elseif (($_POST['save'] ?? 0) == "1") {
 
                  update_or_insert_lesson("create", $pdo, "",
                      $date_type,
@@ -176,35 +176,34 @@ require $include_path . "/dependencies/framework.php";
                                  </div>
                               </div>
                            </div>
-                        </div>
-                        <!-- / .card -->
-                        <div class="row">
-                           <div class="col-md-6 mb-4">
-                              <div class="card shadow">
-                                 <div class="card-body">
-                                    <div class="form-group mb-3">
-                                       <label for="custom-select">Ort des Angebotes bzw. Art</label>
-                                       <select name="location" class="form-control" id="type-select">
-                                          <?php if(isset($lesson_details['location'])) { 
-                                             $selected_location = array();
-                                             $selected_location[$lesson_details['location']] = "selected";
-                                             }?>
-                                          <?php
-                                          for ($i = 1; $i < count($room_names); $i++) {
-                                              $option_value = $i + 1; // Wert um 1 erhöhen, da der Index bei 0 beginnt
-                                              $option_selected = $selected_location[$option_value] ?? '';
-                                              $option_text = $room_names[$i];
-                                              echo '<option value="' . $option_value . '" ' . $option_selected . '>' . $option_text . '</option>';
-                                          }
-                                          ?>
+                         </div>
+                         <!-- / .card -->
+                         <div class="row">
+                             <div class="col-md-6 mb-4">
+                                 <div class="card shadow">
+                                     <div class="card-body">
+                                         <div class="form-group mb-3">
+                                             <label for="custom-select">Ort des Angebotes bzw. Art</label>
+                                             <select name="location" class="form-control" id="type-select">
+                                                 <?php
+                                                 $selected_location = array();
+                                                 if(isset($lesson_details['location'])) {
+                                                     $selected_location[$lesson_details['location']] = "selected";
+                                                 }
+                                                 $count = 0;
+                                                 foreach ($room_names as $i) {
+                                                     $count++;
+                                                     echo '<option value="' . $count . '" ' . ($selected_location[$count] ?? '') . '>' . $i . '</option>';
+                                                 }
+                                                 ?>
 
-                                       </select>
-                                    </div>
+                                             </select>
+                                         </div>
+                                     </div>
+                                     <!-- /.card-body -->
                                  </div>
-                                 <!-- /.card-body -->
-                              </div>
-                              <!-- /.card -->
-                           </div>
+                                 <!-- /.card -->
+                             </div>
                            <!-- /.col -->
                            <div class="col-md-6 mb-4">
                               <div class="card shadow">
@@ -212,16 +211,15 @@ require $include_path . "/dependencies/framework.php";
                                     <div class="form-group mb-3">
                                        <label for="custom-select">Zeitpunkt des Angebotes</label>
                                        <select name="time" class="form-control" id="type-select" required>
-                                          <?php if(isset($lesson_details['time'])) { 
-                                             $selected_time = array();
-                                             $selected_time[$lesson_details['time']] = "selected";
-                                             }?>
                                           <?php
-                                          for ($i = 1; $i < count($times); $i++) {
-                                              $option_value = $i + 1; // Wert um 1 erhöhen, da der Index bei 0 beginnt
-                                              $option_selected = $selected_location[$option_value] ?? '';
-                                              $option_text = $times[$i];
-                                              echo '<option value="' . $option_value . '" ' . $option_selected . '>' . $option_text . '</option>';
+                                          $selected_time = array();
+                                          if(isset($lesson_details['time'])) {
+                                              $selected_time[$lesson_details['time']] = "selected";
+                                          }
+                                          $count = 0;
+                                          foreach ($times as $i) {
+                                              $count++;
+                                              echo '<option value="' . $count . '" ' . ($selected_location[$count] ?? '') . '>' . $i . '</option>';
                                           }
                                           ?>
                                        </select>
@@ -286,11 +284,8 @@ require $include_path . "/dependencies/framework.php";
                                                          if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
                                                          	echo $lesson_details['date']; 
                                                          } else {
-                                                         	echo date("d");
-                                                         	echo "/";
-                                                         	echo date("m");
-                                                         	echo "/";
-                                                         	echo date("Y");
+                                                             echo date("d/m/Y");
+
                                                          }
                                                          ?>
                                                       " aria-describedby="button-addon2">

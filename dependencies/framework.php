@@ -44,13 +44,6 @@ function redirect($newURL) {
     exit();
 }
 
-function Setvalue($value_to_set) {
-    return $value_to_set ?? "Unkown Error";
-}
-function GetValue($value_to_set) {
-    return $value_to_set ?? "Value is empty";
-}
-
 function checkUrlHasntChanged() {
 
     //Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
