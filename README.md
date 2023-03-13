@@ -2,6 +2,25 @@
 
 Hallo und cool das du es auch das Repository vom Wochenplan geschafft hast.
 
+# Übersicht
+ - [Installation](#installation)
+	 - [Vorbereitung](#vorbereitung)
+	 - [MySQL Datenbank](#mysql-datenbank)
+	 - [Config.php](#configphp---allgemein)
+		 - [Allgemein](#configphp---allgemein)
+			 - [permission_level](#permission_level)
+			 - [webroot](#webroot)
+			 - [theme](#theme)
+			 - [create_lessons](#create_lessons)
+			 - [permission_needed](#permission_needed)
+			 - [create_lessons_for_others](#create_lessons_for_others)
+			 - [manage_other_users](#manage_other_users)
+		 - [MySQL](#configphp---mysql)
+			 - [Verbindung](#verbindung)
+			 - [keep_pdo](#keep_dpo)
+			 - [room_names und times](#room_names-und-times)
+			 - [header](#header)
+   - [Lizenz/Rechte](#lizenzrechte)
 
 # Installation
 
@@ -130,3 +149,9 @@ Gibt an wie viele Räume es insgesamt gibt, beim erstellen wird aus dieser Liste
 
 #### $header
 Das dürfen Sie gerne selber herrausfinden. :)
+
+## Lizenz/Rechte
+
+Nauren® Copyright © 2022 - 2023.
+
+Code released under the GNU License.
