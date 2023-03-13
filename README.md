@@ -19,7 +19,7 @@ Für die entsprechenden tools gibt es ebenfalls hier keine Anleitung, falls eine
 
 ## Installation
 
-In dem Setup Ordner befindet sich die 
+In dem Setup Ordner befindet sich die ´Hallo´
 
 
 
