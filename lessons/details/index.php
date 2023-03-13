@@ -163,7 +163,7 @@ require $include_path . "/dependencies/framework.php";
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="simpleinput">Name des Angebotes</label>
-                                       <input name="name" type="text" id="simpleinput" class="form-control" placeholder="Name des Angebotes" maxlength="10" value="<?php if(isset($lesson_details['name'])) { echo $lesson_details['name']; }?>" required>
+                                       <input name="name" type="text" id="simpleinput" class="form-control" placeholder="Name des Angebotes" maxlength="20" value="<?php if(isset($lesson_details['name'])) { echo $lesson_details['name']; }?>" required>
                                        </input>
                                     </div>
                                  </div>
@@ -184,7 +184,7 @@ require $include_path . "/dependencies/framework.php";
                                      <div class="card-body">
                                          <div class="form-group mb-3">
                                              <label for="custom-select">Ort des Angebotes bzw. Art</label>
-                                             <select name="location" class="form-control" id="type-select">
+                                             <select name="location" class="form-control dropdown" id="type-select location">
                                                  <?php
                                                  $selected_location = array();
                                                  if(isset($lesson_details['location'])) {
@@ -210,7 +210,7 @@ require $include_path . "/dependencies/framework.php";
                                  <div class="card-body">
                                     <div class="form-group mb-3">
                                        <label for="custom-select">Zeitpunkt des Angebotes</label>
-                                       <select name="time" class="form-control" id="type-select" required>
+                                       <select name="time" class="form-control" id="type-select time" required>
                                           <?php
                                           $selected_time = array();
                                           if(isset($lesson_details['time'])) {
@@ -261,7 +261,7 @@ require $include_path . "/dependencies/framework.php";
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
                                                    </div>
-                                                   <select name="date-repeat" class="form-control toggle_date_input1" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
+                                                   <select id="day" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
                                                       <?php if($lesson_details['date-type'] == "1") {
                                                          $selected_date = array();
                                                          $selected_date[$lesson_details['date']] = "selected";
@@ -279,7 +279,7 @@ require $include_path . "/dependencies/framework.php";
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
                                                    </div>
-                                                   <input name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
+                                                   <input id="day" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
                                                          if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
                                                          	echo $lesson_details['date']; 
@@ -350,7 +350,7 @@ require $include_path . "/dependencies/framework.php";
                                     </div>
                                 </div>
                             </div>
-
+                             <div id="availability">Test</div>
                            <div class="col-md-12 mb-4">
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
@@ -407,6 +407,29 @@ require $include_path . "/dependencies/framework.php";
       <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
       <!-- Custom JS code -->
       <script>
+          var dropdowns = document.querySelectorAll('.dropdown');
+          dropdowns.forEach(function(dropdown) {
+              dropdown.addEventListener('change', function() {
+                  // Dropdown-Werte abfragen
+                  var day = $('#day').val();
+                  var location = $('#location').val();
+                  var time = $('#time').val();
+
+                  // Ajax-Abfrage an PHP-Code senden
+                  $.ajax({
+                      url: './check.php', // Pfad zur PHP-Datei
+                      type: 'POST', // HTTP-Methode
+                      data: { // Daten, die an den PHP-Code übergeben werden
+                          day: day,
+                          location: location,
+                          time: time
+                      },
+                      success: function(result) { // Callback-Funktion, die bei erfolgreicher Rückgabe des PHP-Codes ausgeführt wird
+                          // Rückgabe in das Ergebnis-Div einfügen
+                          $('#availability').html(result);
+              });
+          });
+
 			$(document).ready(function(){
 				$(".date_selector1").click(function(){
 					$(".repeating").show();
@@ -444,7 +467,7 @@ require $include_path . "/dependencies/framework.php";
                 format: 'DD/MM/YYYY'
               }
             });
-          
+
       </script>
    </body>
 </html>

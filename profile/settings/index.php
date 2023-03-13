@@ -55,7 +55,7 @@ require $include_path . "/dependencies/framework.php";
               <h2 class="h3 mb-4 page-title">Settings</h2>
 
               <div class="my-4">
-                
+
                 <form action="?save=1" method="post">
                   <div class="profilename row mt-5 align-items-center">
                     <div class="col-md-3 text-center mb-5">
