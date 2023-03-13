@@ -7,6 +7,13 @@ require $include_path . "/dependencies/framework.php";
 
 session_start();
 
+if (isset($_GET['return_to'])) {
+    $redirect = $_GET['return_to'];
+} else {
+    $redirect = $webroot . '/dashboard/?ida=1';
+}
+
+
 //Überprüfe ob Nutzer vielleicht schon eingeloggt ist. 
 //Überprüfe auf den 'Angemeldet bleiben'-Cookie
 if(!isset($_SESSION['asl_userid']) && isset($_COOKIE['asl_identifier']) && isset($_COOKIE['asl_securitytoken'])) {
@@ -57,7 +64,7 @@ if(!isset($_SESSION['asl_userid'])) {
 				setcookie("asl_identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
 				setcookie("asl_securitytoken",$securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
 			}
-            redirect(($_GET["url"] ?? $webroot . '/dashboard'));
+            redirect($redirect);
 			exit;
 		} else {
 			$errorMessage = "E-Mail oder Passwort war ungültig<br>";
@@ -105,8 +112,12 @@ $pdo = null;
   <body class="light ">
     <div class="wrapper vh-100">
       <div class="row align-items-center h-100">
-        <form class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="?login=1" method="post">
-          <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./index.html">
+        <form class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="?login=1 <?php
+        if (isset($_GET['return_to'])) {
+            echo "&return_to=" . $_GET['return_to'];
+        }
+        ?>" method="post">
+          <a class="navbar-brand mx-auto mt-2 flex-fill text-center">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="38" viewBox="0,0,36,38">
    <g transform="translate(-222,-161)">
       <g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill="none" fill-rule="nonzero" stroke="none" stroke-width="0.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal">

@@ -9,9 +9,6 @@ function random_string() {
     } else if(function_exists('openssl_random_pseudo_bytes')) {
         $bytes = openssl_random_pseudo_bytes(16);
         $str = bin2hex($bytes);
-    } else if(function_exists('mcrypt_create_iv')) {
-        $bytes = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
-        $str = bin2hex($bytes);
     } else {
         $str = md5(uniqid('kA5Ql0s2M2hveb7uEoTrj7vOFwrLsWDe', true));
     }
@@ -78,7 +75,7 @@ function alert($msg): void
 if (!isset($page)) {
     $page = "";
 }
-#[NoReturn] function Logout() {
+#[NoReturn] function Logout($webroot) {
     session_start();
     session_destroy();
 
@@ -91,7 +88,7 @@ if (!isset($page)) {
 }
 if(isset($_GET["logout"])) {
     if ($_GET["logout"] == "true") { //Logout script
-        Logout();
+        Logout($webroot);
     }
 }
 
@@ -125,7 +122,7 @@ if (!$page == "external") {
 
 
     if (!isset($_SESSION['asl_userid'])) {
-        redirect($webroot . "/login/?message=please-login&url=" . getCurrentUrl());
+        redirect($webroot . "/login/?message=please-login&return_to=" . getCurrentUrl());
         exit;
     }
 
