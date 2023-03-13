@@ -1,6 +1,6 @@
 # Wochenplan
 
-Hallo und cool das du es auch das Repository vom Wochenplan geschafft hast.
+Hallo und cool das du es auch das Repository vom Wochenplan geschafft hast. Wenn du wissen willst an was gerade gearbeitet wird schau doch gerne [Hier](https://github.com/users/PalmarHealer/projects/2/views/1) vorbei.
 
 # Übersicht
  - [Installation](#installation)
