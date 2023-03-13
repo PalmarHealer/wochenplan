@@ -21,7 +21,8 @@ body {
 .db_text * {
     border: none;
     margin-left: -6px;
-    margin-top: -18px
+    margin-top: -18px;
+    margin-right: -60px;
 }
 
 .heading {
