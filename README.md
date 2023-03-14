@@ -20,6 +20,7 @@ Hallo und cool das du es auch das Repository vom Wochenplan geschafft hast. Wenn
 			 - [keep_pdo](#keep_dpo)
 			 - [room_names und times](#room_names-und-times)
 			 - [header](#header)
+   - [Credits](#credits)
    - [Lizenz/Rechte](#lizenzrechte)
 
 # Installation
@@ -149,6 +150,15 @@ Gibt an wie viele Räume es insgesamt gibt, beim erstellen wird aus dieser Liste
 
 #### $header
 Das dürfen Sie gerne selber herrausfinden. :)
+
+## Credits
+
+Theme und Layout (exept plan): [Tinydash](https://github.com/themewagon/tinydash/)
+
+Idee: [Aktive Schule Leipzig - Freie Oberschule](https://www.aktive-schule-leipzig.de/oberschule/)
+
+Techniche umsetzung und realisierung: [Palmar Healer - Nauren](https://nauren.de)
+
 
 ## Lizenz/Rechte
 
