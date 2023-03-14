@@ -62,6 +62,17 @@ $weekday_names = array(
     7 => 'So'
 );
 
+
+//Permission level names
+$permission_level_names = array(
+    $permission_needed => 'Benutzer',
+    $create_lessons => 'Ersteller',
+    $create_lessons_for_others => 'Ersteller (auch für andere)',
+    $manage_other_users => 'Administrator',
+    99 => 'Guru'
+);
+
+
 //Available rooms
 $room_names = array(
     1 => "Raum 1",

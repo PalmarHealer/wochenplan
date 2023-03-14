@@ -106,8 +106,8 @@ require $include_path . "/dependencies/framework.php";
       {
         autoWidth: true,
         "lengthMenu": [
-          [4, 8, 16, 32, 64, -1],
-          [4, 8, 16, 32, 64, "All"]
+            [ -1, 4, 8, 16, 32, 64],
+            ["All", 4, 8, 16, 32, 64]
         ]
       });
     </script>

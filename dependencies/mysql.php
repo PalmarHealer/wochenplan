@@ -120,10 +120,10 @@ function GetLessonByID($id, $info, $pdo) {
 
 function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
     if (!is_numeric($UserID)) {
-        return "Error loading user information";
+        return "Error loading user information (you have to provide a id)";
     }
     $lessons = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-    $lessons->execute(array(1));
+    $lessons->execute(array($UserID));
     if ($InfomationType == "vorname") {
         return $lessons->fetch()["vorname"];
     }
@@ -139,8 +139,21 @@ function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
     }
     if ($InfomationType == "permission_level") {
         return $lessons->fetch()["permission_level"];
+    }
+    if ($InfomationType == "created") {
+        return $lessons->fetch()["created_at"];
+    }
+    if ($InfomationType == "updated") {
+        return $lessons->fetch()["updated_at"];
+    }
+    if ($InfomationType == "available") {
+        if ($lessons->fetch()["id"] == $UserID) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
-        return "Error loading user information. You probably set the wrong information type (there is: vorname, nachname, email and permission_level";
+        return "Error loading user information. You probably set the wrong information type (there is: vorname, nachname, email, permission_level, created, updated and available";
     }
 
 }
@@ -156,6 +169,57 @@ function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     ));
     return $statement->rowCount(); // gibt zurück, wie viele Zeilen aktualisiert wurden, danke ChatGPT
 }
+
+function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
+
+    $users = $pdo->prepare("SELECT * FROM users");
+    $users->execute();
+
+    while($sl = $users->fetch()) {
+
+        $id = $sl["id"];
+        $username = $sl["vorname"] . " " . $sl["nachname"];
+        $email = $sl["email"];
+        //$permission_level = $sl["permission_level"];
+        $permission_level = GetHighestValueBelowValueName($sl["permission_level"], $permission_level_names);
+
+        $created_at = date("d.m.Y", strtotime($sl["created_at"]));
+        $updated_at = date("d.m.Y", strtotime($sl["updated_at"]));
+
+        echo '<tr>
+                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                </td>
+                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                    <div class="avatar avatar-md">
+                        <span class="fe fe-user fe-32"></span>
+                    </div>
+                </td>
+                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                    <p class="mb-0 text-muted"><strong>' . $username . '</strong></p>
+                </td>
+                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                    <p class="mb-0">' . $email . '</p>
+                </td>
+                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                    <p class="mb-0">' . $permission_level . '</p>
+                </td>
+                <td onclick="window.location=\'./edit?id='. $id . '\';" class="text-muted pointer">' . $updated_at . '
+                </td>
+                <td onclick="window.location=\'./edit?id='. $id . '\';" class="text-muted pointer">' . $created_at . '
+                </td>
+                <td>
+                    <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="text-muted sr-only">Action</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="./edit?id=1">Edit</a>
+                        <a class="dropdown-item" href="./edit?delete=1">Remove</a>
+                    </div>
+                </td>
+              </tr>';
+    }
+}
+
 
 function DeleteLesson($lessonid, $pdo) {
     try {

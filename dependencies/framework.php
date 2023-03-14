@@ -48,6 +48,18 @@ function Alert($msg): void
     echo "<script type='text/javascript'>alert('$msg');</script>";
 }
 
+function GetHighestValueBelowValueName($value, $array) {
+    $highest_level_below = 1;
+
+    foreach ($array as $key => $value2) {
+        if ($key <= $value && $key > $highest_level_below) {
+            $highest_level_below = $key;
+        }
+    }
+
+    return $array[$highest_level_below];
+}
+
 #[NoReturn] function redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
@@ -67,8 +79,8 @@ function Alert($msg): void
     session_destroy();
 
     //Cookies entfernen
-    setcookie("asl_identifier", "", time() - 3600, "/login");
-    setcookie("asl_securitytoken", "", time() - 3600, "/login");
+    setcookie("asl_identifier", "", time() - 3600, "$webroot/login");
+    setcookie("asl_securitytoken", "", time() - 3600, "$webroot/login");
 
     redirect($webroot);
     die();
@@ -123,14 +135,16 @@ if (!$page == "external") {
     }
 
 
-    if (!isset($_SESSION['asl_userid'])) {
+    if (isset($_SESSION['asl_userid'])) {
+        if (!GetInfomationOfUser($_SESSION['asl_userid'],"available", $pdo)) {
+            Logout($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
+        }
+    } else {
         redirect($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
-        exit;
     }
 
     if (!$permission_needed > GetInfomationOfUser($_SESSION['asl_userid'], "permission_level", $pdo)) {
         redirect($webroot . "/dashboard/?message=unauthorized");
-        exit;
     }
 
 
