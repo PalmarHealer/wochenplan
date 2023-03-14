@@ -95,14 +95,14 @@ if (!isset($_GET["date"])) {
                 9:00 - 10:00<br />
                 <b class="bold">Morgenband</b>
             </td>
-            <td class="color-2 db_text"><?php PrintLesson($current_day, 1, 1, $pdo); ?></td>
-            <td class="color-2 db_text"><?php PrintLesson($current_day, 1, 2, $pdo); ?></td>
-            <td class="color-2 db_text"><?php PrintLesson($current_day, 1, 3, $pdo); ?></td>
-            <td class="color-2 db_text"><?php PrintLesson($current_day, 1, 4, $pdo); ?></td>
-            <td class="color-2 db_text"><?php PrintLesson($current_day, 1, 5, $pdo); ?></td>
-            <td class="color-2 db_text"><?php PrintLesson($current_day, 1, 6, $pdo); ?></td>
-            <td class="color-2 db_text" rowspan="3"><?php PrintLesson($current_day, 1, 7, $pdo); ?></td>
-            <td class="color-2 db_text" rowspan="3"><?php PrintLesson($current_day, 1, 8, $pdo); ?></td>
+            <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 1, 1, $pdo); ?></td>
+            <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 1, 2, $pdo); ?></td>
+            <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 1, 3, $pdo); ?></td>
+            <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 1, 4, $pdo); ?></td>
+            <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 1, 5, $pdo); ?></td>
+            <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 1, 6, $pdo); ?></td>
+            <td class="color-2 db_text" rowspan="3"><?php PrintLessonToPlan($current_day, 1, 7, $pdo); ?></td>
+            <td class="color-2 db_text" rowspan="3"><?php PrintLessonToPlan($current_day, 1, 8, $pdo); ?></td>
             <td class="color-1 db_text"></td>
         </tr>
         <tr class="piece">

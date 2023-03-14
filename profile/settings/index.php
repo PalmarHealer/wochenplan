@@ -42,7 +42,7 @@ require $include_path . "/dependencies/framework.php";
           $vorname_neu = $_POST['vorname'];
           $nachname_neu = $_POST['nachname'];
           $email_neu = $_POST['email'];
-          echo updateUser($id, $vorname_neu, $nachname_neu, $email_neu, $permission_level, $pdo);
+          echo UpdateUser($id, $vorname_neu, $nachname_neu, $email_neu, $permission_level, $pdo);
       }
 
 
