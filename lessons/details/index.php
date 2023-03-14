@@ -39,6 +39,8 @@ require $include_path . "/dependencies/framework.php";
          <?php
 
 
+
+
          $keep_pdo = true;
          require $include_path. "/include/nav.php";
 
@@ -47,6 +49,18 @@ require $include_path . "/dependencies/framework.php";
              die();
          }
 
+         if (isset($_GET["remove_lesson_with_id"])) {
+             $lesson_to_delete = $_GET["remove_lesson_with_id"];
+             if ($permission_level > $create_lessons_for_others) {
+                 DeleteLesson($lesson_to_delete, $pdo);
+                 GoPageBack("");
+             } elseif ($id == GetLessonByID($lesson_to_delete, "userid", $pdo)) {
+                 DeleteLesson($$lesson_to_delete, $pdo);
+                 GoPageBack("");
+             } else {
+                 GoPageBack("");
+             }
+         }
          if(isset($old_url) AND $new_url = $old_url) {
 
 
@@ -184,7 +198,7 @@ require $include_path . "/dependencies/framework.php";
                                      <div class="card-body">
                                          <div class="form-group mb-3">
                                              <label for="custom-select">Ort des Angebotes bzw. Art</label>
-                                             <select name="location" class="form-control dropdown" id="location" onchange="updateAvailability()">
+                                             <select name="location" class="form-control dropdown" id="location" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
                                                  <?php
                                                  $selected_location = array();
                                                  if(isset($lesson_details['location'])) {
@@ -210,7 +224,7 @@ require $include_path . "/dependencies/framework.php";
                                  <div class="card-body">
                                     <div class="form-group mb-3">
                                        <label for="custom-select">Zeitpunkt des Angebotes</label>
-                                       <select name="time" class="form-control" id="time" onchange="updateAvailability()">
+                                       <select name="time" class="form-control" id="time" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
                                           <?php
                                           $selected_time = array();
                                           if(isset($lesson_details['time'])) {
@@ -261,7 +275,7 @@ require $include_path . "/dependencies/framework.php";
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
                                                    </div>
-                                                   <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
+                                                   <select id="day" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?> name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
                                                       <?php if($lesson_details['date-type'] == "1") {
                                                          $selected_date = array();
                                                          $selected_date[$lesson_details['date']] = "selected";
@@ -279,7 +293,7 @@ require $include_path . "/dependencies/framework.php";
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
                                                    </div>
-                                                   <input id="day2" onchange="updateAvailability2()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
+                                                   <input id="day2" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability2()"';} ?> name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
                                                          if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
                                                          	echo $lesson_details['date']; 
@@ -350,11 +364,16 @@ require $include_path . "/dependencies/framework.php";
                                     </div>
                                 </div>
                             </div>
-                             <div id="availability" class="center2">
-                                 <div class="alert alert-success center" role="alert">
-                                     <span class="fe fe-alert-octagon fe-16 mr-2"></span>Dein Angebot kann dort stattfinden.
-                                 </div>
-                             </div>
+                             <?php
+                             if (!isset($_GET['id'])) {
+                                 echo '<div id="availability" class="center2">';
+                                    echo '<div class="alert alert-success center" role="alert">';
+                                        echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Dein Angebot kann dort stattfinden.';
+                                    echo '</div>';
+                                 echo '</div>';
+                             }
+                             ?>
+
                            <div class="col-md-12 mb-4">
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
@@ -463,18 +482,15 @@ require $include_path . "/dependencies/framework.php";
                   $(".repeating").hide();
               });
           });
-
           $('.select2').select2(
               {
                   theme: 'bootstrap4',
               });
-
           $('.select2-multi').select2(
               {
                   multiple: true,
                   theme: 'bootstrap4',
               });
-
           $('.drgpicker').daterangepicker(
               {
                   singleDatePicker: true,
@@ -485,7 +501,6 @@ require $include_path . "/dependencies/framework.php";
                           format: 'DD/MM/YYYY'
                       }
               });
-
       </script>
    </body>
 </html>
