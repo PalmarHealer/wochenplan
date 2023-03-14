@@ -1,8 +1,7 @@
 <?php
 use JetBrains\PhpStorm\NoReturn;
 
-
-function random_string() {
+function random_string(): string {
     if(function_exists('random_bytes')) {
         $bytes = random_bytes(16);
         $str = bin2hex($bytes);
@@ -15,7 +14,6 @@ function random_string() {
     return $str;
 }
 
-
 function PrintLesson($date, $time, $room, $pdo) {
     if (!GetLesson($date, $time, $room, "available", $pdo)) {
         return;
@@ -27,21 +25,7 @@ function PrintLesson($date, $time, $room, $pdo) {
     echo "<p class='description'>" . GetLesson($date, $time, $room, "description", $pdo) . "</p>";
 }
 
-#[NoReturn] function redirect($newURL) {
-    header("Location: $newURL");
-    echo "<script>window.location.href='$newURL';</script>";
-    $pdo = null;
-    exit();
-}
-
-#[NoReturn] function goPageBack($Parameter) {
-    header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
-    echo "<script>history.back()</script>";
-    $pdo = null;
-    exit();
-}
-
-function getCurrentUrl(): string
+function GetCurrentUrl(): string
 {
 
     //Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
@@ -59,22 +43,25 @@ function getCurrentUrl(): string
     return $current_url;
 }
 
-$old_url_array = explode("?", getCurrentUrl());
-$old_url = $old_url_array[0];
-if (isset($_SERVER['HTTP_REFERER'])) {
-    $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
-    $new_url = $new_url_array[0];
-} else {
-    $new_url = "";
-}
-function alert($msg): void
+function Alert($msg): void
 {
     echo "<script type='text/javascript'>alert('$msg');</script>";
 }
 
-if (!isset($page)) {
-    $page = "";
+#[NoReturn] function redirect($newURL) {
+    header("Location: $newURL");
+    echo "<script>window.location.href='$newURL';</script>";
+    $pdo = null;
+    exit();
 }
+
+#[NoReturn] function GoPageBack($Parameter) {
+    header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
+    echo "<script>history.back()</script>";
+    $pdo = null;
+    exit();
+}
+
 #[NoReturn] function Logout($webroot) {
     session_start();
     session_destroy();
@@ -86,6 +73,21 @@ if (!isset($page)) {
     redirect($webroot);
     die();
 }
+
+
+$old_url_array = explode("?", GetCurrentUrl());
+$old_url = $old_url_array[0];
+if (isset($_SERVER['HTTP_REFERER'])) {
+    $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
+    $new_url = $new_url_array[0];
+} else {
+    $new_url = "";
+}
+
+if (!isset($page)) {
+    $page = "";
+}
+
 if(isset($_GET["logout"])) {
     if ($_GET["logout"] == "true") { //Logout script
         Logout($webroot);
@@ -122,7 +124,7 @@ if (!$page == "external") {
 
 
     if (!isset($_SESSION['asl_userid'])) {
-        redirect($webroot . "/login/?message=please-login&return_to=" . getCurrentUrl());
+        redirect($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
         exit;
     }
 

@@ -35,7 +35,11 @@ function GetLesson($day, $time, $room, $info, $pdo) {
 
     $lessons = $pdo->prepare("SELECT * FROM angebot ORDER BY id ASC");
     $lessons->execute();
-    $repeating_day = date('N', strtotime($day));
+    if (str_contains($day, "-")) {
+        $repeating_day = date('N', strtotime($day));
+    } else {
+        $repeating_day = $day;
+    }
 
     while($sl = $lessons->fetch()) {
 
@@ -54,14 +58,14 @@ function GetLesson($day, $time, $room, $info, $pdo) {
                     return $sl['assigned_user_id'];
                 }
                 if ($info == "available") {
-                    return true;
+                    return false;
                 }
             }
         }
 
     }
     if ($info == "available") {
-        return false;
+        return true;
     } else {
         return "Error loading data";
     }

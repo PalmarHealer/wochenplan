@@ -43,7 +43,7 @@ require $include_path . "/dependencies/framework.php";
          require $include_path. "/include/nav.php";
 
          if($permission_level < $create_lessons) {
-             goPageBack("?message=unauthorized");
+             GoPageBack("?message=unauthorized");
              die();
          }
 
@@ -184,7 +184,7 @@ require $include_path . "/dependencies/framework.php";
                                      <div class="card-body">
                                          <div class="form-group mb-3">
                                              <label for="custom-select">Ort des Angebotes bzw. Art</label>
-                                             <select name="location" class="form-control dropdown" id="type-select location">
+                                             <select name="location" class="form-control dropdown" id="location" onchange="updateAvailability()">
                                                  <?php
                                                  $selected_location = array();
                                                  if(isset($lesson_details['location'])) {
@@ -210,7 +210,7 @@ require $include_path . "/dependencies/framework.php";
                                  <div class="card-body">
                                     <div class="form-group mb-3">
                                        <label for="custom-select">Zeitpunkt des Angebotes</label>
-                                       <select name="time" class="form-control" id="type-select time" required>
+                                       <select name="time" class="form-control" id="time" onchange="updateAvailability()">
                                           <?php
                                           $selected_time = array();
                                           if(isset($lesson_details['time'])) {
@@ -261,7 +261,7 @@ require $include_path . "/dependencies/framework.php";
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
                                                    </div>
-                                                   <select id="day" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
+                                                   <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
                                                       <?php if($lesson_details['date-type'] == "1") {
                                                          $selected_date = array();
                                                          $selected_date[$lesson_details['date']] = "selected";
@@ -279,7 +279,7 @@ require $include_path . "/dependencies/framework.php";
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
                                                    </div>
-                                                   <input id="day" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
+                                                   <input id="day2" onchange="updateAvailability2()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
                                                          if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
                                                          	echo $lesson_details['date']; 
@@ -350,7 +350,11 @@ require $include_path . "/dependencies/framework.php";
                                     </div>
                                 </div>
                             </div>
-                             <div id="availability">Test</div>
+                             <div id="availability" class="center2">
+                                 <div class="alert alert-success center" role="alert">
+                                     <span class="fe fe-alert-octagon fe-16 mr-2"></span>Dein Angebot kann dort stattfinden.
+                                 </div>
+                             </div>
                            <div class="col-md-12 mb-4">
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
@@ -407,66 +411,84 @@ require $include_path . "/dependencies/framework.php";
       <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
       <!-- Custom JS code -->
       <script>
-          var dropdowns = document.querySelectorAll('.dropdown');
-          dropdowns.forEach(function(dropdown) {
-              dropdown.addEventListener('change', function() {
-                  // Dropdown-Werte abfragen
-                  var day = $('#day').val();
-                  var location = $('#location').val();
-                  var time = $('#time').val();
+          function updateAvailability() {
+              var date = $('#day').val();
+              var time = $('#time').val();
+              var location = $('#location').val();
 
-                  // Ajax-Abfrage an PHP-Code senden
-                  $.ajax({
-                      url: './check.php', // Pfad zur PHP-Datei
-                      type: 'POST', // HTTP-Methode
-                      data: { // Daten, die an den PHP-Code übergeben werden
-                          day: day,
-                          location: location,
-                          time: time
-                      },
-                      success: function(result) { // Callback-Funktion, die bei erfolgreicher Rückgabe des PHP-Codes ausgeführt wird
-                          // Rückgabe in das Ergebnis-Div einfügen
-                          $('#availability').html(result);
+              console.log("Date: " + date);
+              console.log("Time: " + time);
+              console.log("Location: " + location);
+              $.ajax({
+                  url: './check.php',
+                  type: 'GET',
+                  data: {date: date, time: time, location: location},
+                  success: function(result) {
+                      $('#availability').html(result);
+                  },
+                  error: function(xhr, status, error) {
+                      console.log("Error: " + error);
+                  }
+              });
+          }
+          function updateAvailability2() {
+              var date = $('#day2').val();
+              var time = $('#time').val();
+              var location = $('#location').val();
+
+              console.log("Date: " + date);
+              console.log("Time: " + time);
+              console.log("Location: " + location);
+              $.ajax({
+                  url: './check.php',
+                  type: 'GET',
+                  data: {date: date, time: time, location: location},
+                  success: function(result) {
+                      $('#availability').html(result);
+                  },
+                  error: function(xhr, status, error) {
+                      console.log("Error: " + error);
+                  }
+              });
+          }
+          $(document).ready(function(){
+              updateAvailability();
+              $(".date_selector1").click(function(){
+                  $(".repeating").show();
+                  $(".toggle_date_input1").removeAttr("disabled", "");
+                  $(".toggle_date_input2").attr("disabled", "");
+                  $(".once").hide();
+              });
+
+              $(".date_selector2").click(function(){
+                  $(".once").show();
+                  $(".toggle_date_input2").removeAttr("disabled", "");
+                  $(".toggle_date_input1").attr("disabled", "");
+                  $(".repeating").hide();
               });
           });
 
-			$(document).ready(function(){
-				$(".date_selector1").click(function(){
-					$(".repeating").show();
-					$(".toggle_date_input1").removeAttr("disabled", "");
-					$(".toggle_date_input2").attr("disabled", "");
-					$(".once").hide();
-				});
-				
-				$(".date_selector2").click(function(){
-					$(".once").show();
-					$(".toggle_date_input2").removeAttr("disabled", "");
-					$(".toggle_date_input1").attr("disabled", "");
-					$(".repeating").hide();
-				});
-			});
-	
-         $('.select2').select2(
-            {
-              theme: 'bootstrap4',
-            });
-         
-            $('.select2-multi').select2(
-            {
-              multiple: true,
-              theme: 'bootstrap4',
-            });
-         
-            $('.drgpicker').daterangepicker(
-            {
-              singleDatePicker: true,
-              timePicker: false,
-              showDropdowns: true,
-              locale:
+          $('.select2').select2(
               {
-                format: 'DD/MM/YYYY'
-              }
-            });
+                  theme: 'bootstrap4',
+              });
+
+          $('.select2-multi').select2(
+              {
+                  multiple: true,
+                  theme: 'bootstrap4',
+              });
+
+          $('.drgpicker').daterangepicker(
+              {
+                  singleDatePicker: true,
+                  timePicker: false,
+                  showDropdowns: true,
+                  locale:
+                      {
+                          format: 'DD/MM/YYYY'
+                      }
+              });
 
       </script>
    </body>
