@@ -13,7 +13,7 @@ if (str_contains($date, "/")) {
 } else {
     $newDate = $date;
 }
-if (GetLesson($newDate, $time, $location, "available", $pdo)) {
+if (!GetLesson($newDate, $time, $location, "available", $pdo)) {
     echo '<div class="alert alert-success center" role="alert">';
     echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Dein Angebot kann dort stattfinden.';
     echo '</div>';

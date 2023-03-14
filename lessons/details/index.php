@@ -126,38 +126,32 @@ require $include_path . "/dependencies/framework.php";
 
          //Get lesson
          if (isset($_GET['id'])) {
-             $lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = :id");
-             $lessons->execute(array('id' => $_GET['id']));
+             $lesson_id = $_GET['id'];
 
-             while($sl = $lessons->fetch()) {
 
-                 $creator_id = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-                 $creator_id->execute(array($sl['assigned_user_id']));
-                 while ($creator_name = $creator_id->fetch()) {
-                     $creator_fomatted = $creator_name['vorname'] . " " . $creator_name['nachname'];
-                 }
 
-                 $lesson_details = array();
-                 $lesson_details['id'] = $sl['id'];
-                 $lesson_details['name'] = $sl['name'];
-                 $lesson_details['description'] = $sl['description'];
-                 $lesson_details['location'] = $sl['location'];
-                 $lesson_details['time'] = $sl['time'];
-                 $lesson_details['creator'] = $creator_fomatted;
-                 $lesson_details['notes'] = $sl['notes'];
+             if (GetLessonByID($lesson_id, "available", $pdo)) {
 
-                 $lesson_details['date-type'] = $sl['date_type'];
-                 if ($lesson_details['date-type'] == "1") {
-                     $lesson_details['date'] = $sl['date_repeating'];
+                 $lesson_details['name'] = GetLessonByID($lesson_id, "name", $pdo);
+                 $lesson_details['description'] = GetLessonByID($lesson_id, "description", $pdo);
+                 $lesson_details['location'] = GetLessonByID($lesson_id, "location", $pdo);
+                 $lesson_details['time'] = GetLessonByID($lesson_id, "time", $pdo);
+                 $lesson_details['notes'] = GetLessonByID($lesson_id, "notes", $pdo);
+
+                 $lesson_details['creator'] = GetInfomationOfUser(GetLessonByID($lesson_id, "userid", $pdo), "name", $pdo);
+
+
+                 $lesson_details['date-raw'] = GetLessonByID($lesson_id, "date", $pdo);
+
+                 if (str_contains($lesson_details['date-raw'], "-")) {
+                     $lesson_details['date'] = date("d-m-Y", strtotime($lesson_details['date-raw']));
                  } else {
-                     $date1 = $sl['date'];
-                     $single_date1 = explode("-", $date1);
-                     $date_fomatted = $single_date1[2] . "/" . $single_date1[1] . "/" . $single_date1[0];
-                     $lesson_details['date'] = $date_fomatted;
+                     $lesson_details['date'] = $lesson_details['date-raw'];
                  }
-
-
+             } else {
+                 redirect("../");
              }
+
          }
 ?>
 
@@ -378,7 +372,7 @@ require $include_path . "/dependencies/framework.php";
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
                                  if(isset($_GET['id'])) {
-                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="../?remove_lesson_with_id=' . $_GET['id'] . '">Angebot Löschen</button>';
+                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot Löschen</button>';
                                      echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
                                  } else {
                                      echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot Löschen</button>';

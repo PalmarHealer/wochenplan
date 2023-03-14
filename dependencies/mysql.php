@@ -57,14 +57,13 @@ function GetLesson($day, $time, $room, $info, $pdo) {
                     return $sl['assigned_user_id'];
                 }
                 if ($info == "available") {
-                    return false;
+                    return true;
                 }
             }
         }
-
     }
     if ($info == "available") {
-        return true;
+        return false;
     } else {
         return "Error loading data";
     }
@@ -87,13 +86,35 @@ function GetLessonByID($id, $info, $pdo) {
         if ($info == "description") {
             return $sl['description'];
         }
+        if ($info == "date") {
+            if ($sl['date_type'] == 1) {
+                return $sl['date_repeating'];
+            } elseif ($sl['date_type'] == 2) {
+                return $sl['date'];
+            } else {
+                return "Error loading date";
+            }
+        }
+        if ($info == "location") {
+            return $sl['location'];
+        }
+        if ($info == "time") {
+            return $sl['time'];
+        }
+        if ($info == "notes") {
+            return $sl['notes'];
+        }
         if ($info == "userid") {
             return $sl['assigned_user_id'];
         }
         if ($info == "available") {
-            return false;
+            return true;
         }
-
+    }
+    if ($info == "available") {
+        return false;
+    } else {
+        return "Error loading data";
     }
 }
 
@@ -108,6 +129,10 @@ function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
     }
     if ($InfomationType == "nachname") {
         return $lessons->fetch()["nachname"];
+    }
+    if ($InfomationType == "name") {
+        $tmp = $lessons->fetch();
+        return $tmp["vorname"] . $tmp["nachname"];
     }
     if ($InfomationType == "email") {
         return $lessons->fetch()["email"];
