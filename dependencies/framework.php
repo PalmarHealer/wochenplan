@@ -14,7 +14,7 @@ function random_string(): string {
     return $str;
 }
 
-function PrintLesson($date, $time, $room, $pdo) {
+function PrintLessonToPlan($date, $time, $room, $pdo) {
     if (!GetLesson($date, $time, $room, "available", $pdo)) {
         return;
     }
