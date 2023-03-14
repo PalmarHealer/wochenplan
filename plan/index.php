@@ -171,7 +171,7 @@ if (!isset($_GET["date"])) {
         </tr>
         <tr class="piece">
             <td class="color-1 no_border">
-                13:00 – 14:30<br/>
+                15:00 – 16:00<br/>
                 <b class="bold">Spätes Band</b>
             </td>
             <td class="color-2"></td>
