@@ -415,10 +415,6 @@ require $include_path . "/dependencies/framework.php";
               var date = $('#day').val();
               var time = $('#time').val();
               var location = $('#location').val();
-
-              console.log("Date: " + date);
-              console.log("Time: " + time);
-              console.log("Location: " + location);
               $.ajax({
                   url: './check.php',
                   type: 'GET',
