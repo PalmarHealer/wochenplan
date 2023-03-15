@@ -155,6 +155,8 @@ Das dürfen Sie gerne selber herrausfinden. :)
 
 Theme und Layout (exept plan): [Tinydash](https://github.com/themewagon/tinydash/)
 
+Loading animation on Plan: [Animaion](https://codepen.io/AbubakerSaeed/pen/JjXERWW)
+
 Idee: [Aktive Schule Leipzig - Freie Oberschule](https://www.aktive-schule-leipzig.de/oberschule/)
 
 Techniche umsetzung und realisierung: [Palmar Healer - Nauren](https://nauren.de)
