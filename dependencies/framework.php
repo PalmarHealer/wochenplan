@@ -60,7 +60,7 @@ function GetHighestValueBelowValueName($value, $array) {
     return $array[$highest_level_below];
 }
 
-#[NoReturn] function redirect($newURL) {
+#[NoReturn] function Redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
     $pdo = null;
@@ -82,7 +82,7 @@ function GetHighestValueBelowValueName($value, $array) {
     setcookie("asl_identifier", "", time() - 3600, "$webroot/login");
     setcookie("asl_securitytoken", "", time() - 3600, "$webroot/login");
 
-    redirect($webroot);
+    Redirect($webroot);
     die();
 }
 
@@ -140,11 +140,11 @@ if (!$page == "external") {
             Logout($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
         }
     } else {
-        redirect($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
+        Redirect($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
     }
 
     if (!$permission_needed > GetInfomationOfUser($_SESSION['asl_userid'], "permission_level", $pdo)) {
-        redirect($webroot . "/dashboard/?message=unauthorized");
+        Redirect($webroot . "/dashboard/?message=unauthorized");
     }
 
 

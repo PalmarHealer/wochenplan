@@ -62,14 +62,13 @@ require $include_path . "/dependencies/framework.php";
                         <tbody>
                         <?php
                         GetAllUsersAndPrintThem($pdo, $permission_level_names);
-
                         ?>
                         </tbody>
                     </table>
-                    <div class="btn-box w-100 mt-4 mb-1 right">
-                        <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary">Benutzer Erstellen</a>
-                    </div>
                 </div>
+            </div>
+            <div class="btn-box w-100 mt-4 mb-1 right">
+                <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary">Benutzer Erstellen</a>
             </div>
 
 

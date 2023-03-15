@@ -40,6 +40,11 @@ body {
     border: none;
 }
 
+.availability {
+    margin-bottom: -55px;
+    margin-top: -10px;
+}
+
 .white_text {
     color: white;
 }

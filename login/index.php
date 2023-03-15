@@ -64,7 +64,7 @@ if(!isset($_SESSION['asl_userid'])) {
 				setcookie("asl_identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
 				setcookie("asl_securitytoken",$securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
 			}
-            redirect($redirect);
+            Redirect($redirect);
 			exit;
 		} else {
 			$errorMessage = "E-Mail oder Passwort war ungültig<br>";

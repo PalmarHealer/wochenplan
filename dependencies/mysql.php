@@ -170,6 +170,17 @@ function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     return $statement->rowCount(); // gibt zurück, wie viele Zeilen aktualisiert wurden, danke ChatGPT
 }
 
+function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_level, $pdo) {
+    $statement = $pdo->prepare("INSERT INTO users (email, passwort, vorname, nachname, permission_level) VALUES (:email, :passwort, :vorname, :nachname, :permission_level)");
+    $result = $statement->execute(array(
+        'email' => $email,
+        'passwort' => $passwort_hash,
+        'vorname' => $vorname,
+        'nachname' => $nachname,
+        'permission_level' => $permission_level
+    ));
+}
+
 function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
 
     $users = $pdo->prepare("SELECT * FROM users");
@@ -178,6 +189,9 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
     while($sl = $users->fetch()) {
 
         $id = $sl["id"];
+        if ($id == $_SESSION['asl_userid']) {
+            continue;
+        }
         $username = $sl["vorname"] . " " . $sl["nachname"];
         $email = $sl["email"];
         //$permission_level = $sl["permission_level"];
@@ -187,33 +201,33 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
         $updated_at = date("d.m.Y", strtotime($sl["updated_at"]));
 
         echo '<tr>
-                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
                 </td>
-                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
                     <div class="avatar avatar-md">
                         <span class="fe fe-user fe-32"></span>
                     </div>
                 </td>
-                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
                     <p class="mb-0 text-muted"><strong>' . $username . '</strong></p>
                 </td>
-                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
                     <p class="mb-0">' . $email . '</p>
                 </td>
-                <td class="pointer" onclick="window.location=\'./edit?id='. $id . '\';">
+                <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
                     <p class="mb-0">' . $permission_level . '</p>
                 </td>
-                <td onclick="window.location=\'./edit?id='. $id . '\';" class="text-muted pointer">' . $updated_at . '
+                <td onclick="window.location=\'./edit/?id='. $id . '\';" class="text-muted pointer">' . $updated_at . '
                 </td>
-                <td onclick="window.location=\'./edit?id='. $id . '\';" class="text-muted pointer">' . $created_at . '
+                <td onclick="window.location=\'./edit/?id='. $id . '\';" class="text-muted pointer">' . $created_at . '
                 </td>
                 <td>
                     <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="text-muted sr-only">Action</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="./edit?id=1">Edit</a>
-                        <a class="dropdown-item" href="./edit?delete=1">Remove</a>
+                        <a class="dropdown-item" href="./edit/?id='. $id . '">Edit</a>
+                        <a class="dropdown-item" href="./edit/?delete='. $id . '">Remove</a>
                     </div>
                 </td>
               </tr>';
@@ -225,6 +239,15 @@ function DeleteLesson($lessonid, $pdo) {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM angebot WHERE id = ?");
         $delete_lesson->execute(array($lessonid));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+    }
+}
+function DeleteUser($userid, $pdo) {
+    try {
+        $delete_lesson = $pdo->prepare("DELETE FROM users WHERE id = ?");
+        $delete_lesson->execute(array($userid));
         return true;
     } catch (PDOException $e) {
         return "Fehler beim Löschen: " . $e->getMessage();
@@ -319,13 +342,8 @@ function GetAllLessons($room_names, $times, $pdo) {
             }
         }
 
+            $creator_fomatted = GetInfomationOfUser($sl['assigned_user_id'], "name", $pdo);
 
-
-        $creator_id = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-        $creator_id->execute(array($sl['assigned_user_id']));
-        while ($creator_name = $creator_id->fetch()) {
-            $creator_fomatted = $creator_name['vorname'] . " " . $creator_name['nachname'];
-        }
         echo '<tr>
 										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">
 										  </td>

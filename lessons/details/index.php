@@ -55,7 +55,7 @@ require $include_path . "/dependencies/framework.php";
                  DeleteLesson($lesson_to_delete, $pdo);
                  GoPageBack("");
              } elseif ($id == GetLessonByID($lesson_to_delete, "userid", $pdo)) {
-                 DeleteLesson($$lesson_to_delete, $pdo);
+                 DeleteLesson($lesson_to_delete, $pdo);
                  GoPageBack("");
              } else {
                  GoPageBack("");
@@ -104,7 +104,7 @@ require $include_path . "/dependencies/framework.php";
                      $new_assigned_user_id
                  );
 
-                 redirect("../");
+                 Redirect("../");
 
                  // Create Lesson
              } elseif (($_POST['save'] ?? 0) == "1") {
@@ -119,7 +119,7 @@ require $include_path . "/dependencies/framework.php";
                      $new_notes,
                      $new_assigned_user_id
                  );
-                 redirect("../");
+                 Redirect("../");
              }
 
          }
@@ -149,7 +149,7 @@ require $include_path . "/dependencies/framework.php";
                      $lesson_details['date'] = $lesson_details['date-raw'];
                  }
              } else {
-                 redirect("../");
+                 Redirect("../");
              }
 
          }
@@ -158,11 +158,28 @@ require $include_path . "/dependencies/framework.php";
          <main role="main" class="main-content">
             <div class="container-fluid">
                <div class="row justify-content-center">
+                   <?php
+                   if (!isset($_GET['id'])) {
+                       echo '<div id="availability" class="center2 availability">';
+                       echo '<div class="alert alert-success center" role="alert">';
+                       echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Dein Angebot kann dort stattfinden.';
+                       echo '</div>';
+                       echo '</div>';
+                   }
+                   ?>
                   <form action="./" method="post">
                      <div class="col-12">
-                        <h2 class="page-title">Angebot erstellen</h2>
-                        <p class="text-muted"> Hier kannst Du ganz einfach Unterrichtsangebote erstellen. Die Unterrichtsangebote können ganz einfach an Deine Bedürfnisse angepasst werden, sodass Du das perfekte Lernangebot anbieten kannst.
-                        <div class="card shadow mb-4">
+                         <h2 class="page-title">
+                             <?php
+                             if(isset($_GET['id'])) {
+                                 echo "Angebot bearbeiten";
+                             } else {
+                                 echo "Angebot erstellen";
+                             }
+                             ?>
+                         </h2>
+                         <p class="text-muted"> Hier kannst Du ganz einfach Unterrichtsangebote erstellen. Die Unterrichtsangebote können ganz einfach an Deine Bedürfnisse angepasst werden, sodass Du das perfekte Lernangebot anbieten kannst.</p>
+                         <div class="card shadow mb-4">
                            <div class="card-header">
                               <strong class="card-title">Angebot details</strong>
                            </div>
@@ -199,9 +216,9 @@ require $include_path . "/dependencies/framework.php";
                                                      $selected_location[$lesson_details['location']] = "selected";
                                                  }
                                                  $count = 0;
-                                                 foreach ($room_names as $i) {
+                                                 foreach ($room_names as $value => $i) {
                                                      $count++;
-                                                     echo '<option value="' . $count . '" ' . ($selected_location[$count] ?? '') . '>' . $i . '</option>';
+                                                     echo '<option value="' . $value . '" ' . ($selected_location[$count] ?? '') . '>' . $i . '</option>';
                                                  }
                                                  ?>
 
@@ -225,9 +242,9 @@ require $include_path . "/dependencies/framework.php";
                                               $selected_time[$lesson_details['time']] = "selected";
                                           }
                                           $count = 0;
-                                          foreach ($times as $i) {
+                                          foreach ($times as $value => $i) {
                                               $count++;
-                                              echo '<option value="' . $count . '" ' . ($selected_time[$count] ?? '') . '>' . $i . '</option>';
+                                              echo '<option value="' . $value . '" ' . ($selected_time[$count] ?? '') . '>' . $i . '</option>';
                                           }
                                           ?>
                                        </select>
@@ -358,16 +375,6 @@ require $include_path . "/dependencies/framework.php";
                                     </div>
                                 </div>
                             </div>
-                             <?php
-                             if (!isset($_GET['id'])) {
-                                 echo '<div id="availability" class="center2">';
-                                    echo '<div class="alert alert-success center" role="alert">';
-                                        echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Dein Angebot kann dort stattfinden.';
-                                    echo '</div>';
-                                 echo '</div>';
-                             }
-                             ?>
-
                            <div class="col-md-12 mb-4">
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
