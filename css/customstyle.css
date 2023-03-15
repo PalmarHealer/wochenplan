@@ -32,6 +32,10 @@ body {
     font-size: 140%;
 }
 
+.iframe {
+    overflow: hidden;
+}
+
 .modt {
     font-size: 200%;
 }

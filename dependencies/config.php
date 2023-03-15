@@ -61,6 +61,16 @@ $weekday_names = array(
     6 => 'Sa',
     7 => 'So'
 );
+//Weekdays in German complete
+$weekday_names_long = array(
+    1 => 'Montag',
+    2 => 'Dienstag',
+    3 => 'Mittwoch',
+    4 => 'Donnerstag',
+    5 => 'Freitag',
+    6 => 'Samstag',
+    7 => 'Sontag'
+);
 
 
 //Permission level names

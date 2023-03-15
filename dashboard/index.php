@@ -70,63 +70,17 @@
                     </div>
                   </div>
                   </div>
-				  
-				  
               </div>
-
-
-
-
-
+                <div class="row my-2">
+                    <?php
+                    PrintDay(date("Y-m-d",time()), "Heute (" . $weekday_names[(new DateTime(date("Y-m-d",time())))->format('N')] . ")");
+                    ?>
+                </div>
 
                 <div class="row my-4">
-
-                    <div class="align-items-center col-md-4 center2">
-                        <div class="card mb-4 shadow">
-                            <div class="card-body my-n3">
-                                <div class="row align-items-center">
-                                    <div class="col-3 text-center">
-                          <span class="circle circle-lg bg-light">
-                            <i class="fe fe-user fe-24 text-primary"></i>
-                          </span>
-                                    </div> <!-- .col -->
-                                    <div class="col">
-                                        <a href="#">
-                                            <h3 class="h5 mt-4 mb-1">Personal</h3>
-                                        </a>
-                                        <p class="text-muted">Schau dir deine Account infomationen nochmal an und ändere gegebenenfalls etwas.</p>
-                                        <br>
-                                    </div> <!-- .col -->
-                                </div> <!-- .row -->
-                            </div> <!-- .card-body -->
-                            <div class="card-footer">
-                                <a href="../profile/settings/" class="d-flex justify-content-between text-muted"><span>Account Settings</span><i class="fe fe-chevron-right"></i></a>
-                            </div> <!-- .card-footer -->
-                        </div> <!-- .card -->
-                    </div> <!-- .col-md-->
-                    <div class="align-items-center col-md-4 center2">
-                        <div class="card mb-4 shadow">
-                            <div class="card-body my-n3">
-                                <div class="row align-items-center">
-                                    <div class="col-3 text-center">
-                          <span class="circle circle-lg bg-light">
-                            <i class="fe fe-calendar fe-24 text-primary"></i>
-                          </span>
-                                    </div> <!-- .col -->
-                                    <div class="col">
-                                        <a href="#">
-                                            <h3 class="h5 mt-4 mb-1">Angebote</h3>
-                                        </a>
-                                        <p class="text-muted">Wechsel zu einer übersicht aller Angebote.</p>
-                                        <br>
-                                    </div> <!-- .col -->
-                                </div> <!-- .row -->
-                            </div> <!-- .card-body -->
-                            <div class="card-footer">
-                                <a href="../lessons" class="d-flex justify-content-between text-muted"><span>Lesson overview</span><i class="fe fe-chevron-right"></i></a>
-                            </div> <!-- .card-footer -->
-                        </div> <!-- .card -->
-                    </div> <!-- .col-md-->
+                    <?php
+                    PrintDays(date("Y-m-d",time()), $weekday_names_long);
+                    ?>
                 </div>
 			  <div class="full">
               <h6 class="mb-3">Quick Lesson overview</h6>

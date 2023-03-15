@@ -60,6 +60,72 @@ function GetHighestValueBelowValueName($value, $array) {
     return $array[$highest_level_below];
 }
 
+function GetDaysOfWeek($date) {
+    $days = array();
+    $monday = date("Y-m-d", strtotime("monday this week", strtotime($date)));
+    $days[] = $monday;
+    $days[] = date("Y-m-d", strtotime("tuesday this week", strtotime($date)));
+    $days[] = date("Y-m-d", strtotime("wednesday this week", strtotime($date)));
+    $days[] = date("Y-m-d", strtotime("thursday this week", strtotime($date)));
+    $days[] = date("Y-m-d", strtotime("friday this week", strtotime($date)));
+    $days[] = date("Y-m-d", strtotime("saturday this week", strtotime($date)));
+    $days[] = date("Y-m-d", strtotime("sunday this week", strtotime($date)));
+    return $days;
+}
+
+
+function PrintDays($date, $weekday_names_long) {
+    foreach (GetDaysOfWeek($date) as $key => $day) {
+        if ($key >= 5) {
+            continue;
+        }
+        echo '<div onclick="window.location=\'../plan/?date='. $day . '\'" class="pointer align-items-center col-md-4 center2">
+                        <div class="card mb-4 shadow">
+                            <div class="card-body my-n3">
+                                <div class="row align-items-center">
+                                    <div class="col-3">
+                                        <img class="right" src="../img/preview.png" alt="Preview" style="width:150%;height:150%;">
+                                    </div>
+                                    <div class="col">
+                                        <a href="#">
+                                            <h1 class="h5 mt-4 mb-1">' . $weekday_names_long[$key + 1] . '</h1>
+                                        </a>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="../plan/?date='. $day . '" class="d-flex justify-content-between text-muted"><span>Angebote ansehen</span><i class="fe fe-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>'; }
+}
+function PrintDay($date, $name) {
+
+        echo '<div onclick="window.location=\'../plan/?date='. $date . '\'" class="pointer align-items-center col-md-4 center2">
+                        <div class="card mb-4 shadow">
+                            <div class="card-body my-n3">
+                                <div class="row align-items-center">
+                                    <div class="col-3 text-center">
+                          <span class="circle circle-lg bg-light">
+                            <i class="fe fe-calendar fe-24 text-primary"></i>
+                          </span>
+                                    </div>
+                                    <div class="col">
+                                        <a href="#">
+                                            <h1 class="h5 mt-4 mb-1">' . $name . '</h1>
+                                        </a>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="../plan" class="d-flex justify-content-between text-muted"><span>Angebote ansehen</span><i class="fe fe-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>';
+}
+
 #[NoReturn] function Redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
