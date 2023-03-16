@@ -30,7 +30,32 @@ $current_day = $_POST['date'];
             </b>
         </th>
         <th class="color-1" colspan="4"></th>
-        <th class="color-3" colspan="5"></th>
+        <th class="color-3 white_text modt text-left" colspan="5">
+            <?php
+
+            $names = array();
+            foreach (GetAllSickNotesRaw($pdo) as &$sickNote) {
+                    $dates = array();
+                    $dates[1] = $sickNote['start_date'];
+                    $dates[2] = $sickNote['end_date'];
+                    if (IsDateBetween($dates, $current_day)) {
+                        if (!in_array($sickNote['vorname'], $names)) {
+                            $names[] = $sickNote['vorname'];
+                        }
+                    }
+
+
+            }
+
+
+            foreach ($names as $key => $name) {
+                echo $name;
+                if ($key != count($names)-1) { // Wenn der Schlüssel nicht der letzte ist, dann füge ein Komma hinzu
+                    echo ", ";
+                }
+            }
+            ?>
+        </th>
     </tr>
     </thead>
     <tbody>

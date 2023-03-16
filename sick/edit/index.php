@@ -3,7 +3,6 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
-
 CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
 <!doctype html>
@@ -16,7 +15,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
       <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 
 
-      <title>Krankmeldungen Verwalten - <?php echo $_SESSION['asl_userid']; echo "-"; echo GetSickNoteByID($_GET['id'], "userid", $pdo); ?></title>
+      <title>Krankmeldungen Verwalten</title>
 
 
       <!-- Simple bar CSS -->

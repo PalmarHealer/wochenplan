@@ -464,6 +464,30 @@ function GetAllSickNotes($pdo) {
 
 }
 
+function GetAllSickNotesRaw($pdo) {
+    $lessons = $pdo->prepare("SELECT * FROM sick");
+    $lessons->execute();
+    $SickNotes = array();
+    $counter = 1;
+    while($sl = $lessons->fetch()) {
+
+        if (!isset($sl)) {
+            continue;
+        }
+        $SickNotes[$counter] = array();
+        $SickNotes[$counter]['userid'] = ($sl['userid'] ?? '');
+        $start_date = ($sl['start'] ?? '');
+        $end_date = ($sl['end'] ?? '');
+        $SickNotes[$counter]['start_date'] = date("d.m.Y", strtotime($start_date));
+        $SickNotes[$counter]['end_date'] = date("d.m.Y", strtotime($end_date));
+        $SickNotes[$counter]['vorname'] = GetInfomationOfUser($sl['userid'], "vorname", $pdo);
+        $SickNotes[$counter]['username'] = GetInfomationOfUser($sl['userid'], "name", $pdo);
+        $counter ++;
+    }
+    return $SickNotes;
+
+
+}
 function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect) {
 
     $get_usernames = "SELECT * FROM users ORDER BY permission_level desc";

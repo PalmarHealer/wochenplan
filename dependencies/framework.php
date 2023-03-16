@@ -18,11 +18,27 @@ function PrintLessonToPlan($date, $time, $room, $pdo) {
     if (!GetLesson($date, $time, $room, "available", $pdo)) {
         return;
     }
-    echo "<p><b>" . GetLesson($date, $time, $room, "name", $pdo) . "</b></p>";
+    $sick = false;
+    $userid = GetLesson($date, $time, $room, "userid", $pdo);
+    foreach (GetAllSickNotesRaw($pdo) as &$sickNote) {
+
+        if (intval($sickNote['userid']) == $userid) {
+            $dates = array();
+            $dates[1] = $sickNote['start_date'];
+            $dates[2] = $sickNote['end_date'];
+            if (IsDateBetween($dates, $date)) {
+                $sick = true;
+            }
+
+        }
+
+    }
+
+    echo "<p><b>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "name", $pdo); if ($sick) { echo "</s>"; } echo "</b></p>";
     echo "<br>";
-    echo "<p class='author'>(" . GetInfomationOfUser(GetLesson($date, $time, $room, "userid", $pdo), "vorname", $pdo) . ")</p>";
-    echo "<br><br>";
-    echo "<p class='description'>" . GetLesson($date, $time, $room, "description", $pdo) . "</p>";
+    echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . GetInfomationOfUser($userid, "vorname", $pdo) . ")"; if ($sick) { echo "</s>"; } echo "</p>";
+
+    echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "description", $pdo); if ($sick) { echo "</s>"; } echo "</p>";
 }
 
 function GetCurrentUrl(): string
@@ -136,12 +152,16 @@ function IsDateBetween($dates, $date_to_check) {
     $end_timestamp = strtotime($dates[2]);
     $date_to_check_timestamp = strtotime($date_to_check);
 
-    if ($date_to_check_timestamp >= $start_timestamp && $date_to_check_timestamp <= $end_timestamp) {
+    if ($date_to_check_timestamp >= $start_timestamp && $date_to_check_timestamp < $end_timestamp) {
+        return true;
+    } elseif ($date_to_check_timestamp == $start_timestamp || $date_to_check_timestamp == $end_timestamp) {
         return true;
     } else {
         return false;
     }
 }
+
+
 
 
 #[NoReturn] function Redirect($newURL) {

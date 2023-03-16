@@ -49,7 +49,6 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                  DeleteUser($user_to_delete, $pdo);
                  Redirect("../");
              } else {
-                 Alert("Test");
                  Redirect("../");
              }
          }
