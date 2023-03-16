@@ -1,8 +1,8 @@
 <?php
 $include_path = __DIR__ . "../../../";
-require $include_path . "/dependencies/config.php";
-require $include_path . "/dependencies/mysql.php";
-require $include_path . "/dependencies/framework.php";
+require_once $include_path . "/dependencies/config.php";
+require_once  $include_path . "/dependencies/mysql.php";
+require_once  $include_path . "/dependencies/framework.php";
 
 $date = ($_GET['date'] ?? '');
 $location = ($_GET['location'] ?? '');

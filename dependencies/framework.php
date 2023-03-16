@@ -131,6 +131,19 @@ function CheckPermission($required, $present, $redirect): void {
     }
 }
 
+function IsDateBetween($dates, $date_to_check) {
+    $start_timestamp = strtotime($dates[1]);
+    $end_timestamp = strtotime($dates[2]);
+    $date_to_check_timestamp = strtotime($date_to_check);
+
+    if ($date_to_check_timestamp >= $start_timestamp && $date_to_check_timestamp <= $end_timestamp) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 #[NoReturn] function Redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
