@@ -140,7 +140,7 @@ Bei **wochenplan** wird die Datenbank ausgewählt. **WICHTIG** wenn hier etwas g
 
 Das ist um die pdo verbindung zu schließen falls es vergessen wird. **NUR** in testumgebungen auf **true** setzten
 
-####$weekday_names
+#### $weekday_names
 
 Sind die Abkürzungen für die Wochentage und werden auf dem [Plan](plan/index.php) angezeigt.
 
