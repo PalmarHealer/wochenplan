@@ -3,6 +3,8 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+
+CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 ?>
 <!doctype html>
 <html lang="de">
@@ -44,13 +46,7 @@ require $include_path . "/dependencies/framework.php";
          $keep_pdo = true;
          require $include_path. "/include/nav.php";
 
-         if($permission_level < $create_lessons) {
-             GoPageBack("?message=unauthorized");
-             die();
-         }
-         if($permission_level < $create_lessons_for_others AND ($_SESSION['asl_userid'] ?? '') !== GetLessonByID($_GET["id"], "userid", $pdo)) {
-             GoPageBack("?message=unauthorized");
-         }
+
          if (isset($_GET["remove_lesson_with_id"])) {
              $lesson_to_delete = $_GET["remove_lesson_with_id"];
              if ($permission_level > $create_lessons_for_others) {
@@ -130,7 +126,9 @@ require $include_path . "/dependencies/framework.php";
          if (isset($_GET['id'])) {
              $lesson_id = $_GET['id'];
 
-
+             if($permission_level < $create_lessons_for_others AND ($_SESSION['asl_userid'] ?? '') != GetLessonByID($lesson_id, "userid", $pdo)) {
+                 Redirect("../?message=unauthorized");
+             }
 
              if (GetLessonByID($lesson_id, "available", $pdo)) {
 
@@ -140,7 +138,8 @@ require $include_path . "/dependencies/framework.php";
                  $lesson_details['time'] = GetLessonByID($lesson_id, "time", $pdo);
                  $lesson_details['notes'] = GetLessonByID($lesson_id, "notes", $pdo);
 
-                 $lesson_details['creator'] = GetInfomationOfUser(GetLessonByID($lesson_id, "userid", $pdo), "name", $pdo);
+                 $lesson_details['userid'] = GetLessonByID($lesson_id, "userid", $pdo);
+                 $lesson_details['creator'] = GetInfomationOfUser($lesson_details['userid'], "name", $pdo);
 
 
                  $lesson_details['date-raw'] = GetLessonByID($lesson_id, "date", $pdo);
@@ -273,6 +272,7 @@ require $include_path . "/dependencies/framework.php";
 											    $date_type[$lesson_details['date-type']] = "active";
 										    }  else {
                                                 $date_type[1] = "active";
+                                                $lesson_details['date-type'] = 1;
                                             }
 										?>
 										
@@ -293,6 +293,9 @@ require $include_path . "/dependencies/framework.php";
                                                    <select id="day" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?> name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
                                                       <?php if($lesson_details['date-type'] == "1") {
                                                          $selected_date = array();
+                                                         if (!isset($lesson_details['date'])) {
+                                                             $lesson_details['date'] = 1;
+                                                         }
                                                          $selected_date[$lesson_details['date']] = "selected";
                                                          }?>
                                                       <option value="1" <?php if(isset($selected_date[1])) { echo $selected_date[1]; }?>>Montag</option>
@@ -338,25 +341,12 @@ require $include_path . "/dependencies/framework.php";
                                        <select name="creator" class="form-control select2" <?php
                                           if($permission_level < $create_lessons_for_others) {
                                           	echo "disabled";
-                                          }?>>
-                                          <option value="<?php echo $id; ?>" selected><?php
-                                             echo $vorname;
-                                             echo " ";
-                                             echo $nachname;
-                                             ?> (Du selbst)</option>
-                                           <?php
+                                          }
+                                          echo ">";
 
                                            if ($permission_level >= $create_lessons_for_others) {
-                                               $get_usernames = "SELECT * FROM users ORDER BY permission_level";
-                                               foreach ($pdo->query($get_usernames) as $other_users) {
-                                                   if ($id != $other_users['id']) {
-                                                       echo "<option value='";
-                                                       echo $other_users['id'];
-                                                       echo "'>";
-                                                       echo $other_users['vorname'] . " " . $other_users['nachname'];
-                                                       echo "</option>";
-                                                   }
-                                               }
+                                                   GetAllUsersAndPrintForSelect($pdo, $id,  ($lesson_details['userid'] ?? $id));
+
                                                $pdo = null;
                                            }
                                            ?>
@@ -383,11 +373,11 @@ require $include_path . "/dependencies/framework.php";
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
                                  if(isset($_GET['id'])) {
-                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot Löschen</button>';
                                      echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot Löschen</button>';
                                  } else {
-                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot Löschen</button>';
                                      echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
+                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot Löschen</button>';
                                  }
                                  ?>
                            </div>

@@ -99,7 +99,7 @@
                         </thead>
                         <tbody>
 							<?php
-								GetAllLessonsFromUserAndPrintThem($id, "4", $room_names, $times, $pdo);
+								GetAllLessonsFromUserAndPrintThem($id, "4", $room_names, $times, $pdo, $webroot);
 							?>
                         </tbody>
               </table>

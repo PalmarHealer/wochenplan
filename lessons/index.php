@@ -1,8 +1,10 @@
 <?php
-    $include_path = __DIR__ . "/..";
+$include_path = __DIR__ . "/..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+
+CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
 <!doctype html>
 <html lang="de">
@@ -46,7 +48,7 @@ require $include_path . "/dependencies/framework.php";
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Angebote</h2>
-              <p class="card-text">Kleine Seiten Beschreibung</p>
+              <!--<p class="card-text">Kleine Seiten Beschreibung</p> -->
               <div class="row my-4">
                 <!-- Small table -->
                 <div class="col-md-12">
@@ -69,9 +71,6 @@ require $include_path . "/dependencies/framework.php";
                         </thead>
                         <tbody>
 							<?php
-                                if($permission_level < $create_lessons_for_others) {
-                                    echo "disabled";
-                                }
                                 GetAllLessons($room_names, $times, $pdo);
 								$pdo = null;
 							?>

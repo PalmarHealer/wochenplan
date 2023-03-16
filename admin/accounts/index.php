@@ -1,9 +1,10 @@
 <?php
-//Please set after __DIR__ the right relation to the files
 $include_path = __DIR__ . "../../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+
+CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
 <!doctype html>
 <html lang="de">
@@ -41,37 +42,48 @@ require $include_path . "/dependencies/framework.php";
     ?>
     <main role="main" class="main-content">
         <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h2 class="mb-2 page-title">Accounts</h2>
+                    <!--<p class="card-text">Kleine Seiten Beschreibung</p> -->
+                    <div class="row my-4">
+                        <!-- Small table -->
+                        <div class="col-md-12">
 
-            <div class="card shadow">
-                <div class="card-body">
-                    <!-- table -->
-                    <table class="table table-borderless table-hover" id="dataTable">
-                        <thead>
-                        <tr>
-                            <td>
-                            </td>
-                            <th></th>
-                            <th>Benutzername</th>
-                            <th>E-Mail</th>
-                            <th>Berechtigung</th>
-                            <th>Zuletzt geändert am</th>
-                            <th>Erstellt am</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                        GetAllUsersAndPrintThem($pdo, $permission_level_names);
-                        ?>
-                        </tbody>
-                    </table>
+
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <!-- table -->
+                                    <table class="table table-borderless table-hover" id="dataTable">
+                                        <thead>
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <th></th>
+                                            <th>Benutzername</th>
+                                            <th>E-Mail</th>
+                                            <th>Berechtigung</th>
+                                            <th>Zuletzt geändert am</th>
+                                            <th>Erstellt am</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        GetAllUsersAndPrintThem($pdo, $permission_level_names);
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="btn-box w-100 mt-4 mb-1 right">
+                                <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary">Benutzer Erstellen</a>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="btn-box w-100 mt-4 mb-1 right">
-                <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary">Benutzer Erstellen</a>
-            </div>
-
-
 
         </div>
         <?php include $include_path . "/include/footer.php"; ?>

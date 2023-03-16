@@ -73,7 +73,6 @@ function GetDaysOfWeek($date) {
     return $days;
 }
 
-
 function PrintDays($date, $weekday_names_long) {
     foreach (GetDaysOfWeek($date) as $key => $day) {
         if ($key >= 5) {
@@ -124,6 +123,12 @@ function PrintDay($date, $name) {
                             </div>
                         </div>
                     </div>';
+}
+
+function CheckPermission($required, $present, $redirect): void {
+    if($present < $required) {
+        Redirect($redirect);
+    }
 }
 
 #[NoReturn] function Redirect($newURL) {

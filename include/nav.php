@@ -71,7 +71,10 @@ if (!$keep_pdo) {
                     <span class="ml-3 item-text">Dashboard</span>
                 </a>
             </li>
-        </ul>
+        </ul><?php
+
+if ($permission_level >= $create_lessons) {
+    echo '
         <p class="text-muted nav-heading mt-4 mb-1">
             <span>Apps</span>
         </p>
@@ -84,28 +87,26 @@ if (!$keep_pdo) {
                     <span class="ml-3 item-text">Angebote</span>
                 </a>
                 <ul class="collapse list-unstyled pl-4 w-100" id="lessons">
-                    <a class="nav-link pl-3" href="<?php echo $relative_path; ?>/lessons"><span class="ml-1">Overview</span></a>
-                    <?php
-
-                    if ($permission_level >= $create_lessons) {
-                        echo '
+                    <a class="nav-link pl-3" href="'. $relative_path . '/lessons"><span class="ml-1">Overview</span></a>
+                    
 							<a class="nav-link pl-3" href="' . $relative_path . '/lessons/details"><span class="ml-1">Angebot erstellen</span></a>
-						';
-                    }
-                    ?>
-                </ul>
-                <?php
+						
+                </ul>';
+        }
 
                 if ($permission_level >= $create_lessons) {
                     echo '
-			<ul class="navbar-nav flex-fill w-100 mb-2">
-				<li class="nav-item w-100">
-					<a class="nav-link" href="'. $relative_path . '/lessons/sick">
-						<i class="fe fe-user-x fe-16"></i>
-						<span class="ml-3 item-text">Krank</span>
-					</a>
-				</li>
-			</ul>';
+			              <ul class="navbar-nav flex-fill w-100 mb-2">
+				             <li class="nav-item w-100">
+					         <a href="#sick" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                    <i class="fe fe-user fe-16"></i>
+                    <span class="ml-3 item-text">Krank</span>
+                </a>
+					         <ul class="collapse list-unstyled pl-4 w-100" id="sick">
+					             <a class="nav-link pl-3" href="'. $relative_path . '/sick/"><span class="ml-1">Overview</span></a>
+                                 <a class="nav-link pl-3" href="' . $relative_path . '/sick/edit/"><span class="ml-1">Krankmeldung erstellen</span></a>                   
+                             </ul>
+                          </ul>';
                 }?>
             </li>
 

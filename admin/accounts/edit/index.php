@@ -3,6 +3,8 @@ $include_path = __DIR__ . "/../../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+
+CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
 <!doctype html>
 <html lang="de">
@@ -14,7 +16,7 @@ require $include_path . "/dependencies/framework.php";
       <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 
 
-      <title>Angebot Verwalten</title>
+      <title>Benutzer bearbeiten</title>
 
 
       <!-- Simple bar CSS -->
@@ -40,10 +42,6 @@ require $include_path . "/dependencies/framework.php";
          $keep_pdo = true;
          require $include_path. "/include/nav.php";
 
-         if($permission_level < $manage_other_users) {
-             GoPageBack("?message=unauthorized");
-             die();
-         }
 
          if (isset($_GET["delete"])) {
              $user_to_delete = $_GET["delete"];

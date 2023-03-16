@@ -34,10 +34,10 @@ function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_dat
     try {
         // Prepare and execute the SQL query
         if ($type == "update") {
-            $stmt = $pdo->prepare("UPDATE sick SET start_date = ?, end_date = ? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE sick SET start = ?, end = ?, userid = ? WHERE id = ?");
             $stmt->execute([$start_date, $end_date, $userid, $id]);
         } else {
-            $stmt = $pdo->prepare("INSERT INTO sick (userid, start_date, end_date) VALUES (?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO sick (userid, start, end) VALUES (?, ?, ?)");
             $stmt->execute([$userid, $start_date, $end_date]);
         }
         return true;
@@ -136,6 +136,7 @@ function GetLessonByID($id, $info, $pdo) {
         return "Error loading data";
     }
 }
+
 function GetSickNoteByID($id, $info, $pdo) {
 
 
@@ -156,9 +157,15 @@ function GetSickNoteByID($id, $info, $pdo) {
         if ($info == "end") {
             return $sl['end'];
         }
+        if ($info == "available") {
+            return true;
+        }
     }
+    if ($info == "available") {
+        return false;
+    } else {
         return "Error loading data";
-
+    }
 }
 
 function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
@@ -305,7 +312,7 @@ function DeleteSickNote($sickid, $pdo) {
     }
 }
 
-function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo) {
+function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo, $webroot) {
 
     $lessons = $pdo->prepare("SELECT * FROM angebot WHERE assigned_user_id = ? ORDER BY date ASC");
     $lessons->execute(array($userid));
@@ -345,14 +352,14 @@ function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times,
         }
 
         echo '<tr>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">
 										  </td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $sl['name'] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $sl['description'] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $date_fomatted . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $sl['name'] . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $sl['description'] . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $date_fomatted . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
 										
 										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<span class="text-muted sr-only">Action</span>
@@ -396,15 +403,15 @@ function GetAllLessons($room_names, $times, $pdo) {
             $creator_fomatted = GetInfomationOfUser($sl['assigned_user_id'], "name", $pdo);
 
         echo '<tr>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">
 										  </td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $sl['name'] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $sl['description'] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $date_fomatted . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $creator_fomatted . '</td>
-										  <td class="pointer" onClick="window.location=\'./../lessons/details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $sl['name'] . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $sl['description'] . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $date_fomatted . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $creator_fomatted . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
 										
 										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<span class="text-muted sr-only">Action</span>
@@ -418,5 +425,60 @@ function GetAllLessons($room_names, $times, $pdo) {
 
     }
 
+
+}
+
+function GetAllSickNotes($pdo) {
+    $lessons = $pdo->prepare("SELECT * FROM sick");
+    $lessons->execute();
+    while($sl = $lessons->fetch()) {
+
+
+        $new_assigned_user_id = ($sl['userid'] ?? '');
+        $start_date = ($sl['start'] ?? '');
+        $end_date = ($sl['end'] ?? '');
+        $start_date2 = date("d.m.Y", strtotime($start_date));
+        $end_date2 = date("d.m.Y", strtotime($end_date));
+
+        $username = GetInfomationOfUser($new_assigned_user_id, "name", $pdo);
+
+        echo '<tr>
+										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">
+										  </td>
+										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $username . '</td>
+										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $start_date2 . '</td>
+										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $end_date2 . '</td>
+										
+										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												<span class="text-muted sr-only">Action</span>
+											  </button>
+											  <div class="dropdown-menu dropdown-menu-right">
+												<a class="dropdown-item" href="./edit/?id=' . $sl['id'] . '">Edit</a>
+												<a class="dropdown-item" href="./edit/?remove=' . $sl['id'] . '">Remove</a>
+											  </div>
+										  </td>
+										  </tr>';
+
+    }
+
+
+}
+
+function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect) {
+
+    $get_usernames = "SELECT * FROM users ORDER BY permission_level desc";
+    foreach ($pdo->query($get_usernames) as $other_users) {
+
+        if ($other_users['id'] == $IdToSelect) {
+            echo "<option selected value='";
+        } else {
+            echo "<option value='";
+        }
+        echo $other_users['id'] . "'>" . $other_users['vorname'] . " " . $other_users['nachname'];
+        if ($other_users['id'] == $OwnId) {
+            echo " (Du Selbst)";
+        }
+        echo "</option>";
+    }
 
 }
