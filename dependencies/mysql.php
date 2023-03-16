@@ -1,6 +1,6 @@
 <?php
 
-function update_or_insert_lesson($type, $pdo, $id, $date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_notes, $new_assigned_user_id) {
+function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_notes, $new_assigned_user_id) {
 
     try {
         // Determine the column names based on the $date_type value
@@ -20,6 +20,25 @@ function update_or_insert_lesson($type, $pdo, $id, $date_type, $new_date, $new_n
         } else {
             $stmt = $pdo->prepare("INSERT INTO angebot (date_type, $set_date_column, $empty_date_column, name, description, location, time, notes, assigned_user_id) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_notes, $new_assigned_user_id]);
+        }
+        return true;
+    } catch(PDOException $e) {
+        // Handle errors here
+        echo "Error: " . $e->getMessage();
+        return false;
+    }
+}
+
+function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_date) {
+
+    try {
+        // Prepare and execute the SQL query
+        if ($type == "update") {
+            $stmt = $pdo->prepare("UPDATE sick SET start_date = ?, end_date = ? WHERE id = ?");
+            $stmt->execute([$start_date, $end_date, $userid, $id]);
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO sick (userid, start_date, end_date) VALUES (?, ?, ?)");
+            $stmt->execute([$userid, $start_date, $end_date]);
         }
         return true;
     } catch(PDOException $e) {
@@ -117,6 +136,30 @@ function GetLessonByID($id, $info, $pdo) {
         return "Error loading data";
     }
 }
+function GetSickNoteByID($id, $info, $pdo) {
+
+
+    $sick = $pdo->prepare("SELECT * FROM sick WHERE id = ?");
+    $sick->execute(array($id));
+
+    while($sl = $sick->fetch()) {
+
+        if (!isset($sl)) {
+            continue;
+        }
+        if ($info == "userid") {
+            return $sl['userid'];
+        }
+        if ($info == "start") {
+            return $sl['start'];
+        }
+        if ($info == "end") {
+            return $sl['end'];
+        }
+    }
+        return "Error loading data";
+
+}
 
 function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
     if (!is_numeric($UserID)) {
@@ -132,7 +175,7 @@ function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
     }
     if ($InfomationType == "name") {
         $tmp = $lessons->fetch();
-        return $tmp["vorname"] . $tmp["nachname"];
+        return $tmp["vorname"] . " " . $tmp["nachname"];
     }
     if ($InfomationType == "email") {
         return $lessons->fetch()["email"];
@@ -234,7 +277,6 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
     }
 }
 
-
 function DeleteLesson($lessonid, $pdo) {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM angebot WHERE id = ?");
@@ -248,6 +290,15 @@ function DeleteUser($userid, $pdo) {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM users WHERE id = ?");
         $delete_lesson->execute(array($userid));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+    }
+}
+function DeleteSickNote($sickid, $pdo) {
+    try {
+        $delete_lesson = $pdo->prepare("DELETE FROM sick WHERE id = ?");
+        $delete_lesson->execute(array($sickid));
         return true;
     } catch (PDOException $e) {
         return "Fehler beim Löschen: " . $e->getMessage();

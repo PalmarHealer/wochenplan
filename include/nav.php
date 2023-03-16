@@ -100,7 +100,7 @@ if (!$keep_pdo) {
                     echo '
 			<ul class="navbar-nav flex-fill w-100 mb-2">
 				<li class="nav-item w-100">
-					<a class="nav-link" href="'. $relative_path . '/lessons/sig">
+					<a class="nav-link" href="'. $relative_path . '/lessons/sick">
 						<i class="fe fe-user-x fe-16"></i>
 						<span class="ml-3 item-text">Krank</span>
 					</a>

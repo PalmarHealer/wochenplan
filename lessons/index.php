@@ -69,6 +69,9 @@ require $include_path . "/dependencies/framework.php";
                         </thead>
                         <tbody>
 							<?php
+                                if($permission_level < $create_lessons_for_others) {
+                                    echo "disabled";
+                                }
                                 GetAllLessons($room_names, $times, $pdo);
 								$pdo = null;
 							?>

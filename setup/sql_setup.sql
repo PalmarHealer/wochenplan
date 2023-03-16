@@ -67,6 +67,21 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 COMMIT;
 
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `sick`
+--
+
+CREATE TABLE IF NOT EXISTS `sick` (
+                                      `id` int(11) NOT NULL AUTO_INCREMENT,
+                                      `userid` varchar(255) NOT NULL,
+                                      `start` date NOT NULL DEFAULT current_timestamp(),
+                                      `end` date NOT NULL,
+                                      PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

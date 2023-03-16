@@ -150,7 +150,7 @@ require $include_path . "/dependencies/framework.php";
                                          <div class="form-group mb-3">
                                              <label for="helping">E-Mail</label>
                                              <?php if(isset($mailalredyused)) { echo '<p class="text-muted">'; echo $mailalredyused; echo '</p>'; }?>
-                                             <input type="email" name="email" type="text" id="helping" class="form-control" placeholder="E-Mail" maxlength="30" value="<?php if(isset($lesson_details['email'])) { echo $lesson_details['email']; }?>">
+                                             <input type="email" name="email" type="text" id="helping" class="form-control" placeholder="E-Mail" maxlength="40" value="<?php if(isset($lesson_details['email'])) { echo $lesson_details['email']; }?>">
                                          </div>
                                      </div>
                                  </div>
@@ -200,14 +200,14 @@ require $include_path . "/dependencies/framework.php";
                             </div>
 
                            <div class="col-md-12 mb-4">
-                              <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
+                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
                                  if(isset($_GET['id'])) {
-                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?delete=' . $_GET['id'] . '">Benutzer Löschen</button>';
                                      echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" formaction="./?update=' . $_GET['id'] . '" name="update" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?delete=' . $_GET['id'] . '">Benutzer Löschen</button>';
                                  } else {
-                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Benutzer Löschen</button>';
                                      echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Benutzer Erstellen</button>';
+                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Benutzer Löschen</button>';
                                  }
                                  ?>
                            </div>

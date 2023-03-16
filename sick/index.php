@@ -1,5 +1,5 @@
 <?php
-$include_path = __DIR__ . "/../..";
+$include_path = __DIR__ . "/..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
@@ -14,7 +14,7 @@ require $include_path . "/dependencies/framework.php";
       <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 
 
-      <title>Angebot Verwalten</title>
+      <title>Krankmeldungen Verwalten</title>
 
 
       <!-- Simple bar CSS -->
@@ -171,7 +171,7 @@ require $include_path . "/dependencies/framework.php";
                        echo '</div>';
                    }
                    ?>
-                  <form action="./" method="post">
+                  <form action="" method="post">
                      <div class="col-12">
                          <h2 class="page-title">
                              <?php
