@@ -140,7 +140,7 @@ Bei **wochenplan** wird die Datenbank ausgewählt. **WICHTIG** wenn hier etwas g
 
 Das ist um die pdo verbindung zu schließen falls es vergessen wird. **NUR** in testumgebungen auf **true** setzten
 
-####$weekday_names
+#### $weekday_names
 
 Sind die Abkürzungen für die Wochentage und werden auf dem [Plan](plan/index.php) angezeigt.
 
@@ -154,6 +154,8 @@ Das dürfen Sie gerne selber herrausfinden. :)
 ## Credits
 
 Theme und Layout (exept plan): [Tinydash](https://github.com/themewagon/tinydash/)
+
+Loading animation on Plan: [Animaion](https://codepen.io/AbubakerSaeed/pen/JjXERWW)
 
 Idee: [Aktive Schule Leipzig - Freie Oberschule](https://www.aktive-schule-leipzig.de/oberschule/)
 
