@@ -161,9 +161,6 @@ function IsDateBetween($dates, $date_to_check) {
     }
 }
 
-
-
-
 #[NoReturn] function Redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
