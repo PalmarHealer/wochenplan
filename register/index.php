@@ -14,11 +14,28 @@ $showRegisterFormular = false;
 $showEmailValidate = true;
 $error = false;
 
+if (isset($_GET['email_send'])) {
+    $showEmailValidate = false;
+    $showEmailSend = true;
+}
+
+
+
 if (isset($_GET['token'])) {
-    //$token = $_GET['token'];
+    $token = $_GET['token'];
     $showRegisterFormular = true;
     $showEmailValidate = false;
-    $email = "myoserhd111@gmail.com";//GetEmailFromToken($token, $pdo);
+    $email = GetEmailFromToken($token, $pdo);
+    if ($email == 'false') {
+        $_GET['token'] = null;
+        Redirect("./?error=invalid_token");
+    }
+
+    if (!IsDateOlderThat10Minutes(GetDateFromToken($token, $pdo))) {
+        DeleteToken($token, $pdo);
+        $_GET['token'] = null;
+        Redirect("./?error=token_expired");
+    }
 
 } else {
     if (isset($_GET['email-send']) AND $_GET['email-send'] == "true") {
@@ -30,6 +47,7 @@ if (isset($_GET['token'])) {
 
 if(isset($_GET['email'])) {
     $email = $_GET['email'];
+    $_GET['email'] = null;
 
     $statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $result = $statement->execute(array('email' => $email));
@@ -46,13 +64,20 @@ if(isset($_GET['email'])) {
         $error = true;
     }
     if(!$error) {
-        SendM
+        $token = CreateToken($email, $pdo);
+        $recipient = array('mail' => $email);
+        try {
+            SendVerificationMail($smtp, $sender, $recipient, $domain . "/register/?token=" . $token);
+        } catch (\PHPMailer\PHPMailer\Exception $e) {
+        }
     }
-    }
+    Redirect("./?message=email_send");
+}
 
 
 
- 
+
+
 if(isset($_GET['register'])) {
     if (!isset($_GET['token'])) die();
     $token = $_GET['token'];

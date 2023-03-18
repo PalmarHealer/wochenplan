@@ -171,8 +171,17 @@ function IsMailAllowed($mail, $allowed_domains) {
     }
 }
 
+function IsDateOlderThat10Minutes($date) {
+    $date2 = strtotime($date);
+    $now = time();
+    $diff = $now - $date2;
+    $max_age = 10 * 60;
+    return $diff <= $max_age;
+}
+
+
 function GenerateRandomString($length = 128) {
-    $characters = '()[]{},.!?&%§#+*-_:<>/\|0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charLength = strlen($characters);
     $randomString = '';
 

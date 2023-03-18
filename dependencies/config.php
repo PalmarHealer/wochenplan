@@ -52,13 +52,6 @@ $keep_dpo = false;
 
 
 
-//here you can list all allowed domains that emails allowed to register
-$allowed_domains = array(
-    "test.com",
-    "nauren.de"
-);
-
-
 //Weekdays in German
 $weekday_names = array(
     1 => 'Mo',

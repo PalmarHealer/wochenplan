@@ -293,6 +293,16 @@ function DeleteLesson($lessonid, $pdo) {
         return "Fehler beim Löschen: " . $e->getMessage();
     }
 }
+
+function DeleteToken($token, $pdo) {
+    try {
+        $delete_lesson = $pdo->prepare("DELETE FROM registertokens WHERE token = ?");
+        $delete_lesson->execute(array($token));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+    }
+}
 function DeleteUser($userid, $pdo) {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM users WHERE id = ?");
@@ -512,7 +522,20 @@ function GetEmailFromToken($token, $pdo) {
     $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
     $tokens->execute(array($token));
 
-    return $sl['email'] ?? false;
+
+    while($sl = $tokens->fetch()) {
+
+        return $sl['email'] ?? 'false';
+    }
+
+}
+function GetDateFromToken($token, $pdo) {
+
+    $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
+    $tokens->execute(array($token));
+    while($sl = $tokens->fetch()) {
+        return $sl['created'] ?? 'false';
+    }
 }
 
 function CreateToken($email, $pdo) {
