@@ -38,19 +38,17 @@ $current_day = $_POST['date'];
                     $dates = array();
                     $dates[1] = $sickNote['start_date'];
                     $dates[2] = $sickNote['end_date'];
+
                     if (IsDateBetween($dates, $current_day)) {
                         if (!in_array($sickNote['vorname'], $names)) {
                             $names[] = $sickNote['vorname'];
                         }
                     }
 
-
             }
-
-
             foreach ($names as $key => $name) {
                 echo $name;
-                if ($key != count($names)-1) { // Wenn der Schlüssel nicht der letzte ist, dann füge ein Komma hinzu
+                if ($key != count($names)-1) {
                     echo ", ";
                 }
             }

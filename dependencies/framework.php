@@ -161,6 +161,28 @@ function IsDateBetween($dates, $date_to_check) {
     }
 }
 
+function IsMailAllowed($mail, $allowed_domains) {
+    $domain = substr(strrchr($mail, "@"), 1);
+
+    if (in_array($domain, $allowed_domains)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function GenerateRandomString($length = 128) {
+    $characters = '()[]{},.!?&%§#+*-_:<>/\|0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charLength = strlen($characters);
+    $randomString = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charLength - 1)];
+    }
+
+    return $randomString;
+}
+
 #[NoReturn] function Redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";

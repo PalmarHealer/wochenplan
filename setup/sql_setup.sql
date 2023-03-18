@@ -62,6 +62,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `nachname` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `passwortcode` VARCHAR(255) NULL,
+  `passwortcode_time` TIMESTAMP NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -73,12 +75,25 @@ COMMIT;
 -- Tabellenstruktur für Tabelle `sick`
 --
 
-CREATE TABLE IF NOT EXISTS `sick` (
-                                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                                      `userid` varchar(255) NOT NULL,
-                                      `start` date NOT NULL DEFAULT current_timestamp(),
-                                      `end` date NOT NULL,
-                                      PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS `registertokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+COMMIT;
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `registertokens`
+--
+
+CREATE TABLE IF NOT EXISTS `registertokens` (
+                                                `id` int(11) DEFAULT NULL,
+                                                `token` varchar(255) NOT NULL,
+                                                `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 COMMIT;
 

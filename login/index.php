@@ -95,7 +95,14 @@ $pdo = null;
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../favicon.ico">
+
+
+
     <title>Login</title>
+
+
+
+
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
     <!-- Fonts CSS -->
@@ -136,29 +143,29 @@ $pdo = null;
           </div>
           <div class="form-group">
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required="" maxlength="250" name="password">
+            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password or one time login" required="" maxlength="250" name="password">
           </div>
           <div class="checkbox mb-3">
             <label>
               <input type="checkbox" name="angemeldet_bleiben" value="1" value="remember-me"> Stay logged in (dafür werden Cookies genutzt)</label>
           </div>
-		  <h2 align="center" class="h6 mb-3">Hast du noch kein Account? dann <a href="../register">Erstelle dich hier ein.</a></h2>
+            <h2 align="center" class="h6 mb-3">Hast du noch kein Account? dann <a href="<?php echo $relative_path; ?>/register">Frag hier einen an.</a></h2>
           <button class="btn btn-lg btn-primary btn-block" type="submit">Let me in</button>
-          <p class="mt-5 mb-3 text-muted">© 2020</p>
+          <p class="mt-5 mb-3 text-muted">© 2023</p>
         </form>
       </div>
     </div>	
 	
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/popper.min.js"></script>
-    <script src="../js/moment.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/simplebar.min.js"></script>
-    <script src='../js/daterangepicker.js'></script>
-    <script src='../js/jquery.stickOnScroll.js'></script>
-    <script src="../js/tinycolor-min.js"></script>
-    <script src="../js/config.js"></script>
-    <script src="../js/apps.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/popper.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/moment.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js"></script>
+    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js'></script>
+    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js'></script>
+    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/config.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
   </body>
 </html>
 </body>

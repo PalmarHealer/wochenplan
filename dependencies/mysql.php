@@ -506,3 +506,21 @@ function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect) {
     }
 
 }
+
+function GetEmailFromToken($token, $pdo) {
+
+    $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
+    $tokens->execute(array($token));
+
+    return $sl['email'] ?? false;
+}
+
+function CreateToken($email, $pdo) {
+    $token = GenerateRandomString();
+    $statement = $pdo->prepare("INSERT INTO registertokens (token, email) VALUES (:token, :email)");
+    $result = $statement->execute(array(
+        'token' => $token,
+        'email' => $email
+    ));
+    return $token;
+}

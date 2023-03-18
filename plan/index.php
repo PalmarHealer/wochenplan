@@ -56,7 +56,7 @@ if (!isset($_GET["date"])) {
       $(document).ready(function() {
           reloadData();
 
-          setInterval(reloadData, 6000); //The first number gives the loop in minutes
+          setInterval(reloadData, 6000);
 
       });
 
