@@ -10,7 +10,7 @@ session_start();
 if (isset($_GET['return_to'])) {
     $redirect = $_GET['return_to'];
 } else {
-    $redirect = $webroot . '/dashboard/?ida=1';
+    $redirect = $webroot . '/dashboard/';
 }
 
 
@@ -71,7 +71,7 @@ if(!isset($_SESSION['asl_userid'])) {
 		}
 	}
 } else {
-	header('Location: ../dashboard');
+	header('Location: ' . $webroot . '/dashboard');
 	exit;
 }
 if (isset($_GET["message"])) {
@@ -143,7 +143,7 @@ $pdo = null;
           </div>
           <div class="form-group">
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password or one time login" required="" maxlength="250" name="password">
+            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required="" maxlength="250" name="password">
           </div>
           <div class="checkbox mb-3">
             <label>

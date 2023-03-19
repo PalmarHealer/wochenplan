@@ -179,7 +179,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                                                      echo "disabled";
                                                  }
                                                  echo ">";
-                                                     if ($permission_level >= $create_lessons_for_others) {
+                                                     if ($permission_level >= $create_lessons) {
                                                          GetAllUsersAndPrintForSelect($pdo, $id, ($sick_note_details['userid'] ?? $id));
                                                          $pdo = null;
                                                      }

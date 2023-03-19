@@ -50,7 +50,25 @@ $pdo = new PDO('mysql:host=localhost;dbname=wochenplan', $db_user, $db_password)
 
 $keep_dpo = false;
 
+$domain = "http://localhost:63342/wochenplan/";
 
+//here you can list all allowed domains that emails allowed to register
+$allowed_domains = array(
+    "test.com",
+    "nauren.de",
+);
+
+$smtp = array(
+    'host' => 'smtp.host',
+    'username' => 'smtp.username',
+    'password' => 'smtp.password',
+    'port' => '25'
+);
+
+$sender = array(
+    'mail' => 'email sender',
+    'name' => 'sender name'
+);
 
 //Weekdays in German
 $weekday_names = array(

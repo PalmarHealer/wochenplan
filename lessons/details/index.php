@@ -344,7 +344,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                           }
                                           echo ">";
 
-                                           if ($permission_level >= $create_lessons_for_others) {
+                                           if ($permission_level >= $create_lessons) {
                                                    GetAllUsersAndPrintForSelect($pdo, $id,  ($lesson_details['userid'] ?? $id));
 
                                                $pdo = null;

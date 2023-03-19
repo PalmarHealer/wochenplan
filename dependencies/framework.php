@@ -51,6 +51,7 @@ function GetCurrentUrl(): string
         $current_url = "http://";
     // Append the host(domain name, ip) to the URL.
     $current_url.= $_SERVER['HTTP_HOST'];
+    $current_url = "https://wochenplan.nauren.de";
 
     // Append the requested resource location to the URL
     $current_url.= $_SERVER['REQUEST_URI'];
