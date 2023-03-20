@@ -34,11 +34,11 @@ function PrintLessonToPlan($date, $time, $room, $pdo) {
 
     }
 
-    echo "<p><b>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "name", $pdo); if ($sick) { echo "</s>"; } echo "</b></p>";
+    echo "<div class='lessons'><p><b>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "name", $pdo); if ($sick) { echo "</s>"; } echo "</b></p>";
     echo "<br>";
     echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . GetInfomationOfUser($userid, "vorname", $pdo) . ")"; if ($sick) { echo "</s>"; } echo "</p>";
 
-    echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "description", $pdo); if ($sick) { echo "</s>"; } echo "</p>";
+    echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "description", $pdo); if ($sick) { echo "</s>"; } echo "</p></div>";
 }
 
 function GetCurrentUrl(): string

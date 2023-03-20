@@ -273,11 +273,11 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
                 </td>
                 <td>
                     <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="text-muted sr-only">Action</span>
+                        <span class="text-muted sr-only">Aktion</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="./edit/?id='. $id . '">Edit</a>
-                        <a class="dropdown-item" href="./edit/?delete='. $id . '">Remove</a>
+                        <a class="dropdown-item" href="./edit/?id='. $id . '">Bearbeiten</a>
+                        <a class="dropdown-item" href="./edit/?delete='. $id . '">Löschen</a>
                     </div>
                 </td>
               </tr>';
@@ -372,11 +372,11 @@ function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times,
 										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
 										
 										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="text-muted sr-only">Action</span>
+												<span class="text-muted sr-only">Aktion</span>
 											  </button>
 											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="../lessons/details/?id=' . $sl['id'] . '">Edit</a>
-												<a class="dropdown-item" href="../lessons/details/?remove_lesson_with_id=' . $sl['id'] . '">Remove</a>
+												<a class="dropdown-item" href="../lessons/details/?id=' . $sl['id'] . '">Bearbeiten</a>
+												<a class="dropdown-item" href="../lessons/details/?remove_lesson_with_id=' . $sl['id'] . '">Löschen</a>
 											  </div>
 										  </td>
 										  </tr>';
@@ -424,11 +424,11 @@ function GetAllLessons($room_names, $times, $pdo) {
 										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
 										
 										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="text-muted sr-only">Action</span>
+												<span class="text-muted sr-only">Aktion</span>
 											  </button>
 											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="./details/?id=' . $sl['id'] . '">Edit</a>
-												<a class="dropdown-item" href="./details/?remove_lesson_with_id=' . $sl['id'] . '">Remove</a>
+												<a class="dropdown-item" href="./details/?id=' . $sl['id'] . '">Bearbeiten</a>
+												<a class="dropdown-item" href="./details/?remove_lesson_with_id=' . $sl['id'] . '">Löschen</a>
 											  </div>
 										  </td>
 										  </tr>';
@@ -460,11 +460,11 @@ function GetAllSickNotes($pdo) {
 										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $end_date2 . '</td>
 										
 										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="text-muted sr-only">Action</span>
+												<span class="text-muted sr-only">Aktion</span>
 											  </button>
 											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="./edit/?id=' . $sl['id'] . '">Edit</a>
-												<a class="dropdown-item" href="./edit/?remove=' . $sl['id'] . '">Remove</a>
+												<a class="dropdown-item" href="./edit/?id=' . $sl['id'] . '">Bearbeiten</a>
+												<a class="dropdown-item" href="./edit/?remove=' . $sl['id'] . '">Löschen</a>
 											  </div>
 										  </td>
 										  </tr>';
@@ -510,7 +510,7 @@ function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect) {
         }
         echo $other_users['id'] . "'>" . $other_users['vorname'] . " " . $other_users['nachname'];
         if ($other_users['id'] == $OwnId) {
-            echo " (Du Selbst)";
+            echo " (Du selbst)";
         }
         echo "</option>";
     }

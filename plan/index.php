@@ -28,7 +28,7 @@ if (!isset($_GET["date"])) {
       <!-- Simple bar CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
       <!-- Fonts CSS -->
-      <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abel">
       <!-- Icons CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
@@ -56,13 +56,13 @@ if (!isset($_GET["date"])) {
       $(document).ready(function() {
           reloadData();
 
-          setInterval(reloadData, 6000);
+          //setInterval(reloadData, 6000);
 
       });
 
       function reloadData() {
           $.ajax({
-              url: "./reload.php",
+              url: "./reload<?php echo ($_GET['version'] ?? '2') ?>.php",
               type: "POST",
               data: { date: "<?php echo $current_day; ?>" },
               cache: false,

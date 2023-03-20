@@ -13,7 +13,7 @@
     <meta name="author" content="">
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 	
-    <title>Dashboard</title>
+    <title>Übersicht</title>
 
 
       <!-- Simple bar CSS -->
@@ -45,7 +45,7 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <h2 class="h3 mb-4 page-title">Dashboard</h2>
+              <h2 class="h3 mb-4 page-title">Übersicht</h2>
 			  
 			  
 			  
@@ -66,7 +66,7 @@
                 <div class="col">
                   <div class="row align-items-center">
                     <div class="col-md-7">
-                        <h4 class="name-badge mb-1"><?php echo $vorname . ", " . $nachname ?></h4>
+                        <h4 class="name-badge mb-1"><?php echo $vorname . " " . $nachname ?></h4>
                     </div>
                   </div>
                   </div>
@@ -83,7 +83,7 @@
                     ?>
                 </div>
 			  <div class="full">
-              <h6 class="mb-3">Quick Lesson overview</h6>
+              <h6 class="mb-3">Deine Angebote</h6>
               <table class="table table-borderless table-striped table-hover">
                 <thead>
                           <tr>

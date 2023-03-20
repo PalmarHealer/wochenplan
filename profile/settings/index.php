@@ -13,7 +13,7 @@ require $include_path . "/dependencies/framework.php";
     <meta name="author" content="">
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 	
-    <title>Settings</title>
+    <title>Einstellungen</title>
 	
 	
     <!-- Simple bar CSS -->
@@ -52,7 +52,7 @@ require $include_path . "/dependencies/framework.php";
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-8">
-              <h2 class="h3 mb-4 page-title">Settings</h2>
+              <h2 class="h3 mb-4 page-title">Einstellungen</h2>
 
               <div class="my-4">
 
@@ -67,7 +67,7 @@ require $include_path . "/dependencies/framework.php";
                     <div class="col">
                       <div class="row align-items-center">
                         <div class="col-md-7">
-                          <h4 class="name-badge mb-1"><?php if(isset($_GET['save'])) { echo $vorname_neu; } else { echo $vorname; } ?>, <?php if(isset($_GET['save'])) { echo $nachname_neu; } else { echo $nachname; } ?></h4>
+                          <h4 class="name-badge mb-1"><?php if(isset($_GET['save'])) { echo $vorname_neu; } else { echo $vorname; } echo " "; if(isset($_GET['save'])) { echo $nachname_neu; } else { echo $nachname; } ?></h4>
                         </div>
                       </div>
                     </div>
@@ -87,8 +87,9 @@ require $include_path . "/dependencies/framework.php";
                     <label for="inputEmail4">Email</label>
                     <input name="email" type="email" class="form-control" id="inputEmail4" value="<?php if(isset($_GET['save'])) { echo $email_neu; } else { echo $email; } ?>">
                   </div>
-                  
-                  <button type="submit" class="btn btn-primary">Save Change</button>
+                  <div class="right">
+                  <button type="submit" class="btn btn-primary">Einstellungen speichern</button>
+                  </div>
                 </form>
               </div> <!-- /.card-body -->
             </div> <!-- /.col-12 -->

@@ -244,7 +244,7 @@ if($showRegisterFormular) {
             </div>
             <div class="col-md-6">
               <p class="mb-2">Passwort Mindestanforderungen</p>
-              <p class="small text-muted mb-2"> Um ein sicheres Passwort zu erstellen, setzten wir folgende Anforderungen voraus:</p>
+              <p class="small text-muted mb-2"> Um ein sicheres Passwort zu erstellen, setzen wir folgende Anforderungen voraus:</p>
               <ul class="small text-muted pl-4 mb-0">
                 <li> Mindestens 8 Zeichen </li>
                 <li> Mindestens ein Sonderzeichen</li>
@@ -254,7 +254,7 @@ if($showRegisterFormular) {
             </div>
           </div>
 			<p class="mb-2">*Pflichtfelder</p>
-			<h2 align="center" class="h6 mb-3">Hast du bereits ein Account? dann <a href="../login">Logge dich hier ein.</a></h2>
+			<h2 align="center" class="h6 mb-3">Hast du bereits ein Account? Dann <a href="<?php echo $relative_path; ?>/login">melde dich hier an</a>.</h2>
           <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
           <p class="mt-5 mb-3 text-muted text-center">© 2023</p>
         </form>
@@ -328,14 +328,14 @@ if ($showEmailValidate) {
                             </g>
                         </svg>
                     </a>
-                    <h2 class="my-3">E-Mail Adresse verifizieren</h2>
+                    <h2 class="my-3">E-Mail-Adresse verifizieren</h2>
                 </div>
                 <div class="form-group">
                     <?php if(isset($mailempty)) { echo '<h2 class="h6 mb-3">'; echo $mailempty; echo '</h2>'; }?>
                     <?php if(isset($mailalredyused)) { echo '<h2 class="h6 mb-3">'; echo $mailalredyused; echo '</h2>'; }?>
-                    <input placeholder="Email address" id="email" type="email" size="40" maxlength="250" name="email" class="form-control" id="inputEmail4"" required>
+                    <input placeholder="E-Mail-Adresse" id="email" type="email" size="40" maxlength="250" name="email" class="form-control" id="inputEmail4"" required>
                 </div>
-                <h2 align="center" class="h6 mb-3">Hast du bereits ein Account? dann <a href="<?php echo $relative_path; ?>/login">Logge dich hier ein.</a></h2>
+                <h2 align="center" class="h6 mb-3">Hast du bereits ein Account? Dann <a href="<?php echo $relative_path; ?>/login">melde dich hier an</a>.</h2>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Send E-Mail</button>
                 <p class="mt-5 mb-3 text-muted">© 2023</p>
             </form>

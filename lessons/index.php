@@ -83,7 +83,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
             </div> <!-- .col-12 -->
           </div> <!-- .row -->
 		<div class="btn-box w-100 mt-4 mb-1 right">
-			<a href="<?php echo $relative_path; ?>/lessons/details" type="button" class="btn mb-2 btn-primary">Angebot Erstellen</a>
+			<a href="<?php echo $relative_path; ?>/lessons/details" type="button" class="btn mb-2 btn-primary">Angebot erstellen</a>
         </div>
         </div> <!-- .container-fluid -->
 		

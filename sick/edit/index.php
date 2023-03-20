@@ -127,7 +127,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                              </h2>
                              <div class="card shadow mb-4">
                                  <div class="card-header">
-                                     <strong class="card-title">Krankmeldung details</strong>
+                                     <strong class="card-title">Krankmeldung Details</strong>
                                  </div>
                                  <div class="card-body">
                                      <div class="row">
@@ -169,7 +169,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                                  <div class="col-md-12 mb-4">
                                      <div class="card shadow">
                                          <div class="card-header">
-                                             <strong class="card-title">Wer ist Krank</strong>
+                                             <strong class="card-title">Wer ist krank</strong>
                                          </div>
                                          <div class="card-body">
                                              <div class="form-group">
@@ -199,10 +199,10 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                              <?php
                              if(isset($_GET['id'])) {
                                  echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="update" value="' . $_GET['id'] . '">Aktualisieren</button>';
-                                 echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove=' . $_GET['id'] . '">Krankmeldung Löschen</button>';
+                                 echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove=' . $_GET['id'] . '">Krankmeldung löschen</button>';
                              } else {
                                  echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
-                                 echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Krankmeldung Löschen</button>';
+                                 echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Krankmeldung löschen</button>';
                              }
                              ?>
                          </div>

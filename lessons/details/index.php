@@ -181,7 +181,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                              }
                              ?>
                          </h2>
-                         <p class="text-muted"> Hier kannst Du ganz einfach Unterrichtsangebote erstellen. Die Unterrichtsangebote können ganz einfach an Deine Bedürfnisse angepasst werden, sodass Du das perfekte Lernangebot anbieten kannst.</p>
                          <div class="card shadow mb-4">
                            <div class="card-header">
                               <strong class="card-title">Angebot details</strong>
@@ -199,7 +198,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="helping">Weitere Beschreibung</label>
-                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest kannst du das einfach hier machen." maxlength="30" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>" required>
+                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." maxlength="30" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>">
                                     </div>
                                  </div>
                               </div>
@@ -276,14 +275,14 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                             }
 										?>
 										
-										<a class="date_selector1 nav-link py-3 <?php echo ($date_type[1] ?? '');?>" data-toggle="pill" aria-selected="true"><span class="fe fe-16 fe-repeat"></span></a>
-										<a class="date_selector2 nav-link py-3 <?php echo ($date_type[2] ?? '');?>" data-toggle="pill" aria-selected="false"><span class="fe fe-16 fe-calendar"></span></a>
+										<a title="Regelmäßiges Angebot" class="date_selector1 nav-link py-3 <?php echo ($date_type[1] ?? '');?>" data-toggle="pill" aria-selected="true"><span class="fe fe-16 fe-repeat"></span></a>
+										<a title="Einmaliges Angebot" class="date_selector2 nav-link py-3 <?php echo ($date_type[2] ?? '');?>" data-toggle="pill" aria-selected="false"><span class="fe fe-16 fe-calendar"></span></a>
                                     </div>
 									
                                           <div class="form-group mb-3 full">
                                              <div class="card-body">
 
-                                                <label for="custom-select">Zeitpunkt des Angebotes</label>
+                                                <label for="custom-select">Tag des Angebotes</label>
 												
 												<div class="repeating" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") echo "style='display: none;'"; ?>>
                                                 <div class="input-group">
@@ -337,7 +336,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <div class="card shadow">
                                  <div class="card-body">
                                     <div class="form-group mb-3">
-                                       <label for="custom-select">Wer macht diese Angebot?</label>
+                                       <label for="custom-select">Wer macht dieses Angebot?</label>
                                        <select name="creator" class="form-control select2" <?php
                                           if($permission_level < $create_lessons_for_others) {
                                           	echo "disabled";
@@ -360,7 +359,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                             <div class="col-md-12 mb-4">
                                 <div class="card shadow">
                                     <div class="card-header">
-                                        <strong class="card-title">Zusätsliche Infomationen (Sind nur hier sichtbar und werden nicht auf dem Plan gezeigt)</strong>
+                                        <strong class="card-title">Zusätzliche Informationen (sind nur hier sichtbar und werden nicht auf dem Plan gezeigt)</strong>
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
@@ -374,10 +373,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <?php
                                  if(isset($_GET['id'])) {
                                      echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
-                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot Löschen</button>';
+                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
                                  } else {
                                      echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
-                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot Löschen</button>';
+                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
                                  }
                                  ?>
                            </div>

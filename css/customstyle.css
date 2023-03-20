@@ -17,15 +17,31 @@ body {
     border-radius: 0 0 0 0;
     margin: 0 auto;
     text-align: left;
+    font-family: Abel;
     table-layout: fixed;
-    font-size: 105%;
+    font-size: 110%;
+    vertical-align: top;
+    horiz-align: center;
 }
+
+.white-col {
+    background-color: white;
+}
+
+.lessons {
+    width: 100%;
+    height: 100%;
+}
+
 
 .db_text * {
     border: none;
-    margin-left: -6px;
-    margin-top: -18px;
+    margin-left: -5px;
     margin-right: -60px;
+    margin-top: -18px;
+    font-size: 100%;
+    vertical-align: top;
+    max-height: 100%;
 }
 
 .heading {
@@ -37,7 +53,7 @@ body {
 }
 
 .modt {
-    font-size: 200%;
+    font-size: 150%;
 }
 
 .no_border * {
@@ -85,6 +101,10 @@ body {
     background-color: #f8e9be;
 }
 
+.color-6 {
+    background-color: #e3bdb4;
+}
+
 .full {
     width: 100%;
     height: 100%;
@@ -93,17 +113,27 @@ body {
 .piece {
     width: 10%;
     height: 10%;
+    max-height: 6px;
 }
 
-.small_piece {
-    height: 1px;
+.small_piece * {
+    height: 5%;
     max-height: 6px;
     width: 10%;
+    max-width: 10px;
+}
+
+.macro_piece * {
+    height: 1%;
+    max-height: 5%;
+
+    max-width: 10%;
 }
 
 .big_piece {
-    height: 25%;
+    height: 15%;
     width: 10%;
+    max-height: 6px;
 }
 
 .breakfast {

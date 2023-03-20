@@ -44,7 +44,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <h2 class="mb-2 page-title">Accounts</h2>
+                    <h2 class="mb-2 page-title">Benutzer</h2>
                     <!--<p class="card-text">Kleine Seiten Beschreibung</p> -->
                     <div class="row my-4">
                         <!-- Small table -->
@@ -65,7 +65,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                                             <th>Berechtigung</th>
                                             <th>Zuletzt geändert am</th>
                                             <th>Erstellt am</th>
-                                            <th>Action</th>
+                                            <th>Aktionen</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -77,7 +77,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                                 </div>
                             </div>
                             <div class="btn-box w-100 mt-4 mb-1 right">
-                                <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary">Benutzer Erstellen</a>
+                                <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary">Benutzer erstellen</a>
                             </div>
 
                         </div>

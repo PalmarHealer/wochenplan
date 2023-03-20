@@ -62,7 +62,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                               <th>Person</th>
                               <th>Von</th>
                               <th>Bis</th>
-                              <th>Aktion</th>
+                              <th>Aktionen</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -79,7 +79,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
             </div> <!-- .col-12 -->
           </div> <!-- .row -->
 		<div class="btn-box w-100 mt-4 mb-1 right">
-			<a href="<?php echo $relative_path; ?>/sick/edit" type="button" class="btn mb-2 btn-primary">Krankmeldung Erstellen</a>
+			<a href="<?php echo $relative_path; ?>/sick/edit" type="button" class="btn mb-2 btn-primary">Krankmeldung erstellen</a>
         </div>
         </div> <!-- .container-fluid -->
 		

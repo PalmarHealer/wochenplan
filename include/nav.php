@@ -40,8 +40,8 @@ if (!$keep_pdo) {
 
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="<?php echo $relative_path; ?>/profile/settings">Settings</a>
-                <a class="dropdown-item" href="./?logout=true">Logout</a>
+                <a class="dropdown-item" href="<?php echo $relative_path; ?>/profile/settings">Einstellungen</a>
+                <a class="dropdown-item" href="./?logout=true">Abmelden</a>
             </div>
         </li>
     </ul>
@@ -69,7 +69,7 @@ if (!$keep_pdo) {
             <li class="nav-item w-100">
                 <a class="nav-link" href="<?php echo $relative_path; ?>/dashboard">
                     <i class="fe fe-home fe-16"></i>
-                    <span class="ml-3 item-text">Dashboard</span>
+                    <span class="ml-3 item-text">Übersicht</span>
                 </a>
             </li>
         </ul><?php
@@ -88,7 +88,7 @@ if ($permission_level >= $create_lessons) {
                     <span class="ml-3 item-text">Angebote</span>
                 </a>
                 <ul class="collapse list-unstyled pl-4 w-100" id="lessons">
-                    <a class="nav-link pl-3" href="'. $relative_path . '/lessons"><span class="ml-1">Overview</span></a>
+                    <a class="nav-link pl-3" href="'. $relative_path . '/lessons"><span class="ml-1">Übersicht</span></a>
                     
 							<a class="nav-link pl-3" href="' . $relative_path . '/lessons/details"><span class="ml-1">Angebot erstellen</span></a>
 						
@@ -104,7 +104,7 @@ if ($permission_level >= $create_lessons) {
                     <span class="ml-3 item-text">Krank</span>
                 </a>
 					         <ul class="collapse list-unstyled pl-4 w-100" id="sick">
-					             <a class="nav-link pl-3" href="'. $relative_path . '/sick/"><span class="ml-1">Overview</span></a>
+					             <a class="nav-link pl-3" href="'. $relative_path . '/sick/"><span class="ml-1">Übersicht</span></a>
                                  <a class="nav-link pl-3" href="' . $relative_path . '/sick/edit/"><span class="ml-1">Krankmeldung erstellen</span></a>                   
                              </ul>
                           </ul>';
@@ -126,7 +126,7 @@ if ($permission_level >= $create_lessons) {
 							<span class="ml-3 item-text">Administration</span>
 						</a>
 						<ul class="collapse list-unstyled pl-4 w-100" id="admin">
-							<a class="nav-link pl-3" href="' . $relative_path . '/admin/accounts"><span class="ml-1">Accounts</span></a>
+							<a class="nav-link pl-3" href="' . $relative_path . '/admin/accounts"><span class="ml-1">Benutzer</span></a>
 							' .
                             //<a class="nav-link pl-3" href="' . $relative_path . '/admin/settings"><span class="ml-1">Settings</span></a>
                             '

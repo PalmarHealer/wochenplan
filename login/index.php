@@ -138,19 +138,19 @@ $pdo = null;
 		  <h2 class="h6 mb-3"><?php if(isset($errorMessage)) { echo $errorMessage; }?></h2>
 		  <h2 class="h6 mb-3"><?php if(isset($getMessage)) { echo $getMessage; }?></h2>
           <div class="form-group">
-            <label for="inputEmail" class="sr-only">Email address</label>
-            <input type="email" id="inputEmail" class="form-control form-control-lg" placeholder="Email address" required="" maxlength="250" name="email">
+            <label for="inputEmail" class="sr-only">E-Mail-Adresse</label>
+            <input type="email" id="inputEmail" class="form-control form-control-lg" placeholder="E-Mail-Adresse" required="" maxlength="250" name="email">
           </div>
           <div class="form-group">
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Password" required="" maxlength="250" name="password">
+            <label for="inputPassword" class="sr-only">Passwort</label>
+            <input type="password" id="inputPassword" class="form-control form-control-lg" placeholder="Passwort" required="" maxlength="250" name="password">
           </div>
           <div class="checkbox mb-3">
             <label>
-              <input type="checkbox" name="angemeldet_bleiben" value="1" value="remember-me"> Stay logged in (dafür werden Cookies genutzt)</label>
+              <input type="checkbox" name="angemeldet_bleiben" value="1" value="remember-me"> Angemeldet bleiben (dafür werden Cookies genutzt)</label>
           </div>
-            <h2 align="center" class="h6 mb-3">Hast du noch kein Account? dann <a href="<?php echo $relative_path; ?>/register">Frag hier einen an.</a></h2>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Let me in</button>
+            <h2 align="center" class="h6 mb-3">Hast du noch kein Account? Dann <a href="<?php echo $relative_path; ?>/register">frag hier einen an</a>.</h2>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
           <p class="mt-5 mb-3 text-muted">© 2023</p>
         </form>
       </div>
