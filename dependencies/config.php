@@ -110,19 +110,25 @@ $room_names = array(
     4 => "Raum 4 (RS)",
     5 => "Gesprächsraum",
     6 => "SZ/Praxisber.",
-    7 => "Sport</option",
+    7 => "Sport",
     8 => "Ausflug",
     9 => "Freiarbeit"
 );
 
 //Available times
 $times = array(
-    1 => "Morgenband - 9:00 - 10:00",
-    2 => "Morgenkreise - 10:00 – 10:30",
-    3 => "Großes Band - 10:30 – 12:00",
-    4 => "Großes Band (Noch Nicht Sichtbar)",
-    5 => "Nachmittagsband - 13:00 – 14:30",
-    6 => "Spätes Band - 13:00 – 14:30"
+    1 => "l-lV Morgenband - 8:00 – 9:00",
+    2 => "l/ll Morgenkreise - 9:00 – 9:30",
+    3 => "l/ll Angebot 1 - 9:30 – 10:30",
+    4 => "l/ll Angebot 2 - 10:45 – 11:45",
+    5 => "l/ll Nachmittagsband - 13:00 – 14:30",
+
+
+    6 => "l-lV Offene Räume - 9:00 - 10:00",
+    7 => "l-lV Morgenkreise - 10:00 – 10:30",
+    8 => "l-lV Großes Band - 10:30 – 12:00",
+    9 => "l-lV Nachmittagsband - 13:00 – 14:30",
+    10 => "l-lV Spätes Band - 15:00 – 16:00"
 );
 
 

@@ -41,8 +41,7 @@ require $include_path . "/dependencies/framework.php";
       if (isset($_GET['save'])) {
           $vorname_neu = $_POST['vorname'];
           $nachname_neu = $_POST['nachname'];
-          $email_neu = $_POST['email'];
-          echo UpdateUser($id, $vorname_neu, $nachname_neu, $email_neu, $permission_level, $pdo);
+          echo UpdateUsernames($id, $vorname_neu, $nachname_neu, $pdo);
       }
 
 
@@ -82,10 +81,6 @@ require $include_path . "/dependencies/framework.php";
                       <label for="lastname">Nachname</label>
                       <input name="nachname" type="text" id="lastname" class="form-control" value="<?php if(isset($_GET['save'])) { echo $nachname_neu; } else { echo $nachname; } ?>">
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="inputEmail4">Email</label>
-                    <input name="email" type="email" class="form-control" id="inputEmail4" value="<?php if(isset($_GET['save'])) { echo $email_neu; } else { echo $email; } ?>">
                   </div>
                   <div class="right">
                   <button type="submit" class="btn btn-primary">Einstellungen speichern</button>

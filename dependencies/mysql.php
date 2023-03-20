@@ -217,7 +217,17 @@ function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
         'email' => $email,
         'permission_level' => $permission_level
     ));
-    return $statement->rowCount(); // gibt zurück, wie viele Zeilen aktualisiert wurden, danke ChatGPT
+    return $statement->rowCount();
+}
+
+function UpdateUsernames($id, $vorname, $nachname, $pdo) {
+    $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname WHERE id = :id");
+    $statement->execute(array(
+        'id' => $id,
+        'vorname' => $vorname,
+        'nachname' => $nachname
+    ));
+    return $statement->rowCount();
 }
 
 function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_level, $pdo) {
