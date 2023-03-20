@@ -171,7 +171,7 @@ if (!isset($_GET["date"])) {
 
 
 
-  <script src="../js/jquery.min.js"></script>
+  <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
   <script>
 
       $(document).ready(function() {
@@ -183,6 +183,8 @@ if (!isset($_GET["date"])) {
           animate(dots, "dots--animate");
 
           setInterval(reloadData, 6000);
+
+
 
 
       });
