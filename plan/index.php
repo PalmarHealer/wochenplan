@@ -44,6 +44,127 @@ if (!isset($_GET["date"])) {
 
   <body class="full">
 
+  <h1>
+      Loading
+      <div class="dots">
+          <span class="dot z"></span><span class="dot f"></span><span class="dot s"></span><span class="dot t"><span class="dot l"></span></span>
+      </div>
+  </h1>
+  <style>
+      @import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap);
+      body,
+      h1 {
+          box-sizing: border-box;
+      }
+      .dot .l,
+      .dot.z {
+          position: absolute;
+      }
+      body {
+          display: grid;
+          place-content: center;
+          min-height: 100vh;
+          margin: 0;
+          padding: 2px;
+          overflow: hidden;
+      }
+      h1 {
+          font-family: "Open Sans", -apple-system, "Segoe UI", sans-serif;
+          font-size: 50px;
+          font-weight: 700;
+          color: #212121;
+      }
+      .dots {
+          display: inline-flex;
+      }
+      .dots--animate .dot.z {
+          -webkit-animation: 0.8s 0.2s forwards scale;
+          animation: 0.8s 0.2s forwards scale;
+      }
+      .dots--animate .dot.f,
+      .dots--animate .dot.s {
+          -webkit-animation: 0.5s forwards right;
+          animation: 0.5s forwards right;
+      }
+      .dots--animate .dot.l {
+          -webkit-animation: 0.4s linear 0.1s forwards rightDown, 2s linear 0.4s forwards drop;
+          animation: 0.4s linear 0.1s forwards rightDown, 2s linear 0.4s forwards drop;
+      }
+      .dot {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          background: #212121;
+          border-radius: 10px;
+          position: relative;
+          margin-left: 6px;
+      }
+      .dot.z {
+          transform: scale(0);
+      }
+      @-webkit-keyframes scale {
+          100% {
+              transform: scale(1);
+          }
+      }
+      @keyframes scale {
+          100% {
+              transform: scale(1);
+          }
+      }
+      .dot.f,
+      .dot.s {
+          transform: translateX(0);
+      }
+      @-webkit-keyframes right {
+          100% {
+              transform: translateX(16px);
+          }
+      }
+      @keyframes right {
+          100% {
+              transform: translateX(16px);
+          }
+      }
+      .dot.t {
+          background: 0 0;
+      }
+      .dot .l {
+          margin-left: 0;
+          top: 0;
+          left: 0;
+      }
+      @-webkit-keyframes rightDown {
+          50% {
+              top: 4px;
+              left: 16px;
+          }
+          100% {
+              top: 12px;
+              left: 24px;
+          }
+      }
+      @keyframes rightDown {
+          50% {
+              top: 4px;
+              left: 16px;
+          }
+          100% {
+              top: 12px;
+              left: 24px;
+          }
+      }
+      @-webkit-keyframes drop {
+          100% {
+              transform: translate(70px, calc(35px + (100vh / 2)));
+          }
+      }
+      @keyframes drop {
+          100% {
+              transform: translate(70px, calc(35px + (100vh / 2)));
+          }
+      }
+  </style>
 
   </body>
 
@@ -54,11 +175,18 @@ if (!isset($_GET["date"])) {
   <script>
 
       $(document).ready(function() {
-          reloadData();
 
-          //setInterval(reloadData, 6000);
+          let $ = (t) => document.querySelector(t),
+              dots = $(".dots");
+
+
+          animate(dots, "dots--animate");
+
+          setInterval(reloadData, 6000);
+
 
       });
+
 
       function reloadData() {
           $.ajax({
@@ -72,6 +200,16 @@ if (!isset($_GET["date"])) {
 
               }
           });
+      }
+
+      function animate(t, a) {
+          t.classList.add(a),
+              setTimeout(() => {
+                  t.classList.remove(a),
+                      setTimeout(() => {
+                          animate(t, a);
+                      }, 500);
+              }, 2500);
       }
 
   </script>
