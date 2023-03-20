@@ -123,7 +123,6 @@ $times = array(
     4 => "l/ll Angebot 2 - 10:45 – 11:45",
     5 => "l/ll Nachmittagsband - 13:00 – 14:30",
 
-
     6 => "l-lV Offene Räume - 9:00 - 10:00",
     7 => "l-lV Morgenkreise - 10:00 – 10:30",
     8 => "l-lV Großes Band - 10:30 – 12:00",
