@@ -1,5 +1,5 @@
 <?php
-$include_path = __DIR__ . "../../..";
+$include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";

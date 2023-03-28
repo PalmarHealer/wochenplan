@@ -112,12 +112,14 @@ $pdo = null;
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
     <!-- Date Range Picker CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
     <!-- App CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
   </head>
   <body class="light ">
-    <div class="wrapper vh-100">
+    <div class="wrapper vh-100 noflow">
       <div class="row align-items-center h-100">
         <form class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="?login=1 <?php
         if (isset($_GET['return_to'])) {

@@ -4,7 +4,7 @@ if (!$keep_pdo) {
 }
 ?>
 
-<nav class="topnav navbar navbar-light">
+<nav class="topnav navbar navbar-light sticky-top">
     <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar" href="./?mode=dark">
         <i class="fe fe-menu navbar-toggler-icon"></i>
     </button>

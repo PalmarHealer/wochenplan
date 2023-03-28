@@ -157,20 +157,26 @@ if($showRegisterFormular) {
 
 
 
-    <!-- Simple bar CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
-    <!-- Fonts CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <!-- Icons CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
-    <!-- Date Range Picker CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
-    <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+      <!-- Simple bar CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
+      <!-- Fonts CSS -->
+      <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+      <!-- Icons CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
+      <!-- Date Range Picker CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
+      <!-- App CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+
+
+
+
   </head>
   <body class="light ">
-    <div class="wrapper vh-100">
+    <div class="wrapper vh-100 noflow">
       <div class="row align-items-center h-100">
         <form class="col-lg-6 col-md-8 col-10 mx-auto" action="?register=1<?php if (isset($_GET['token'])) { echo "&token=" . $_GET['token']; } ?>" method="post">
           <div class="mx-auto text-center my-4">
@@ -313,9 +319,12 @@ if ($showEmailValidate) {
         <!-- App CSS -->
         <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
         <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+
     </head>
-    <body class="light ">
-    <div class="wrapper vh-100">
+    <body class="light">
+    <div class="wrapper vh-100 noflow">
         <div class="row align-items-center h-100">
             <form class="col-lg-3 col-md-4 col-10 mx-auto text-center">
                 <div class="mx-auto text-center my-4">
@@ -395,9 +404,12 @@ if ($showEmailSend) {
         <!-- App CSS -->
         <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
         <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+
     </head>
-    <body class="light ">
-    <div class="wrapper vh-100">
+    <body class="light">
+    <div class="wrapper vh-100 noflow">
         <div class="row align-items-center h-100">
             <form class="col-lg-3 col-md-4 col-10 mx-auto text-center">
                 <div class="mx-auto text-center my-4">

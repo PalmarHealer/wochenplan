@@ -104,6 +104,7 @@ $permission_level_names = array(
 
 //Available rooms
 $room_names = array(
+    10 => "Raumlos",
     1 => "Raum 1",
     2 => "Raum 2",
     3 => "Raum 3 (HS)",
@@ -112,22 +113,29 @@ $room_names = array(
     6 => "SZ/Praxisber.",
     7 => "Sport",
     8 => "Ausflug",
-    9 => "Freiarbeit"
+    9 => "Freiarbeit",
+    11 => "Putzen EG",
+    12 => "Putzen UG/OG",
+    13 => "Putzen Garten",
 );
 
 //Available times
 $times = array(
+    13 => "Den ganzen Tag gültig",
     1 => "l-lV Morgenband - 8:00 – 9:00",
     2 => "l/ll Morgenkreise - 9:00 – 9:30",
     3 => "l/ll Angebot 1 - 9:30 – 10:30",
     4 => "l/ll Angebot 2 - 10:45 – 11:45",
     5 => "l/ll Nachmittagsband - 13:00 – 14:30",
 
-    6 => "l-lV Offene Räume - 9:00 - 10:00",
-    7 => "l-lV Morgenkreise - 10:00 – 10:30",
-    8 => "l-lV Großes Band - 10:30 – 12:00",
-    9 => "l-lV Nachmittagsband - 13:00 – 14:30",
-    10 => "l-lV Spätes Band - 15:00 – 16:00"
+    14 => "Mittagspause - 12:00 – 13:00",
+
+    6 => "ll-lV Offene Räume - 9:00 - 10:00",
+    7 => "ll-lV Morgenkreise - 10:00 – 10:30",
+    8 => "ll-lV Großes Band - 10:30 – 12:00",
+    9 => "ll-lV Nachmittagsband - 13:00 – 14:30",
+    12 => "Putzen - 14:30 – 15:00",
+    10 => "ll-lV Spätes Band - 15:00 – 16:00",
 );
 
 

@@ -2,6 +2,10 @@ body {
     margin: 0;
 }
 
+.noflow {
+    overflow: hidden;
+}
+
 .pointer {
     cursor: pointer;
 }
@@ -17,8 +21,27 @@ body {
     border-collapse: collapse;
     margin: 0 auto;
     text-align: left;
+    vertical-align: top;
+    horiz-align: left;
     table-layout: fixed;
     font-size: 110%;
+}
+
+.tg-small-preview * {
+    border-color: #ffffff;
+    color: black;
+    font-family: Abel;
+    border-style: solid;
+    border-width: 0.45vh;
+    border-spacing: 0;
+    border-radius: 0 0 0 0;
+    padding: 3px 5px;
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: left;
+    vertical-align: top;
+    horiz-align: left;
+    table-layout: fixed;
 }
 
 .white-col {
@@ -27,7 +50,7 @@ body {
 
 .lessons {
     overflow: hidden;
-    margin-top: -15%;
+    margin-top: -40px;
     width: 120%;
     height: 120%;
 }
@@ -40,7 +63,6 @@ body {
     margin-right: -34px;
     margin-bottom: -5%;
     font-size: 100%;
-    vertical-align: top;
     max-height: 100%;
 }
 
@@ -74,7 +96,7 @@ body {
 
 .author {
     margin-left: -7px;
-    margin-top: -20px;
+    margin-top: -10px;
 }
 
 .bold {
@@ -106,6 +128,24 @@ body {
 
 .color-6 {
     background-color: #e3bdb4;
+}
+
+
+.preview-hover:hover {
+    background-color: #bbafad; !important;
+    cursor: pointer;
+}
+.preview-lighthover:hover {
+    background-color: #bcae87; !important;
+    cursor: pointer;
+}
+
+.preview-selected {
+    background-color: #c8daff; !important;
+}
+
+.preview-selected:hover {
+    background-color: #96b9ff; !important;
 }
 
 .full {
