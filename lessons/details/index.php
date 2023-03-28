@@ -164,8 +164,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                    <?php
                    if (!isset($_GET['id'])) {
                        echo '<div id="availability" class="center2 availability">';
-                       echo '<div class="alert alert-success center" role="alert">';
-                       echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Dein Angebot kann dort stattfinden.';
+                       echo '<div class="alert alert-secondary center" role="alert">';
+                       echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Lade Slot info...';
                        echo '</div>';
                        echo '</div>';
                    }
@@ -257,10 +257,221 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <!-- /.card -->
                            </div>
                            <!-- /.col -->
-						   
-						   
-						   
-                           <div class="col-md-6 mb-4">
+
+                             <div class="col-md-12 mb-4">
+                                 <div class="card shadow">
+                                     <div class="card-header">
+                                         <table class="full tg-small-preview">
+                                             <colgroup>
+                                                 <col class="piece"/>
+                                                 <col/>
+                                                 <col/>
+                                                 <col/>
+                                                 <col/>
+                                                 <col/>
+                                                 <col/>
+                                                 <col/>
+                                                 <col/>
+                                                 <col/>
+                                             </colgroup>
+                                             <thead>
+                                             <tr class="center">
+                                                 <th class="color-3 no_border">
+                                                     <br>
+                                                     <br>
+                                                 </th>
+                                                 <th class="color-1 preview-hover preview-selected" colspan="4" time="13" room="10"></th>
+                                                 <th class="color-3 white_text modt text-left" colspan="5">
+
+                                                 </th>
+                                             </tr>
+                                             </thead>
+                                             <tbody>
+                                             <tr class="name-badge center">
+                                                 <td class="color-6 db_text"><b class="bold">Zeiten l/ll</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">Raum 1</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">Freiarbeit</b></td>
+                                                 <td class="color-6 db_text"><b class="bold">Zeiten ll-lV</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">Raum 2</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">Raum 3 (HS)</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">Raum 4 (RS)</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">Gesprächsraum</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">SZ/Praxisber.</b></td>
+                                                 <td class="color-1 db_text"><b class="bold">Sport</b></td>
+                                             </tr>
+
+
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     8:00 – 9:00<br/>
+                                                     <b class="bold">Morgenband</b>
+                                                 </td>
+                                                 <td class="color-2 db_text" colspan="2"></td>
+
+                                                 <td class="color-6 no_border">
+                                                     8:00 – 9:00<br/>
+                                                     <b class="bold">Morgenband</b>
+                                                 </td>
+
+                                                 <td class="color-2 preview-hover center" time="1" room="10" colspan="6"></td>
+                                             </tr>
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     9:00 – 9:30<br/>
+                                                     <b class="bold">Morgenkreise</b>
+                                                 </td>
+
+                                                 <td class="color-2 preview-hover" time="2" room="1"></td>
+                                                 <td class="color-1 preview-hover" time="2" room="9"></td>
+
+                                                 <td class="color-6 no_border" rowspan="2">
+                                                     9:00 - 10:00<br/>
+                                                     <b class="bold">Offene Räume</b>
+                                                 </td>
+                                                 <td class="color-2 preview-hover" time="6" room="2" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="6" room="3" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="6" room="4" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="6" room="5" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="13" room="6" rowspan="5"></td>
+                                                 <td class="color-2 preview-hover" time="13" room="7" rowspan="5"></td>
+                                             </tr>
+
+
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border" rowspan="2">
+                                                     9:30 – 10:30<br/>
+                                                     <b class="bold">Angebot 1</b>
+                                                 </td>
+                                                 <td class="color-2 preview-hover" time="3" room="1" rowspan="2"></td>
+                                                 <td class="color-1 preview-hover" time="3" room="9" rowspan="2"></td>
+                                             </tr>
+
+
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     10:00 – 10:30<br/>
+                                                     <b class="bold">Morgenkreise</b>
+                                                 </td>
+
+                                                 <td class="color-2 preview-hover" time="7" room="2"></td>
+                                                 <td class="color-2 preview-hover" time="7" room="3"></td>
+                                                 <td class="color-2 preview-hover" time="7" room="4"></td>
+                                                 <td class="color-2 preview-hover" time="7" room="5"></td>
+                                             </tr>
+
+
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     <b class="bold">Räum-Pause </b>
+                                                 </td>
+
+                                                 <td class="color-2"></td>
+                                                 <td class="color-1"></td>
+
+                                                 <td class="color-6 no_border" rowspan="2">
+                                                     10:30 – 12:00<br/>
+                                                     <b class="bold">Großes Band</b>
+                                                 </td>
+
+                                                 <td class="color-2 preview-hover" time="8" room="2" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="3" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="4" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="5" rowspan="2"></td>
+                                             </tr>
+
+
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     10:45 – 11:45<br/>
+                                                     <b class="bold">Angebot 2</b>
+                                                 </td>
+
+                                                 <td class="color-2 preview-hover" time="4" room="1"></td>
+                                                 <td class="color-1 preview-hover" time="4" room="9"></td>
+                                             </tr>
+
+
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     12:00 – 13:00<br/>
+                                                     <b class="bold">Mittagspause</b>
+                                                 </td>
+
+                                                 <td class="color-4 preview-hover no_border center2" colspan="9" time="14" room="10"><b class="bold">Mittagessen</b>
+                                                 </td>
+                                             </tr>
+
+
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     13:00 – 14:30<br/>
+                                                     <b class="bold">Nachmittagsband</b>
+                                                 </td>
+
+                                                 <td class="color-2 preview-hover" time="5" room="1"></td>
+                                                 <td class="color-1 preview-hover" time="5" room="9"></td>
+
+                                                 <td class="color-6 no_border">
+                                                     13:00 – 14:30<br/>
+                                                     <b class="bold">Nachmittagsband</b>
+                                                 </td>
+
+                                                 <td class="color-2 preview-hover" time="9" room="2"></td>
+                                                 <td class="color-2 preview-hover" time="9" room="3"></td>
+                                                 <td class="color-2 preview-hover" time="9" room="4"></td>
+                                                 <td class="color-2 preview-hover" time="9" room="5"></td>
+                                                 <td class="color-2 preview-hover" time="9" room="6"></td>
+                                                 <td class="color-2 preview-hover" time="9" room="7"></td>
+                                             </tr>
+
+
+                                             <tr class="">
+                                                 <td class="white-col" rowspan="3"></td>
+                                                 <td class="white-col" rowspan="3"></td>
+                                                 <td class="white-col" rowspan="3"></td>
+
+                                                 <td class="color-6 no_border" rowspan="2">
+                                                     14:30 – 15:00<br/>
+                                                     <b class="bold">Putzen</b>
+                                                 </td>
+                                                 <td class="color-5 preview-lighthover" time="12" room="10" colspan="8"></td>
+                                             </tr>
+
+                                             <tr class="">
+                                                 <td class="color-5 preview-lighthover" time="12" room="11" colspan="2"></td>
+                                                 <td class="color-5 preview-lighthover" time="12" room="12" colspan="2"></td>
+                                                 <td class="color-5 preview-lighthover" time="12" room="13" colspan="2"></td>
+                                             </tr>
+
+
+                                             <tr class="">
+                                                 <td class="color-6 no_border">
+                                                     15:00 – 16:00<br/>
+                                                     <b class="bold">Spätes Band</b>
+                                                 </td>
+                                                 <td class="color-2 preview-hover" time="10" room="2"></td>
+                                                 <td class="color-2 preview-hover" time="10" room="3"></td>
+                                                 <td class="color-2 preview-hover" time="10" room="4"></td>
+                                                 <td class="color-2 preview-hover" time="10" room="5"></td>
+                                                 <td class="color-2 preview-hover" time="10" room="6"></td>
+                                                 <td class="color-2 preview-hover" time="10" room="7"></td>
+                                             </tr>
+                                             </tbody>
+                                         </table>
+
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="col-md-6 mb-4">
                               <div class="card shadow">
                                  <div class="d-flex flex-row tab-icon">
                                     <div class="nav flex-column nav-pills" aria-orientation="vertical">
@@ -475,6 +686,16 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   $(".toggle_date_input1").attr("disabled", "");
                   $(".repeating").hide();
               });
+
+              $('.preview-hover, .preview-lighthover').click(function() {
+                  const room = $(this).attr('room');
+                  const time = $(this).attr('time');
+                  $('.preview-hover, .preview-lighthover').removeClass("preview-selected");
+                  $(this).addClass("preview-selected");
+                  $('#location').val(room).change();
+                  $('#time').val(time).change();
+              });
+
           });
           $('.select2').select2(
               {
