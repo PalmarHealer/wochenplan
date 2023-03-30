@@ -74,7 +74,7 @@ $current_day = $_POST['date'];
             8:00 – 9:00<br />
             <b class="bold">Morgenband</b>
         </td>
-        <td class="color-2 no_border center" colspan="8"><p>Ankommen</p></td>
+        <td class="color-2 no_border text-center" colspan="8"><p>Test</p></td>
         <td class="color-1"></td>
     </tr>
     <tr class="piece">
