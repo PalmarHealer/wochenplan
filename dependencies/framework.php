@@ -41,6 +41,15 @@ function PrintLessonToPlan($date, $time, $room, $pdo) {
     echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "description", $pdo); if ($sick) { echo "</s>"; } echo "</p></div>";
 }
 
+function PrintInfo($date, $time, $room, $pdo) {
+
+    if (!GetLesson($date, $time, $room, "available", $pdo)) {
+        return;
+    }
+
+     echo GetLesson($date, $time, $room, "name", $pdo);
+}
+
 function GetCurrentUrl(): string
 {
 

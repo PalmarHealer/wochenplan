@@ -176,14 +176,14 @@ if (!isset($_GET["date"])) {
 
       $(document).ready(function() {
 
-          let $ = (t) => document.querySelector(t),
-              dots = $(".dots");
-
-
-          animate(dots, "dots--animate");
-
-          setInterval(reloadData, 6000);
-
+          //let $ = (t) => document.querySelector(t),
+          //    dots = $(".dots");
+//
+//
+          //animate(dots, "dots--animate");
+//
+          //setInterval(reloadData, 6000);
+          reloadData();
 
 
 

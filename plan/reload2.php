@@ -8,10 +8,10 @@ $current_day = $_POST['date'];
 ?>
 <table class="full tg">
     <colgroup>
-        <col class="piece"/>
+        <col class="lesson_signs"/>
         <col/>
         <col/>
-        <col/>
+        <col class="lesson_signs"/>
         <col/>
         <col/>
         <col/>
@@ -29,7 +29,7 @@ $current_day = $_POST['date'];
                 ?>
             </b>
         </th>
-        <th class="color-1" colspan="4"></th>
+        <th class="color-1 text-left" colspan="4"><?php PrintInfo($current_day, 13, 10, $pdo); ?></th>
         <th class="color-3 white_text modt text-left" colspan="5">
             <?php
 
@@ -79,14 +79,14 @@ $current_day = $_POST['date'];
             8:00 – 9:00<br />
             <b class="bold">Morgenband</b>
         </td>
-        <td class="color-2 db_text" colspan="2"><?php PrintLessonToPlan($current_day, 1, 10, $pdo); ?></td>
+        <td class="color-2 db_text" colspan="2"></td>
 
         <td class="color-6 no_border">
             8:00 – 9:00<br />
             <b class="bold">Morgenband</b>
         </td>
 
-        <td class="color-2 db_text center" colspan="6">Ankommen</td>
+        <td class="color-2 db_text text-center" colspan="6"><?php PrintInfo($current_day, 1, 10, $pdo); ?></td>
     </tr>
     <tr class="macro_piece">
 
@@ -222,13 +222,13 @@ $current_day = $_POST['date'];
             14:30 – 15:00<br/>
             <b class="bold">Putzen</b>
         </td>
-        <td class="color-5" colspan="8"><?php PrintLessonToPlan($current_day, 12, 10, $pdo); ?></td>
+        <td class="color-5 text-center" colspan="8"><?php PrintInfo($current_day, 12, 10, $pdo); ?></td>
     </tr>
 
     <tr class="small_piece">
-        <td class="color-5" colspan="2"><?php PrintLessonToPlan($current_day, 12, 11, $pdo); ?></td>
-        <td class="color-5" colspan="2"><?php PrintLessonToPlan($current_day, 12, 12, $pdo); ?></td>
-        <td class="color-5" colspan="2"><?php PrintLessonToPlan($current_day, 12, 13, $pdo); ?></td>
+        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 11, $pdo); ?></td>
+        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 12, $pdo); ?></td>
+        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 13, $pdo); ?></td>
     </tr>
 
 

@@ -139,6 +139,16 @@ $times = array(
 );
 
 
+//Slots that are not a Lesson
+$name_only_lesson = array(
+    1 => "l-lV Morgenband - 8:00 – 9:00",
+    2 => "l/ll Morgenkreise - 9:00 – 9:30",
+    3 => "l/ll Angebot 1 - 9:30 – 10:30",
+    4 => "l/ll Angebot 2 - 10:45 – 11:45",
+    5 => "l/ll Nachmittagsband - 13:00 – 14:30",
+);
+
+
 
 //---------- DO NOT TOUCH (general software information) ----------
 //If you do some changes here, some or hole parts of the 
