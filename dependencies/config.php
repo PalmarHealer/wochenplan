@@ -155,4 +155,4 @@ $name_only_lesson = array(
 //website are not able to work properly
 
 $header = "true";
-$ver = "1.1.1.0";
+$ver = "1.1.2.0";
