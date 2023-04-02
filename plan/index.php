@@ -173,21 +173,20 @@ if (!isset($_GET["date"])) {
 
   <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
   <script>
-
-      $(document).ready(function() {
-
-          //let $ = (t) => document.querySelector(t),
-          //    dots = $(".dots");
-//
-//
-          //animate(dots, "dots--animate");
-//
-          //setInterval(reloadData, 6000);
-          reloadData();
-
-
-
-      });
+      <?php
+          if (isset($_GET['skip'])) {
+              echo "reloadData();";
+              echo "setInterval(reloadData, 6000);";
+          }
+          else {
+              echo '$(document).ready(function() {
+                        let $ = (t) => document.querySelector(t),
+                        dots = $(".dots");
+                        animate(dots, "dots--animate");
+                         setInterval(reloadData, 6000);
+                    });';
+          }
+      ?>
 
 
       function reloadData() {
