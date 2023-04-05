@@ -96,7 +96,7 @@ $current_day = $_POST['date'];
         </td>
 
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 2, 1, $pdo); ?></td>
-        <td class="color-1 db_text"><?php PrintLessonToPlan($current_day, 2, 9, $pdo); ?></td>
+        <td class="color-1 db_text"><?php PrintInfo($current_day, 2, 9, $pdo); ?></td>
 
         <td class="color-6 no_border" rowspan="2">
             9:00 - 10:00<br/>
@@ -120,7 +120,7 @@ $current_day = $_POST['date'];
             <b class="bold">Angebot 1</b>
         </td>
         <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 3, 1, $pdo); ?></td>
-        <td class="color-1 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 3, 9, $pdo); ?></td>
+        <td class="color-1 db_text" rowspan="2"><?php PrintInfo($current_day, 3, 9, $pdo); ?></td>
     </tr>
 
 
@@ -171,7 +171,7 @@ $current_day = $_POST['date'];
         </td>
 
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 4, 1, $pdo); ?></td>
-        <td class="color-1 db_text"><?php PrintLessonToPlan($current_day, 4, 9, $pdo); ?></td>
+        <td class="color-1 db_text"><?php PrintInfo($current_day, 4, 9, $pdo); ?></td>
     </tr>
 
 
@@ -195,7 +195,7 @@ $current_day = $_POST['date'];
         </td>
 
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 5, 1, $pdo); ?></td>
-        <td class="color-1 db_text"><?php PrintLessonToPlan($current_day, 5, 9, $pdo); ?></td>
+        <td class="color-1 db_text"><?php PrintInfo($current_day, 5, 9, $pdo); ?></td>
 
         <td class="color-6 no_border">
             13:00 – 14:30<br/>

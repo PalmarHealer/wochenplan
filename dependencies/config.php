@@ -140,15 +140,9 @@ $times = array(
     10 => "ll-lV Spätes Band - 15:00 – 16:00",
 );
 
-
-//Slots that are not a Lesson
-$name_only_lesson = array(
-    1 => "l-lV Morgenband - 8:00 – 9:00",
-    2 => "l/ll Morgenkreise - 9:00 – 9:30",
-    3 => "l/ll Angebot 1 - 9:30 – 10:30",
-    4 => "l/ll Angebot 2 - 10:45 – 11:45",
-    5 => "l/ll Nachmittagsband - 13:00 – 14:30",
-);
+//Placeholders
+//you can use them to replace something
+//the placeholder are written in framework.php in line 56
 
 
 

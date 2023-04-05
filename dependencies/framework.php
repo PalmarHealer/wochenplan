@@ -34,12 +34,41 @@ function PrintLessonToPlan($date, $time, $room, $pdo) {
 
     }
 
-    echo "<div class='lessons'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "name", $pdo); if ($sick) { echo "</s>"; } echo "</b>";
-    echo "<br>";
-    echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . GetInfomationOfUser($userid, "vorname", $pdo) . ")"; if ($sick) { echo "</s>"; } echo "</p>";
+    $lesson_name        = replacePlaceholders(GetLesson($date, $time, $room, "name", $pdo));
+    $lesson_username    = replacePlaceholders(GetInfomationOfUser($userid, "vorname", $pdo));
+    $lesson_description = replacePlaceholders(GetLesson($date, $time, $room, "description", $pdo));
 
-    echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "description", $pdo); if ($sick) { echo "</s>"; } echo "</p></div>";
+    echo "<div class='lessons'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
+    echo "<br>";
+    echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . $lesson_username . ")"; if ($sick) { echo "</s>"; } echo "</p>";
+
+    echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo $lesson_description; if ($sick) { echo "</s>"; } echo "</p></div>";
 }
+
+
+
+function modNumber($number, $mod) {
+    return $number % $mod;
+}
+
+function replacePlaceholders($string) {
+
+    $placeholders = array(
+        '%knr1%' => modNumber(date("W"), 3) + 1,
+        '%knr2%' => modNumber(date("W"), 3) + 2,
+        '%knr3%' => modNumber(date("W"), 3) + 3,
+        '%knr4%' => modNumber(date("W"), 3) + 4,
+        '%knr5%' => modNumber(date("W"), 3) + 5,
+        '%<3%' => "manu ist der beste",
+    );
+    foreach ($placeholders as $placeholder => $replacement) {
+        $string = str_replace($placeholder, $replacement, $string);
+    }
+
+    return $string;
+}
+
+
 
 function PrintInfo($date, $time, $room, $pdo) {
 

@@ -6,13 +6,17 @@ body {
     overflow: hidden;
 }
 
+.modt {
+    font-size: 120%;
+}
+
 .pointer {
     cursor: pointer;
 }
 .tg * {
     border-color: #ffffff;
     color: black;
-    font-family: Abel;
+    font-family: Abel, serif;
     border-style: solid;
     border-width: 0.56vh;
     border-spacing: 0;
@@ -30,7 +34,7 @@ body {
 .tg-small-preview * {
     border-color: #ffffff;
     color: black;
-    font-family: Abel;
+    font-family: Abel, serif;
     border-style: solid;
     border-width: 0.45vh;
     border-spacing: 0;
@@ -63,10 +67,6 @@ body {
 
 .heading {
     font-size: 140%;
-}
-
-.modt {
-    font-size: 125%;
 }
 
 .no_border * {
