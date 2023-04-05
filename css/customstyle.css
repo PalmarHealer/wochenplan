@@ -96,9 +96,11 @@ body {
     padding: 0 0 0 5px;
 }
 .author {
+    width: 100%;
 }
 
 .description {
+    width: 100%;
 }
 
 

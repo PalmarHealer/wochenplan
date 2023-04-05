@@ -82,7 +82,7 @@ function GenerateEmail($link): string {
                                     <tbody style="box-sizing: border-box;">
                                       <tr style="box-sizing: border-box;">
                                         <td id="c1545" class="card-footer" style="box-sizing: border-box; padding-top: 20px; padding-right: 0px; padding-bottom: 20px; padding-left: 0px; text-align: center;" align="center">
-                                          <a href="' . $link . '" class="button" id="it95o" style="box-sizing: border-box; font-size: 12px; padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; font-weight: 300; color: rgb(255, 255, 255); background-color: #7d74d1;">Registrierung Abschließen</a>
+                                          <a href="' . $link . '" class="button" id="it95o" style="box-sizing: border-box; font-size: 12px; padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px; text-align: center; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; font-weight: 300; color: rgb(255, 255, 255); background-color: #7d74d1;">Registrierung Abschlie&szligen</a>
                                         </td>
                                       </tr>
                                     </tbody>

@@ -111,5 +111,14 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
             ]
         });
 </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YL7H2T9DF4"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-YL7H2T9DF4');
+</script>
 </body>
 </html>

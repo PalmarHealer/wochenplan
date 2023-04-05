@@ -190,7 +190,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="simpleinput">Name des Angebotes</label>
-                                       <input name="name" type="text" id="simpleinput" class="form-control" placeholder="Name des Angebotes" maxlength="20" value="<?php if(isset($lesson_details['name'])) { echo $lesson_details['name']; }?>" required>
+                                       <input name="name" type="text" id="simpleinput" class="form-control" placeholder="Name des Angebotes" maxlength="30" value="<?php if(isset($lesson_details['name'])) { echo $lesson_details['name']; }?>" required>
                                        </input>
                                     </div>
                                  </div>
@@ -198,7 +198,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="helping">Weitere Beschreibung</label>
-                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." maxlength="30" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>">
+                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." maxlength="60" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>">
                                     </div>
                                  </div>
                               </div>
@@ -717,5 +717,16 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                       }
               });
       </script>
+
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-YL7H2T9DF4"></script>
+      <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-YL7H2T9DF4');
+      </script>
+
    </body>
 </html>

@@ -34,7 +34,7 @@ function PrintLessonToPlan($date, $time, $room, $pdo) {
 
     }
 
-    echo "<div class='lessons'><p class='lesson'><b>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "name", $pdo); if ($sick) { echo "</s>"; } echo "</b></p>";
+    echo "<div class='lessons'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo GetLesson($date, $time, $room, "name", $pdo); if ($sick) { echo "</s>"; } echo "</b>";
     echo "<br>";
     echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . GetInfomationOfUser($userid, "vorname", $pdo) . ")"; if ($sick) { echo "</s>"; } echo "</p>";
 
@@ -244,7 +244,7 @@ if (!isset($page)) {
 
 if(isset($_GET["logout"])) {
     if ($_GET["logout"] == "true") { //Logout script
-        Logout($webroot);
+        Logout($domain);
     }
 }
 

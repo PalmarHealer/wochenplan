@@ -52,7 +52,7 @@ $pdo = new PDO('mysql:host=localhost:3306;dbname=wochenplan', $db_user, $db_pass
 
 $keep_dpo = false;
 
-$domain = "http://localhost:63342/wochenplan/";
+$domain = "http://localhost:63342/wochenplan";
 
 //here you can list all allowed domains that emails allowed to register
 $allowed_domains = array(

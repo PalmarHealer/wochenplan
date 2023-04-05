@@ -133,7 +133,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="helping">Nachname</label>
-                                       <input name="nachname" type="text" id="helping" class="form-control" placeholder="Nachname" maxlength="30" value="<?php if(isset($lesson_details['nachname'])) { echo $lesson_details['nachname']; }?>" required>
+                                       <input name="nachname" type="text" id="helping" class="form-control" placeholder="Nachname" maxlength="30" value="<?php if(isset($lesson_details['nachname'])) { echo $lesson_details['nachname']; }?>">
                                     </div>
                                  </div>
                               </div>
@@ -147,7 +147,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                                          <div class="form-group mb-3">
                                              <label for="helping">E-Mail</label>
                                              <?php if(isset($mailalredyused)) { echo '<p class="text-muted">'; echo $mailalredyused; echo '</p>'; }?>
-                                             <input type="email" name="email" type="text" id="helping" class="form-control" placeholder="E-Mail" maxlength="40" value="<?php if(isset($lesson_details['email'])) { echo $lesson_details['email']; }?>">
+                                             <input type="email" name="email" type="text" id="helping" class="form-control" placeholder="E-Mail" maxlength="50" value="<?php if(isset($lesson_details['email'])) { echo $lesson_details['email']; }?>" required>
                                          </div>
                                      </div>
                                  </div>
@@ -250,6 +250,15 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
       <script src="<?php echo $relative_path; ?>/js/uppy.min.js"></script>
       <script src="<?php echo $relative_path; ?>/js/quill.min.js"></script>
       <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-YL7H2T9DF4"></script>
+      <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-YL7H2T9DF4');
+      </script>
       <!-- Custom JS code -->
    </body>
 </html>
