@@ -46,7 +46,7 @@ $db_password = "password";
 //If you don't want to use the default port you have to write it in the db_ip variable. For ex.: "my-host.com:3306"
 //and if the database is on the same server as the website then you can use "localhost"
 //specify the database to save everything like lessons and users.
-$pdo = new PDO('mysql:host=localhost;dbname=wochenplan', $db_user, $db_password);
+$pdo = new PDO('mysql:host=localhost:3306;dbname=wochenplan', $db_user, $db_password);
 
 $keep_dpo = false;
 
