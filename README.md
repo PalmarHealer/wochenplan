@@ -4,7 +4,7 @@ Hallo und cool das du es auch das Repository vom Wochenplan geschafft hast. Wenn
 
 ## Version
 Das Versionssystem ist folgendermaßen strukturiert:
-``state``.``version``.``feature``.``path/fix``
+``state``.``version``.``feature``.``patch/fix``
 # Übersicht
  - [Installation](#installation)
 	 - [Vorbereitung](#vorbereitung)
