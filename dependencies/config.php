@@ -35,6 +35,7 @@ $create_lessons_for_others = 6; //default 6
 $manage_other_users = 10; //default 10
 
 
+
 //---------- MySQL connection Information: ----------
 
 //This is where the credentials for the code come in.
