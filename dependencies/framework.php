@@ -45,30 +45,9 @@ function PrintLessonToPlan($date, $time, $room, $pdo) {
     echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo $lesson_description; if ($sick) { echo "</s>"; } echo "</p></div>";
 }
 
-
-
 function modNumber($number, $mod) {
-    return $number % $mod;
+    return $number % $mod +1;
 }
-
-function replacePlaceholders($string) {
-
-    $placeholders = array(
-        '%knr1%' => modNumber(date("W"), 3) + 1,
-        '%knr2%' => modNumber(date("W"), 3) + 2,
-        '%knr3%' => modNumber(date("W"), 3) + 3,
-        '%knr4%' => modNumber(date("W"), 3) + 4,
-        '%knr5%' => modNumber(date("W"), 3) + 5,
-        '%<3%' => "manu ist der beste",
-    );
-    foreach ($placeholders as $placeholder => $replacement) {
-        $string = str_replace($placeholder, $replacement, $string);
-    }
-
-    return $string;
-}
-
-
 
 function PrintInfo($date, $time, $room, $pdo) {
 
@@ -76,7 +55,27 @@ function PrintInfo($date, $time, $room, $pdo) {
         return;
     }
 
-     echo GetLesson($date, $time, $room, "name", $pdo);
+    $value = replacePlaceholders(GetLesson($date, $time, $room, "name", $pdo));
+     echo $value;
+
+}
+
+function replacePlaceholders($string): string {
+
+    $placeholders = array(
+        '%knr%'   => modNumber(intval(date("W")), 3),
+        '%knr:1%' => modNumber(intval(date("W")) + 1, 3),
+        '%knr:2%' => modNumber(intval(date("W")) + 2, 3),
+        '%knr:3%' => modNumber(intval(date("W")) + 3, 3),
+        '%knr:4%' => modNumber(intval(date("W")) + 4, 3),
+        '%knr:5%' => modNumber(intval(date("W")) + 5, 3),
+        '%<3%' => "manu ist der beste",
+    );
+    foreach ($placeholders as $placeholder => $replacement) {
+        $string = str_replace($placeholder, $replacement, $string);
+    }
+
+    return $string;
 }
 
 function GetCurrentUrl(): string
@@ -101,6 +100,10 @@ function GetCurrentUrl(): string
 function Alert($msg): void
 {
     echo "<script type='text/javascript'>alert('$msg');</script>";
+}
+function ConsoleLog($msg): void
+{
+    echo "<script type='text/javascript'>console.log('$msg');</script>";
 }
 
 function GetHighestValueBelowValueName($value, $array) {
@@ -218,7 +221,6 @@ function IsDateOlderThat10Minutes($date) {
     return $diff <= $max_age;
 }
 
-
 function GenerateRandomString($length = 128) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charLength = strlen($characters);
@@ -257,13 +259,13 @@ function GenerateRandomString($length = 128) {
     die();
 }
 
-
 $old_url_array = explode("?", GetCurrentUrl());
 $old_url = $old_url_array[0];
 if (isset($_SERVER['HTTP_REFERER'])) {
     $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
     $new_url = $new_url_array[0];
-} else {
+}
+else {
     $new_url = "";
 }
 
