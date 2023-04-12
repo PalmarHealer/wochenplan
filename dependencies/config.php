@@ -142,7 +142,7 @@ $times = array(
 
 //Placeholders
 //you can use them to replace something
-//the placeholder are written in framework.php in line 56
+//the placeholder are written in framework.php in line 66
 
 
 
