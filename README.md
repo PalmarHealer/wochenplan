@@ -158,6 +158,12 @@ Das dürfen Sie gerne selbst herrausfinden. :)
 
 Theme und Layout (exept plan): [Tinydash](https://github.com/themewagon/tinydash/)
 
+Color Picker: [Coloris](https://github.com/mdbassit/Coloris)
+
+Mail libary: [PHPMailer](https://github.com/PHPMailer/PHPMailer)
+
+Convert to PDF: [dompdf](https://github.com/dompdf/dompdf)
+
 Loading animation on Plan: [Animaion](https://codepen.io/AbubakerSaeed/pen/JjXERWW)
 
 Idee: [Aktive Schule Leipzig - Freie Oberschule](https://www.aktive-schule-leipzig.de/oberschule/)
