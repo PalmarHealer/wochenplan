@@ -34,7 +34,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <!-- Custom CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
       <!-- Site Css -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/select2.css">
+       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/select2.css">
+       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/coloris.min.css">
    </head>
    <body class="vertical light">
       <div class="wrapper">
@@ -280,7 +281,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      <br>
                                                      <br>
                                                  </th>
-                                                 <th class="color-1 preview-hover preview-selected" colspan="4" time="13" room="10"></th>
+                                                 <th class="color-1 preview-hover" colspan="4" time="13" room="10"></th>
                                                  <th class="color-3 white_text modt text-left" colspan="5">
 
                                                  </th>
@@ -471,6 +472,20 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  </div>
                              </div>
 
+
+
+                             <div class="col-md-12">
+                                 <div class="card shadow mb-4">
+                                     <div class="card-body">
+                                         <div class="form-group mb-3">
+                                             <label for="color-picker">Farbe</label>
+                                             <input id="color-picker" class="test form-control" type="text" name="color" value="#f6e9e6" data-coloris>
+                                         </div>
+                                     </div> <!-- /.card-body -->
+                                 </div> <!-- /.card -->
+                             </div>
+
+
                              <div class="col-md-6 mb-4">
                               <div class="card shadow">
                                  <div class="d-flex flex-row tab-icon">
@@ -633,6 +648,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <script src="<?php echo $relative_path; ?>/js/uppy.min.js"></script>
       <script src="<?php echo $relative_path; ?>/js/quill.min.js"></script>
       <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
+      <script src="<?php echo $relative_path; ?>/js/coloris.min.js"></script>
       <!-- Custom JS code -->
       <script>
           function updateAvailability() {
@@ -656,9 +672,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
               var time = $('#time').val();
               var location = $('#location').val();
 
-              console.log("Date: " + date);
-              console.log("Time: " + time);
-              console.log("Location: " + location);
               $.ajax({
                   url: './check.php',
                   type: 'GET',
@@ -673,6 +686,14 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
           }
           $(document).ready(function(){
               updateAvailability();
+
+
+              const time = $('#time').val();
+              const room = $('#location').val();
+
+              $(`[time="${time}"][room="${room}"]`).addClass("preview-selected");
+
+
               $(".date_selector1").click(function(){
                   $(".repeating").show();
                   $(".toggle_date_input1").removeAttr("disabled", "");
@@ -696,7 +717,33 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   $('#time').val(time).change();
               });
 
+
+              Coloris.setInstance('.test', {
+                  //default, large, polaroid, pill
+                  theme: 'pill',
+
+                  themeMode: 'light',
+
+                  margin: 5,
+
+                  format: 'hex',
+                  alpha: false,
+                  swatches: [
+                      '#ffffff',
+                      '#f6e9e6',
+                      '#ecd3cd',
+                      '#e3bdb4',
+                      '#d09182',
+                      '#dee5e6',
+                      '#e5f4d4',
+                      '#f8e9be',
+                      '#ffca39',
+                      '#ff3939',
+                  ]
+
+              });
           });
+
           $('.select2').select2(
               {
                   theme: 'bootstrap4',
@@ -745,6 +792,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                       ],
                   }
               });
+
       </script>
 
       <!-- Google tag (gtag.js) -->
