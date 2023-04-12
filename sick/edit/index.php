@@ -259,10 +259,39 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                   singleDatePicker: false,
                   timePicker: false,
                   showDropdowns: true,
-                  locale:
-                      {
-                          format: 'DD/MM/YYYY'
-                      }
+                  locale: {
+                      format: "DD/MM/YYYY",
+                      separator: " - ",
+                      applyLabel: "Anwenden",
+                      cancelLabel: "Abbrechen",
+                      fromLabel: "Von",
+                      toLabel: "bis",
+                      customRangeLabel: "Custom",
+                      weekLabel: "W",
+                      daysOfWeek: [
+                          "So",
+                          "Mo",
+                          "Di",
+                          "Mi",
+                          "Do",
+                          "Fr",
+                          "Sa"
+                      ],
+                      monthNames: [
+                          "Januar",
+                          "Februar",
+                          "März",
+                          "April",
+                          "Mai",
+                          "Juni",
+                          "Juli",
+                          "August",
+                          "September",
+                          "Oktober",
+                          "November",
+                          "Dezember"
+                      ],
+                  }
               });
       </script>
 
