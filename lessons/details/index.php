@@ -81,6 +81,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              $new_description = ($_POST['description'] ?? '');
              $new_location = ($_POST['location'] ?? '');
              $new_time = ($_POST['time'] ?? '');
+             $new_box_color = ($_POST['box-color'] ?? '#f6e9e6');
              $new_notes = ($_POST['notes'] ?? '');
              $new_assigned_user_id = ($_POST['creator'] ?? '');
 
@@ -99,6 +100,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $new_description,
                      $new_location,
                      $new_time,
+                     $new_box_color,
                      $new_notes,
                      $new_assigned_user_id
                  );
@@ -115,6 +117,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $new_description,
                      $new_location,
                      $new_time,
+                     $new_box_color,
                      $new_notes,
                      $new_assigned_user_id
                  );
@@ -137,7 +140,11 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                  $lesson_details['description'] = GetLessonByID($lesson_id, "description", $pdo);
                  $lesson_details['location'] = GetLessonByID($lesson_id, "location", $pdo);
                  $lesson_details['time'] = GetLessonByID($lesson_id, "time", $pdo);
+
                  $lesson_details['notes'] = GetLessonByID($lesson_id, "notes", $pdo);
+
+                 $lesson_details['box-color'] = GetLessonByID($lesson_id, "box-color", $pdo);
+
 
                  $lesson_details['userid'] = GetLessonByID($lesson_id, "userid", $pdo);
                  $lesson_details['creator'] = GetInfomationOfUser($lesson_details['userid'], "name", $pdo);
@@ -190,8 +197,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <div class="row">
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
-                                       <label for="simpleinput">Name des Angebotes</label>
-                                       <input name="name" type="text" id="simpleinput" class="form-control" placeholder="Name des Angebotes" maxlength="30" value="<?php if(isset($lesson_details['name'])) { echo $lesson_details['name']; }?>" required>
+                                       <label for="name">Name des Angebotes</label>
+                                       <input name="name" type="text" id="name" class="form-control" placeholder="Name des Angebotes" maxlength="30" value="<?php echo ($lesson_details['name'] ?? '');?>" required>
                                        </input>
                                     </div>
                                  </div>
@@ -199,7 +206,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="helping">Weitere Beschreibung</label>
-                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." maxlength="60" value="<?php if(isset($lesson_details['description'])) { echo $lesson_details['description']; }?>">
+                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." maxlength="60" value="<?php echo ($lesson_details['description'] ?? '');?>">
                                     </div>
                                  </div>
                               </div>
@@ -211,7 +218,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="card shadow">
                                      <div class="card-body">
                                          <div class="form-group mb-3">
-                                             <label for="custom-select">Ort des Angebotes bzw. Art</label>
+                                             <label for="location">Ort des Angebotes bzw. Art</label>
                                              <select name="location" class="form-control dropdown" id="location" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
                                                  <?php
                                                  $selected_location = array();
@@ -237,7 +244,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <div class="card shadow">
                                  <div class="card-body">
                                     <div class="form-group mb-3">
-                                       <label for="custom-select">Zeitpunkt des Angebotes</label>
+                                       <label for="time">Zeitpunkt des Angebotes</label>
                                        <select name="time" class="form-control" id="time" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
                                           <?php
                                           $selected_time = array();
@@ -479,7 +486,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                      <div class="card-body">
                                          <div class="form-group mb-3">
                                              <label for="color-picker">Farbe</label>
-                                             <input id="color-picker" class="test form-control" type="text" name="color" value="#f6e9e6" data-coloris>
+                                             <input id="color-picker" class="test form-control" type="text" name="box-color" value="<?php echo ($lesson_details['box-color']?? '#f6e9e6'); ?>" data-coloris>
                                          </div>
                                      </div> <!-- /.card-body -->
                                  </div> <!-- /.card -->
@@ -508,7 +515,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                           <div class="form-group mb-3 full">
                                              <div class="card-body">
 
-                                                <label for="custom-select">Tag des Angebotes</label>
+                                                <label for="day">Tag des Angebotes</label>
 												
 												<div class="repeating" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") echo "style='display: none;'"; ?>>
                                                 <div class="input-group">
@@ -562,8 +569,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <div class="card shadow">
                                  <div class="card-body">
                                     <div class="form-group mb-3">
-                                       <label for="custom-select">Wer macht dieses Angebot?</label>
-                                       <select name="creator" class="form-control select2" <?php
+                                       <label for="creator">Wer macht dieses Angebot?</label>
+                                       <select id="creator" name="creator" class="form-control select2" <?php
                                           if($permission_level < $create_lessons_for_others) {
                                           	echo "disabled";
                                           }
@@ -589,7 +596,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                     </div>
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <input name="notes" class="form-control form-control-lg" type="text" placeholder="Notizen" maxlength="255" value="<?php if(isset($lesson_details['notes'])) { echo $lesson_details['notes']; }?>">
+                                            <input name="notes" class="form-control form-control-lg" type="text" placeholder="Notizen" maxlength="255" value="<?php echo ($lesson_details['notes'] ?? '');?>">
                                         </div>
                                     </div>
                                 </div>
