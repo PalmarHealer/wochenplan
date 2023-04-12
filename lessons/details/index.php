@@ -53,7 +53,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              if ($permission_level > $create_lessons_for_others) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  GoPageBack("");
-             } elseif ($id == GetLessonByID($lesson_to_delete, "userid", $pdo)) {
+             } elseif ($id == GetLessonInfoByID($lesson_to_delete, "userid", $pdo)) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  GoPageBack("");
              } else {
@@ -130,27 +130,27 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
          if (isset($_GET['id'])) {
              $lesson_id = $_GET['id'];
 
-             if($permission_level < $create_lessons_for_others AND ($_SESSION['asl_userid'] ?? '') != GetLessonByID($lesson_id, "userid", $pdo)) {
+             if($permission_level < $create_lessons_for_others AND ($_SESSION['asl_userid'] ?? '') != GetLessonInfoByID($lesson_id, "userid", $pdo)) {
                  Redirect("../?message=unauthorized");
              }
 
-             if (GetLessonByID($lesson_id, "available", $pdo)) {
+             if (GetLessonInfoByID($lesson_id, "available", $pdo)) {
 
-                 $lesson_details['name'] = GetLessonByID($lesson_id, "name", $pdo);
-                 $lesson_details['description'] = GetLessonByID($lesson_id, "description", $pdo);
-                 $lesson_details['location'] = GetLessonByID($lesson_id, "location", $pdo);
-                 $lesson_details['time'] = GetLessonByID($lesson_id, "time", $pdo);
+                 $lesson_details['name'] = GetLessonInfoByID($lesson_id, "name", $pdo);
+                 $lesson_details['description'] = GetLessonInfoByID($lesson_id, "description", $pdo);
+                 $lesson_details['location'] = GetLessonInfoByID($lesson_id, "location", $pdo);
+                 $lesson_details['time'] = GetLessonInfoByID($lesson_id, "time", $pdo);
 
-                 $lesson_details['notes'] = GetLessonByID($lesson_id, "notes", $pdo);
+                 $lesson_details['notes'] = GetLessonInfoByID($lesson_id, "notes", $pdo);
 
-                 $lesson_details['box-color'] = GetLessonByID($lesson_id, "box-color", $pdo);
+                 $lesson_details['box-color'] = GetLessonInfoByID($lesson_id, "box-color", $pdo);
 
 
-                 $lesson_details['userid'] = GetLessonByID($lesson_id, "userid", $pdo);
+                 $lesson_details['userid'] = GetLessonInfoByID($lesson_id, "userid", $pdo);
                  $lesson_details['creator'] = GetInfomationOfUser($lesson_details['userid'], "name", $pdo);
 
 
-                 $lesson_details['date-raw'] = GetLessonByID($lesson_id, "date", $pdo);
+                 $lesson_details['date-raw'] = GetLessonInfoByID($lesson_id, "date", $pdo);
 
                  if (str_contains($lesson_details['date-raw'], "-")) {
                      $lesson_details['date-type'] = 2;

@@ -48,7 +48,7 @@ function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_dat
     }
 }
 
-function GetLesson($day, $time, $room, $info, $pdo) {
+function GetLessonInfo($day, $time, $room, $info, $pdo) {
 
 
     $lessons = $pdo->prepare("SELECT * FROM angebot ORDER BY id ASC");
@@ -66,11 +66,36 @@ function GetLesson($day, $time, $room, $info, $pdo) {
         }
         if ($day == $sl['date'] OR $repeating_day == $sl['date_repeating']) {
             if ($time == $sl['time'] AND $room == $sl['location']) {
+
+                if ($info == "id") {
+                    return $sl['id'];
+                }
                 if ($info == "name") {
                     return $sl['name'];
                 }
                 if ($info == "description") {
                     return $sl['description'];
+                }
+                if ($info == "date") {
+                    if ($sl['date_type'] == 1) {
+                        return $sl['date_repeating'];
+                    } elseif ($sl['date_type'] == 2) {
+                        return $sl['date'];
+                    } else {
+                        return "Error loading date";
+                    }
+                }
+                if ($info == "location") {
+                    return $sl['location'];
+                }
+                if ($info == "time") {
+                    return $sl['time'];
+                }
+                if ($info == "box-color") {
+                    return $sl['box_color'];
+                }
+                if ($info == "notes") {
+                    return $sl['notes'];
                 }
                 if ($info == "userid") {
                     return $sl['assigned_user_id'];
@@ -88,7 +113,7 @@ function GetLesson($day, $time, $room, $info, $pdo) {
     }
 }
 
-function GetLessonByID($id, $info, $pdo) {
+function GetLessonInfoByID($id, $info, $pdo) {
 
 
     $lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = ?");

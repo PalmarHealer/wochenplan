@@ -86,7 +86,7 @@ $current_day = $_POST['date'];
             <b class="bold">Morgenband</b>
         </td>
 
-        <td class="color-2 db_text text-center" colspan="6"><?php PrintInfo($current_day, 1, 10, $pdo); ?></td>
+        <td class="color-2 db_text text-center" colspan="6"><?php PrintInfo($current_day, 1, 10, $pdo, $webroot); ?></td>
     </tr>
     <tr class="macro_piece">
 
@@ -95,19 +95,19 @@ $current_day = $_POST['date'];
             <b class="bold">Morgenkreise</b>
         </td>
 
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 2, 1, $pdo); ?></td>
-        <td class="color-1 db_text"><?php PrintInfo($current_day, 2, 9, $pdo); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 2, 1, $pdo, $webroot); ?></td>
+        <td class="color-1 db_text"><?php PrintInfo($current_day, 2, 9, $pdo, $webroot); ?></td>
 
         <td class="color-6 no_border" rowspan="2">
             9:00 - 10:00<br/>
             <b class="bold">Offene Räume</b>
         </td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 2, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 3, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 4, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 5, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="5"><?php PrintLessonToPlan($current_day, 13, 6, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="5"><?php PrintLessonToPlan($current_day, 13, 7, $pdo); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 2, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 3, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 4, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 5, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="5"><?php PrintLessonToPlan($current_day, 13, 6, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="5"><?php PrintLessonToPlan($current_day, 13, 7, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -119,8 +119,8 @@ $current_day = $_POST['date'];
             9:30 – 10:30<br/>
             <b class="bold">Angebot 1</b>
         </td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 3, 1, $pdo); ?></td>
-        <td class="color-1 db_text" rowspan="2"><?php PrintInfo($current_day, 3, 9, $pdo); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 3, 1, $pdo, $webroot); ?></td>
+        <td class="color-1 db_text" rowspan="2"><?php PrintInfo($current_day, 3, 9, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -131,10 +131,10 @@ $current_day = $_POST['date'];
             <b class="bold">Morgenkreise</b>
         </td>
 
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 2, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 3, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 4, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 5, $pdo); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 2, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 3, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 4, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 5, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -155,10 +155,10 @@ $current_day = $_POST['date'];
             <b class="bold">Großes Band</b>
         </td>
 
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 2, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 3, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 4, $pdo); ?></td>
-        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 5, $pdo); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 2, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 3, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 4, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 5, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -170,8 +170,8 @@ $current_day = $_POST['date'];
             <b class="bold">Angebot 2</b>
         </td>
 
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 4, 1, $pdo); ?></td>
-        <td class="color-1 db_text"><?php PrintInfo($current_day, 4, 9, $pdo); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 4, 1, $pdo, $webroot); ?></td>
+        <td class="color-1 db_text"><?php PrintInfo($current_day, 4, 9, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -183,7 +183,7 @@ $current_day = $_POST['date'];
             <b class="bold">Mittagspause</b>
         </td>
 
-        <td class="color-4 no_border center2" colspan="9"><b class="bold">Mittagessen</b><br><?php PrintLessonToPlan($current_day, 10, 14, $pdo); ?></td>
+        <td class="color-4 no_border center2" colspan="9"><b class="bold">Mittagessen</b><br><?php PrintInfo($current_day, 10, 14, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -194,20 +194,20 @@ $current_day = $_POST['date'];
             <b class="bold">Nachmittagsband</b>
         </td>
 
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 5, 1, $pdo); ?></td>
-        <td class="color-1 db_text"><?php PrintInfo($current_day, 5, 9, $pdo); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 5, 1, $pdo, $webroot); ?></td>
+        <td class="color-1 db_text"><?php PrintInfo($current_day, 5, 9, $pdo, $webroot); ?></td>
 
         <td class="color-6 no_border">
             13:00 – 14:30<br/>
             <b class="bold">Nachmittagsband</b>
         </td>
 
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 2, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 3, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 4, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 5, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 6, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 7, $pdo); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 2, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 3, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 4, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 5, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 6, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 7, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -222,13 +222,13 @@ $current_day = $_POST['date'];
             14:30 – 15:00<br/>
             <b class="bold">Putzen</b>
         </td>
-        <td class="color-5 text-center" colspan="8"><?php PrintInfo($current_day, 12, 10, $pdo); ?></td>
+        <td class="color-5 text-center" colspan="8"><?php PrintInfo($current_day, 12, 10, $pdo, $webroot); ?></td>
     </tr>
 
     <tr class="small_piece">
-        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 11, $pdo); ?></td>
-        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 12, $pdo); ?></td>
-        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 13, $pdo); ?></td>
+        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 11, $pdo, $webroot); ?></td>
+        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 12, $pdo, $webroot); ?></td>
+        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 13, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -239,12 +239,12 @@ $current_day = $_POST['date'];
             15:00 – 16:00<br/>
             <b class="bold">Spätes Band</b>
         </td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 2, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 3, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 4, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 5, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 6, $pdo); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 7, $pdo); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 2, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 3, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 4, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 5, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 6, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 7, $pdo, $webroot); ?></td>
     </tr>
     </tbody>
 </table>

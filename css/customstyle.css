@@ -62,7 +62,7 @@ body {
     max-height: 100%;
 }
 .db_text {
-    padding: 8px 0 0 0;
+    padding: 0 0 0 0;
 }
 
 .heading {
@@ -86,14 +86,13 @@ body {
 
 .lessons {
     margin: inherit;
+    width: 100%;
+    height: 100%;
+    padding: 8px 10px 5px 5px; !important;
 }
 
 .lesson {
     width: 100%;
-}
-
-.lessons {
-    padding: 0 0 0 5px;
 }
 .author {
     width: 100%;
@@ -102,10 +101,6 @@ body {
 .description {
     width: 100%;
 }
-
-
-
-
 
 .profilename {
     margin-right: -80%;

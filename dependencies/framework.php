@@ -14,12 +14,12 @@ function random_string(): string {
     return $str;
 }
 
-function PrintLessonToPlan($date, $time, $room, $pdo) {
-    if (!GetLesson($date, $time, $room, "available", $pdo)) {
+function PrintLessonToPlan($date, $time, $room, $pdo, $webroot) {
+    if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
     $sick = false;
-    $userid = GetLesson($date, $time, $room, "userid", $pdo);
+    $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
     foreach (GetAllSickNotesRaw($pdo) as &$sickNote) {
 
         if (intval($sickNote['userid']) == $userid) {
@@ -34,11 +34,11 @@ function PrintLessonToPlan($date, $time, $room, $pdo) {
 
     }
 
-    $lesson_name        = replacePlaceholders(GetLesson($date, $time, $room, "name", $pdo));
+    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
     $lesson_username    = replacePlaceholders(GetInfomationOfUser($userid, "vorname", $pdo));
-    $lesson_description = replacePlaceholders(GetLesson($date, $time, $room, "description", $pdo));
+    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo));
 
-    echo "<div class='lessons'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
+    echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
     echo "<br>";
     echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . $lesson_username . ")"; if ($sick) { echo "</s>"; } echo "</p>";
 
@@ -51,11 +51,11 @@ function modNumber($number, $mod) {
 
 function PrintInfo($date, $time, $room, $pdo) {
 
-    if (!GetLesson($date, $time, $room, "available", $pdo)) {
+    if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
 
-    $value = replacePlaceholders(GetLesson($date, $time, $room, "name", $pdo));
+    $value = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
      echo $value;
 
 }
