@@ -64,6 +64,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                             <th>Ort</th>
                             <th>Zeitpunkt</th>
                             <th>Tag</th>
+                            <th>Farbe</th>
                             <th>Person</th>
                             <th>Notizen</th>
                             <th>Aktionen</th>

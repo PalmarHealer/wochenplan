@@ -93,6 +93,7 @@
                             <th>Ort</th>
                             <th>Zeitpunkt</th>
                             <th>Tag</th>
+                            <th>Farbe</th>
                             <th>Notizen</th>
                             <th>Aktionen</th>
                           </tr>
