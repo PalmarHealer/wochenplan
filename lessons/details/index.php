@@ -220,7 +220,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  $count = 0;
                                                  foreach ($room_names as $value => $i) {
                                                      $count++;
-                                                     echo '<option value="' . $value . '" ' . ($selected_location[$count] ?? '') . '>' . $i . '</option>';
+                                                     echo '<option value="' . $value . '" ' . ($selected_location[$value] ?? '') . '>' . $i . '</option>';
                                                  }
                                                  ?>
 
@@ -246,7 +246,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                           $count = 0;
                                           foreach ($times as $value => $i) {
                                               $count++;
-                                              echo '<option value="' . $value . '" ' . ($selected_time[$count] ?? '') . '>' . $i . '</option>';
+                                              echo '<option value="' . $value . '" ' . ($selected_time[$value] ?? '') . '>' . $i . '</option>';
                                           }
                                           ?>
                                        </select>
@@ -711,10 +711,39 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   singleDatePicker: true,
                   timePicker: false,
                   showDropdowns: true,
-                  locale:
-                      {
-                          format: 'DD/MM/YYYY'
-                      }
+                  locale: {
+                      format: "DD/MM/YYYY",
+                      separator: " - ",
+                      applyLabel: "Anwenden",
+                      cancelLabel: "Abbrechen",
+                      fromLabel: "Von",
+                      toLabel: "bis",
+                      customRangeLabel: "Custom",
+                      weekLabel: "W",
+                      daysOfWeek: [
+                          "So",
+                          "Mo",
+                          "Di",
+                          "Mi",
+                          "Do",
+                          "Fr",
+                          "Sa"
+                      ],
+                      monthNames: [
+                          "Januar",
+                          "Februar",
+                          "März",
+                          "April",
+                          "Mai",
+                          "Juni",
+                          "Juli",
+                          "August",
+                          "September",
+                          "Oktober",
+                          "November",
+                          "Dezember"
+                      ],
+                  }
               });
       </script>
 
