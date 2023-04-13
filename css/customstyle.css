@@ -191,8 +191,14 @@ body {
     height: 5%;
 }
 
-.name-badge {
-    margin-top: -5%;
+.name-badge * {
+    text-align: center;
+    padding: 5px;
+    horiz-align: center;
+    vertical-align: center;
+    margin: auto;
+
+
 }
 
 .center * {
@@ -217,6 +223,23 @@ body {
     text-align: left;
 }
 
-.tmp {
-    width: 20%;
+:fullscreen .open_fullscreen {
+    display: none;
+}
+:-webkit-full-screen .open_fullscreen {
+    display: none;
+}
+
+:fullscreen .close_fullscreen {
+    display: inline;
+}
+:-webkit-full-screen .close_fullscreen {
+    display: inline;
+}
+
+.close_fullscreen {
+    display: none;
+}
+.close_fullscreen {
+    display: none;
 }
