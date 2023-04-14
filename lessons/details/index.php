@@ -147,7 +147,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
 
                  $lesson_details['userid'] = GetLessonInfoByID($lesson_id, "userid", $pdo);
-                 $lesson_details['creator'] = GetInfomationOfUser($lesson_details['userid'], "name", $pdo);
+                 $lesson_details['creator'] = GetUserByID($lesson_details['userid'], "name", $pdo);
 
 
                  $lesson_details['date-raw'] = GetLessonInfoByID($lesson_id, "date", $pdo);

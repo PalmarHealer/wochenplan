@@ -55,10 +55,10 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
 
      if (isset($_GET['id'])) {
          $userid = $_GET['id'];
-         $lesson_details['vorname'] = GetInfomationOfUser($userid, "vorname", $pdo);
-         $lesson_details['nachname'] = GetInfomationOfUser($userid, "nachname", $pdo);
-         $lesson_details['email'] = GetInfomationOfUser($userid, "email", $pdo);
-         $lesson_details['permission_level'] = GetInfomationOfUser($userid, "permission_level", $pdo);
+         $lesson_details['vorname'] = GetUserByID($userid, "vorname", $pdo);
+         $lesson_details['nachname'] = GetUserByID($userid, "nachname", $pdo);
+         $lesson_details['email'] = GetUserByID($userid, "email", $pdo);
+         $lesson_details['permission_level'] = GetUserByID($userid, "permission_level", $pdo);
      }
          if(isset($old_url) AND $new_url = $old_url AND ($_POST['save'] ?? 0) == "1") {
              $error = false;

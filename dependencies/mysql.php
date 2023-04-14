@@ -29,7 +29,7 @@ function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name
     }
 }
 
-function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_date) {
+function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_date): bool {
 
     try {
         // Prepare and execute the SQL query
@@ -196,7 +196,7 @@ function GetSickNoteByID($id, $info, $pdo) {
     }
 }
 
-function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
+function GetUserByID($UserID, $InfomationType, $pdo) {
     if (!is_numeric($UserID)) {
         return "Error loading user information (you have to provide a id)";
     }
@@ -236,6 +236,61 @@ function GetInfomationOfUser($UserID, $InfomationType, $pdo) {
 
 }
 
+function GetUserByName($Name, $InfomationType, $pdo) {
+    $lessons = $pdo->prepare("SELECT * FROM users WHERE vorname = ?");
+    $lessons->execute(array($Name));
+    if ($InfomationType == "id") {
+        return $lessons->fetch()["id"];
+    }
+    if ($InfomationType == "nachname") {
+        return $lessons->fetch()["nachname"];
+    }
+    if ($InfomationType == "name") {
+        $tmp = $lessons->fetch();
+        return $tmp["vorname"] . " " . $tmp["nachname"];
+    }
+    if ($InfomationType == "email") {
+        return $lessons->fetch()["email"];
+    }
+    if ($InfomationType == "permission_level") {
+        return $lessons->fetch()["permission_level"];
+    }
+    if ($InfomationType == "created") {
+        return $lessons->fetch()["created_at"];
+    }
+    if ($InfomationType == "updated") {
+        return $lessons->fetch()["updated_at"];
+    }
+    if ($InfomationType == "available") {
+        if ($lessons->fetch()["vorname"] == $Name) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return "Error loading user information. You probably set the wrong information type (there is: id, nachname, email, permission_level, created, updated and available";
+    }
+
+}
+
+
+function GetAllUsers($pdo): array {
+
+    $users = $pdo->prepare("SELECT * FROM users");
+    $users->execute();
+    $user_list = array();
+
+    while($sl = $users->fetch()) {
+
+        $username = $sl["vorname"];
+        $id = $sl["id"];
+        $user_list[$username] = $id;
+
+    }
+    return $user_list;
+}
+
+
 function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname, email = :email, permission_level = :permission_level WHERE id = :id");
     $statement->execute(array(
@@ -248,7 +303,7 @@ function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     return $statement->rowCount();
 }
 
-function UpdateUsernames($id, $vorname, $nachname, $pdo) {
+function UpdateUsername($id, $vorname, $nachname, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname WHERE id = :id");
     $statement->execute(array(
         'id' => $id,
@@ -258,7 +313,7 @@ function UpdateUsernames($id, $vorname, $nachname, $pdo) {
     return $statement->rowCount();
 }
 
-function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_level, $pdo) {
+function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_level, $pdo): void {
     $statement = $pdo->prepare("INSERT INTO users (email, passwort, vorname, nachname, permission_level) VALUES (:email, :passwort, :vorname, :nachname, :permission_level)");
     $result = $statement->execute(array(
         'email' => $email,
@@ -269,7 +324,7 @@ function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_lev
     ));
 }
 
-function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
+function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
 
     $users = $pdo->prepare("SELECT * FROM users");
     $users->execute();
@@ -322,7 +377,7 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names) {
     }
 }
 
-function DeleteLesson($lessonid, $pdo) {
+function DeleteLesson($lessonid, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM angebot WHERE id = ?");
         $delete_lesson->execute(array($lessonid));
@@ -332,7 +387,7 @@ function DeleteLesson($lessonid, $pdo) {
     }
 }
 
-function DeleteToken($token, $pdo) {
+function DeleteToken($token, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM registertokens WHERE token = ?");
         $delete_lesson->execute(array($token));
@@ -341,7 +396,7 @@ function DeleteToken($token, $pdo) {
         return "Fehler beim Löschen: " . $e->getMessage();
     }
 }
-function DeleteUser($userid, $pdo) {
+function DeleteUser($userid, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM users WHERE id = ?");
         $delete_lesson->execute(array($userid));
@@ -350,7 +405,7 @@ function DeleteUser($userid, $pdo) {
         return "Fehler beim Löschen: " . $e->getMessage();
     }
 }
-function DeleteSickNote($sickid, $pdo) {
+function DeleteSickNote($sickid, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM sick WHERE id = ?");
         $delete_lesson->execute(array($sickid));
@@ -360,7 +415,7 @@ function DeleteSickNote($sickid, $pdo) {
     }
 }
 
-function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo, $webroot) {
+function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo, $webroot): void {
 
     $lessons = $pdo->prepare("SELECT * FROM angebot WHERE assigned_user_id = ? ORDER BY date ASC");
     $lessons->execute(array($userid));
@@ -423,7 +478,7 @@ function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times,
 
 }
 
-function GetAllLessons($room_names, $times, $pdo) {
+function GetAllLessons($room_names, $times, $pdo): void {
     $lessons = $pdo->prepare("SELECT * FROM angebot");
     $lessons->execute();
     while($sl = $lessons->fetch()) {
@@ -449,7 +504,7 @@ function GetAllLessons($room_names, $times, $pdo) {
             }
         }
 
-            $creator_fomatted = GetInfomationOfUser($sl['assigned_user_id'], "name", $pdo);
+        $creator_fomatted = GetUserByID($sl['assigned_user_id'], "name", $pdo);
 
         echo '<tr>
 										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">
@@ -478,7 +533,7 @@ function GetAllLessons($room_names, $times, $pdo) {
 
 }
 
-function GetAllSickNotes($pdo) {
+function GetAllSickNotes($pdo): void {
     $lessons = $pdo->prepare("SELECT * FROM sick");
     $lessons->execute();
     while($sl = $lessons->fetch()) {
@@ -490,7 +545,7 @@ function GetAllSickNotes($pdo) {
         $start_date2 = date("d.m.Y", strtotime($start_date));
         $end_date2 = date("d.m.Y", strtotime($end_date));
 
-        $username = GetInfomationOfUser($new_assigned_user_id, "name", $pdo);
+        $username = GetUserByID($new_assigned_user_id, "name", $pdo);
 
         echo '<tr>
 										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">
@@ -514,7 +569,7 @@ function GetAllSickNotes($pdo) {
 
 }
 
-function GetAllSickNotesRaw($pdo) {
+function GetAllSickNotesRaw($pdo): array {
     $lessons = $pdo->prepare("SELECT * FROM sick");
     $lessons->execute();
     $SickNotes = array();
@@ -530,15 +585,15 @@ function GetAllSickNotesRaw($pdo) {
         $end_date = ($sl['end'] ?? '');
         $SickNotes[$counter]['start_date'] = date("d.m.Y", strtotime($start_date));
         $SickNotes[$counter]['end_date'] = date("d.m.Y", strtotime($end_date));
-        $SickNotes[$counter]['vorname'] = GetInfomationOfUser($sl['userid'], "vorname", $pdo);
-        $SickNotes[$counter]['username'] = GetInfomationOfUser($sl['userid'], "name", $pdo);
+        $SickNotes[$counter]['vorname'] = GetUserByID($sl['userid'], "vorname", $pdo);
+        $SickNotes[$counter]['username'] = GetUserByID($sl['userid'], "name", $pdo);
         $counter ++;
     }
     return $SickNotes;
 
 
 }
-function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect) {
+function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect): void {
 
     $get_usernames = "SELECT * FROM users ORDER BY permission_level desc";
     foreach ($pdo->query($get_usernames) as $other_users) {
@@ -578,7 +633,7 @@ function GetDateFromToken($token, $pdo) {
     }
 }
 
-function CreateToken($email, $pdo) {
+function CreateToken($email, $pdo): string {
     $token = GenerateRandomString();
     $statement = $pdo->prepare("INSERT INTO registertokens (token, email) VALUES (:token, :email)");
     $result = $statement->execute(array(

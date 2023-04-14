@@ -20,7 +20,7 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot) {
     }
     $sick = false;
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
-    foreach (GetAllSickNotesRaw($pdo) as &$sickNote) {
+    foreach (GetAllSickNotesRaw($pdo) as $sickNote) {
 
         if (intval($sickNote['userid']) == $userid) {
             $dates = array();
@@ -35,7 +35,7 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot) {
     }
 
     $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
-    $lesson_username    = replacePlaceholders(GetInfomationOfUser($userid, "vorname", $pdo));
+    $lesson_username    = replacePlaceholders(GetUserByID($userid, "vorname", $pdo));
     $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo));
 
     echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
@@ -54,14 +54,64 @@ function PrintInfo($date, $time, $room, $pdo, $webroot) {
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
-
     $value = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
+
+    $user_names = ExplodeStringToArray($value);
+    $sick_notes = GetAllSickNotesRaw($pdo);
+    //$loop = array_intersect($user_names, $sick_notes);
+    $return = $value;
+    foreach ($sick_notes as $sickNote) {
+
+        $username = GetUserByID($sickNote["userid"], "vorname", $pdo);
+        if (in_array($username, $user_names)) {
+            $dates = array();
+            $dates[1] = $sickNote['start_date'];
+            $dates[2] = $sickNote['end_date'];
+            if (IsDateBetween($dates, $date)) {
+                $new_username = "<s>" . $username . "</s>";
+                $return = replaceString($return, $username, $new_username);
+            }
+
+        }
+
+    }
+    $value = $return;
+
 
     echo "<div class='lessons pointer' onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, 'id', $pdo) . "\"'>";
     echo $value;
     echo "</div>";
 
 }
+
+function replaceString($string, $search, $replace) {
+    return str_replace($search, $replace, $string);
+}
+
+function ExplodeStringToArray($string): array {
+    $string = preg_replace('/[^A-Za-z0-9\-]/', ' ', $string);
+
+    $words = explode(' ', $string);
+    $return = array();
+
+    foreach ($words as $word) {
+        if ($word != "") {
+            $return[] = $word;
+        }
+    }
+    return $return;
+}
+
+function CompareArrays($array1, $array2) {
+    foreach($array1 as $value) {
+        $index = array_search($value, $array2);
+        if($index !== false) {
+            return $index;
+        }
+    }
+    return false;
+}
+
 
 function replacePlaceholders($string): string {
 
@@ -313,24 +363,24 @@ if (!$page == "external") {
 
 
     if (isset($_SESSION['asl_userid'])) {
-        if (!GetInfomationOfUser($_SESSION['asl_userid'],"available", $pdo)) {
+        if (!GetUserByID($_SESSION['asl_userid'],"available", $pdo)) {
             Logout($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
         }
     } else {
         Redirect($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
     }
 
-    if (!$permission_needed > GetInfomationOfUser($_SESSION['asl_userid'], "permission_level", $pdo)) {
+    if (!$permission_needed > GetUserByID($_SESSION['asl_userid'], "permission_level", $pdo)) {
         Redirect($webroot . "/dashboard/?message=unauthorized");
     }
 
 
     $id = $_SESSION['asl_userid'];
-    $permission_level = GetInfomationOfUser($id, "permission_level", $pdo);
+    $permission_level = GetUserByID($id, "permission_level", $pdo);
     settype($permission_level, "int"); //Convert perm level in INT
 
-    $email = GetInfomationOfUser($id, "email", $pdo);
-    $vorname = GetInfomationOfUser($id, "vorname", $pdo);
-    $nachname = GetInfomationOfUser($id, "nachname", $pdo);
+    $email = GetUserByID($id, "email", $pdo);
+    $vorname = GetUserByID($id, "vorname", $pdo);
+    $nachname = GetUserByID($id, "nachname", $pdo);
 
 }

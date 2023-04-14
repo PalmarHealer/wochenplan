@@ -41,7 +41,7 @@ require $include_path . "/dependencies/framework.php";
       if (isset($_GET['save'])) {
           $vorname_neu = $_POST['vorname'];
           $nachname_neu = $_POST['nachname'];
-          echo UpdateUsernames($id, $vorname_neu, $nachname_neu, $pdo);
+          echo UpdateUsername($id, $vorname_neu, $nachname_neu, $pdo);
       }
 
 
