@@ -8,7 +8,13 @@ require $include_path . "/dependencies/framework.php";
 
 if (!isset($_GET["date"])) {
   $_GET["date"] = date("Y-m-d", time());
+  if (isset($_GET["skip"])) {
+    Redirect("./?skip=1&date=" . date("Y-m-d", time()));
+  } else {
+    Redirect("./?date=" . date("Y-m-d", time()));
+  }
 }
+
 ?>
 <!-- Custom CSS (this has to be here, otherwise it will do randomly things) -->
 <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
