@@ -7,9 +7,7 @@ require $include_path . "/dependencies/framework.php";
 
 
 if (!isset($_GET["date"])) {
-    $current_day = date("Y-m-d",time());
-} else {
-    $current_day = $_GET["date"];
+  $_GET["date"] = date("Y-m-d", time());
 }
 ?>
 <!-- Custom CSS (this has to be here, otherwise it will do randomly things) -->
@@ -23,7 +21,7 @@ if (!isset($_GET["date"])) {
     <meta name="author" content="">
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
 
-      <title>Plan - <?php echo date('d.m.Y', strtotime($current_day)); ?></title>
+      <title>Plan - <?php echo date('d.m.Y', strtotime($_GET["date"])); ?></title>
 
       <!-- Simple bar CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
@@ -177,7 +175,7 @@ if (!isset($_GET["date"])) {
           if (isset($_GET['skip'])) {
               echo "setTimeout(hide_btn, 6000);";
               echo "reloadData();";
-              echo "setInterval(reloadData, 6000);";
+              //echo "setInterval(reloadData, 6000);";
           }
           else {
               echo '$(document).ready(function() {
@@ -236,27 +234,25 @@ if (!isset($_GET["date"])) {
           // Aktualisieren Sie die URL der aktuellen Seite
           window.history.replaceState({}, document.title, newUrl);
 
-          // Laden Sie die Seite neu
-          window.location.reload();
+          reloadData(formattedDate);
       }
 
       function hide_btn() {
           $(".close_fullscreen").hide();
       }
 
-
-      function reloadData() {
-          $.ajax({
-              url: "./reload<?php echo ($_GET['version'] ?? '2') ?>.php",
-              type: "POST",
-              data: { date: "<?php echo $current_day; ?>" },
-              cache: false,
-              success: function(data) {
-                  console.log("Data reloaded");
-                  $(".full").html(data);
-
-              }
-          });
+      function reloadData(dateParam) {
+        const dateValue = dateParam || "<?php echo $_GET["date"]; ?>";
+        $.ajax({
+          url: "./reload<?php echo ($_GET['version'] ?? '2') ?>.php",
+          type: "POST",
+          data: { date: dateValue },
+          cache: false,
+          success: function(data) {
+            console.log("Data reloaded");
+            $(".full").html(data);
+          }
+        });
       }
 
       function animate(t, a) {

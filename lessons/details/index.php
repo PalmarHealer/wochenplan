@@ -741,10 +741,12 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                       '#d09182',
                       '#dee5e6',
                       '#e5f4d4',
+                      '#cdcdff',
                       '#f8e9be',
                       '#ffca39',
                       '#ff3939',
                   ]
+
 
               });
           });

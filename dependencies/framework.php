@@ -49,14 +49,17 @@ function modNumber($number, $mod) {
     return $number % $mod +1;
 }
 
-function PrintInfo($date, $time, $room, $pdo) {
+function PrintInfo($date, $time, $room, $pdo, $webroot) {
 
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
 
     $value = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
-     echo $value;
+
+    echo "<div class='lessons pointer' onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, 'id', $pdo) . "\"'>";
+    echo $value;
+    echo "</div>";
 
 }
 

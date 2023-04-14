@@ -20,16 +20,18 @@ $current_day = $_POST['date'];
         <col/>
     </colgroup>
     <thead>
-    <tr class="small_piece center">
-        <th class="color-3 no_border">
-            <b class="white_text modt">
+    <tr class="small_piece">
+        <th class="color-3 no_border text-center" style='text-align: center;'>
+            <div class="text-center db_text">
+            <b class="white_text modt ">
                 <?php
                 $weekday = (new DateTime($current_day))->format('N');
                 echo $weekday_names[$weekday] . " " . date('d.m.Y', strtotime($current_day));
                 ?>
             </b>
+            </div>
         </th>
-        <th class="color-1 text-left" colspan="4"><?php PrintInfo($current_day, 13, 10, $pdo); ?></th>
+        <th class="color-1 text-left db_text text-left" colspan="4"><?php PrintInfo($current_day, 13, 10, $pdo, $webroot); ?></th>
         <th class="color-3 white_text modt text-left" colspan="5">
             <?php
 
@@ -57,7 +59,7 @@ $current_day = $_POST['date'];
     </tr>
     </thead>
     <tbody>
-    <tr class="name-badge center small_piece">
+    <tr class="name_badge center small_piece">
         <td class="color-6 db_text"><b class="bold">Zeiten l/ll</b></td>
         <td class="color-1 db_text"><b class="bold">Raum 1</b></td>
         <td class="color-1 db_text"><b class="bold">Freiarbeit</b></td>
@@ -183,7 +185,7 @@ $current_day = $_POST['date'];
             <b class="bold">Mittagspause</b>
         </td>
 
-        <td class="color-4 no_border center2" colspan="9"><b class="bold">Mittagessen</b><br><?php PrintInfo($current_day, 10, 14, $pdo, $webroot); ?></td>
+        <td class="color-4 db_text text-center bold" colspan="9"><?php PrintInfo($current_day, 14, 10, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -226,13 +228,13 @@ $current_day = $_POST['date'];
             14:30 – 15:00<br/>
             <b class="bold">Putzen</b>
         </td>
-        <td class="color-5 text-center" colspan="8"><?php PrintInfo($current_day, 12, 10, $pdo, $webroot); ?></td>
+        <td class="color-5 text-center db_text bold" colspan="8"><?php PrintInfo($current_day, 12, 10, $pdo, $webroot); ?></td>
     </tr>
 
     <tr class="small_piece">
-        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 11, $pdo, $webroot); ?></td>
-        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 12, $pdo, $webroot); ?></td>
-        <td class="color-5 text-center" colspan="2"><?php PrintInfo($current_day, 12, 13, $pdo, $webroot); ?></td>
+        <td class="color-5 text-center db_text" colspan="2"><?php PrintInfo($current_day, 12, 11, $pdo, $webroot); ?></td>
+        <td class="color-5 text-center db_text" colspan="2"><?php PrintInfo($current_day, 12, 12, $pdo, $webroot); ?></td>
+        <td class="color-5 text-center db_text" colspan="2"><?php PrintInfo($current_day, 12, 13, $pdo, $webroot); ?></td>
     </tr>
 
 
