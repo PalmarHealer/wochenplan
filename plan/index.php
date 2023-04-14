@@ -175,11 +175,13 @@ if (!isset($_GET["date"])) {
   <script>
       <?php
           if (isset($_GET['skip'])) {
+              echo "setTimeout(hide_btn, 6000);";
               echo "reloadData();";
               echo "setInterval(reloadData, 6000);";
           }
           else {
               echo '$(document).ready(function() {
+                        setTimeout(hide_btn, 6000);
                         let $ = (t) => document.querySelector(t),
                         dots = $(".dots");
                         animate(dots, "dots--animate");
@@ -238,6 +240,9 @@ if (!isset($_GET["date"])) {
           window.location.reload();
       }
 
+      function hide_btn() {
+          $(".close_fullscreen").hide();
+      }
 
 
       function reloadData() {
