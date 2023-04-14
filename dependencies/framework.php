@@ -87,11 +87,12 @@ function GetCurrentUrl(): string
     //Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
     if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
         $current_url = "https://";
-    else
+    else {
         $current_url = "http://";
-    // Append the host(domain name, ip) to the URL.
-    $current_url.= $_SERVER['HTTP_HOST'];
-    $current_url = "https://wochenplan.nauren.de";
+        // Append the host(domain name, ip) to the URL.
+        $current_url = $_SERVER['HTTP_HOST'];
+        $current_url = "https://wochenplan.nauren.de";
+    }
 
     // Append the requested resource location to the URL
     $current_url.= $_SERVER['REQUEST_URI'];

@@ -242,7 +242,8 @@ if (!isset($_GET["date"])) {
       }
 
       function reloadData(dateParam) {
-        const dateValue = dateParam || "<?php echo $_GET["date"]; ?>";
+        const urlParams = new URLSearchParams(window.location.search);
+        const dateValue = dateParam || urlParams.get('date');
         $.ajax({
           url: "./reload<?php echo ($_GET['version'] ?? '2') ?>.php",
           type: "POST",
