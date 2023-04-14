@@ -486,7 +486,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                      <div class="card-body">
                                          <div class="form-group mb-3">
                                              <label for="color-picker">Farbe</label>
-                                             <input id="color-picker" class="test form-control" type="text" name="box-color" value="<?php echo ($lesson_details['box-color']?? '#f6e9e6'); ?>" data-coloris>
+                                             <input id="color-picker" class="color_picker form-control" type="text" name="box-color" value="<?php echo ($lesson_details['box-color']?? '#f6e9e6'); ?>" data-coloris>
                                          </div>
                                      </div> <!-- /.card-body -->
                                  </div> <!-- /.card -->
@@ -662,6 +662,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
               var date = $('#day').val();
               var time = $('#time').val();
               var location = $('#location').val();
+
+              $(`[time="${time}"][room="${location}"]`).addClass("preview-selected");
               $.ajax({
                   url: './check.php',
                   type: 'GET',
@@ -679,7 +681,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
               var time = $('#time').val();
               var location = $('#location').val();
 
+
+              $(`[time="${time}"][room="${location}"]`).addClass("preview-selected");
               $.ajax({
+
                   url: './check.php',
                   type: 'GET',
                   data: {date: date, time: time, location: location},
@@ -693,13 +698,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
           }
           $(document).ready(function(){
               updateAvailability();
-
-
-              const time = $('#time').val();
-              const room = $('#location').val();
-
-              $(`[time="${time}"][room="${room}"]`).addClass("preview-selected");
-
 
               $(".date_selector1").click(function(){
                   $(".repeating").show();
@@ -725,7 +723,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
               });
 
 
-              Coloris.setInstance('.test', {
+              Coloris.setInstance('.color_picker', {
                   //default, large, polaroid, pill
                   theme: 'pill',
 

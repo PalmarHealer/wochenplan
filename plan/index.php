@@ -176,7 +176,7 @@ if (!isset($_GET["date"])) {
       <?php
           if (isset($_GET['skip'])) {
               echo "reloadData();";
-              //echo "setInterval(reloadData, 6000);";
+              echo "setInterval(reloadData, 6000);";
           }
           else {
               echo '$(document).ready(function() {
@@ -198,6 +198,8 @@ if (!isset($_GET["date"])) {
         } else if (elem.msRequestFullscreen) { /* IE11 */
           elem.msRequestFullscreen();
         }
+          $(".open_fullscreen").hide();
+          $(".close_fullscreen").show();
       }
 
       function closeFullscreen() {
@@ -208,7 +210,34 @@ if (!isset($_GET["date"])) {
         } else if (document.msExitFullscreen) { /* IE11 */
           document.msExitFullscreen();
         }
+          $(".open_fullscreen").show();
+          $(".close_fullscreen").hide();
       }
+
+      function updateDateInUrl(daysToAddOrSubtract) {
+          // Holen Sie das Datum aus der GET-Variable "date" im Format "YYYY-MM-DD"
+          const urlParams = new URLSearchParams(window.location.search);
+          const dateString = urlParams.get('date');
+
+          // Wenn die Variable nicht existiert, verwenden Sie das aktuelle Datum
+          const date = dateString ? new Date(dateString) : new Date();
+
+          // Fügen Sie die angegebene Anzahl von Tagen zum Datum hinzu oder ziehen Sie sie ab
+          date.setDate(date.getDate() + daysToAddOrSubtract);
+
+          // Konvertieren Sie das Datum in das erforderliche Format "YYYY-MM-DD"
+          const formattedDate = date.toISOString().slice(0, 10);
+
+          // Erstellen Sie die neue URL mit dem aktualisierten Datum und dem Parameter "skip"
+          const newUrl = window.location.origin + window.location.pathname + '?date=' + formattedDate + '&skip=1';
+
+          // Aktualisieren Sie die URL der aktuellen Seite
+          window.history.replaceState({}, document.title, newUrl);
+
+          // Laden Sie die Seite neu
+          window.location.reload();
+      }
+
 
 
       function reloadData() {

@@ -194,11 +194,8 @@ body {
 .name-badge * {
     text-align: center;
     padding: 5px;
-    horiz-align: center;
     vertical-align: center;
     margin: auto;
-
-
 }
 
 .center * {

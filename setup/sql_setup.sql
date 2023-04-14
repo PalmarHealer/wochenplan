@@ -1,25 +1,14 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
-
+SET time_zone = "+02:00";
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Datenbank: `wochenplan`
---
-DROP DATABASE IF EXISTS `wochenplan`;
 CREATE DATABASE IF NOT EXISTS `wochenplan` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `wochenplan`;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `angebot`
---
 
 CREATE TABLE IF NOT EXISTS `angebot` (
                                          `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -30,16 +19,11 @@ CREATE TABLE IF NOT EXISTS `angebot` (
                                          `description` varchar(255) NOT NULL,
                                          `location` int(11) NOT NULL,
                                          `time` int(11) NOT NULL,
+                                         `box_color` varchar(20) NOT NULL DEFAULT '#f6e9e6',
                                          `notes` varchar(255) DEFAULT NULL,
                                          `assigned_user_id` int(11) NOT NULL,
                                          PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `registertokens`
---
 
 CREATE TABLE IF NOT EXISTS `registertokens` (
                                                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -48,12 +32,6 @@ CREATE TABLE IF NOT EXISTS `registertokens` (
                                                 `created` timestamp NOT NULL DEFAULT current_timestamp(),
                                                 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `securitytokens`
---
 
 CREATE TABLE IF NOT EXISTS `securitytokens` (
                                                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -64,12 +42,6 @@ CREATE TABLE IF NOT EXISTS `securitytokens` (
                                                 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `sick`
---
-
 CREATE TABLE IF NOT EXISTS `sick` (
                                       `id` int(11) NOT NULL AUTO_INCREMENT,
                                       `userid` varchar(255) NOT NULL,
@@ -77,12 +49,6 @@ CREATE TABLE IF NOT EXISTS `sick` (
                                       `end` date NOT NULL,
                                       PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `users`
---
 
 CREATE TABLE IF NOT EXISTS `users` (
                                        `id` int(11) NOT NULL AUTO_INCREMENT,

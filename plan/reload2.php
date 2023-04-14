@@ -214,7 +214,13 @@ $current_day = $_POST['date'];
 
 
     <tr class="small_piece">
-        <td class="white-col align-bottom" rowspan="3"><span onclick="openFullscreen()" class="open_fullscreen fe fe-32 fe-maximize-2 pointer"></span><span onclick="closeFullscreen()" class="close_fullscreen fe fe-32 fe-minimize-2 pointer"></span></td>
+        <td class="white-col align-bottom" rowspan="3">
+            <span onclick="openFullscreen()" class="open_fullscreen fe fe-32 fe-maximize-2 pointer"></span>
+            <span onclick="closeFullscreen()" class="close_fullscreen fe fe-32 fe-minimize-2 pointer"></span>
+            <span onclick="updateDateInUrl(-1)" class="fe fe-24 fe-arrow-left pointer"></span>
+            <span onclick="updateDateInUrl(1)" class="fe fe-24 fe-arrow-right pointer"></span>
+            <span onclick="window.location.href='../dashboard'" class="fe fe-24 fe-home pointer"></span>
+        </td>
         <td class="white-col" rowspan="3"></td>
         <td class="white-col" rowspan="3"></td>
 
