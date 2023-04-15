@@ -227,7 +227,7 @@ if($showRegisterFormular) {
                         name="passwort"
                         class="form-control"
                         id="inputPassword5"
-                        pattern="^(?=.*[!@#$%^&amp;*()_+\-=[\]{};':&quot;\\|,.<>\/?])(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+                        minlength="8"
                         value="<?php if(isset($passwort)) { echo $passwort; }?>"
                 >
 
@@ -243,14 +243,14 @@ if($showRegisterFormular) {
                         name="passwort2"
                         class="form-control"
                         id="inputPassword6"
-                        pattern="^(?=.*[!@#$%^&amp;*()_+\-=[\]{};':&quot;\\|,.<>\/?])(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+                        minlength="8"
                 >
 				<?php if(isset($passwdmatch)) { echo '<h2 class="h6 mb-3">'; echo $passwdmatch; echo '</h2>'; }?>
               </div>
             </div>
             <div class="col-md-6">
-              <p class="mb-2">Passwort Mindestanforderungen</p>
-              <p class="small text-muted mb-2"> Um ein sicheres Passwort zu erstellen, setzen wir folgende Anforderungen voraus:</p>
+              <p class="mb-2">Passwort Empfehlungen</p>
+              <p class="small text-muted mb-2"> Um ein sicheres Passwort zu erstellen, empfehlen wir folgende Anforderungen zu erfüllen:</p>
               <ul class="small text-muted pl-4 mb-0">
                 <li> Mindestens 8 Zeichen </li>
                 <li> Mindestens ein Sonderzeichen</li>

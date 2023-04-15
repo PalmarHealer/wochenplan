@@ -22,6 +22,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <!-- Simple bar CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
       <!-- Fonts CSS -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abel">
       <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
       <!-- Icons CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
@@ -214,57 +215,37 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                          </div>
                          <!-- / .card -->
                          <div class="row">
-                             <div class="col-md-6 mb-4">
-                                 <div class="card shadow">
-                                     <div class="card-body">
-                                         <div class="form-group mb-3">
-                                             <label for="location">Ort des Angebotes bzw. Art</label>
-                                             <select name="location" class="form-control dropdown" id="location" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
-                                                 <?php
-                                                 $selected_location = array();
-                                                 if(isset($lesson_details['location'])) {
-                                                     $selected_location[$lesson_details['location']] = "selected";
-                                                 }
-                                                 $count = 0;
-                                                 foreach ($room_names as $value => $i) {
-                                                     $count++;
-                                                     echo '<option value="' . $value . '" ' . ($selected_location[$value] ?? '') . '>' . $i . '</option>';
-                                                 }
-                                                 ?>
 
-                                             </select>
-                                         </div>
-                                     </div>
-                                     <!-- /.card-body -->
-                                 </div>
-                                 <!-- /.card -->
-                             </div>
-                           <!-- /.col -->
-                           <div class="col-md-6 mb-4">
-                              <div class="card shadow">
-                                 <div class="card-body">
-                                    <div class="form-group mb-3">
-                                       <label for="time">Zeitpunkt des Angebotes</label>
-                                       <select name="time" class="form-control" id="time" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
-                                          <?php
-                                          $selected_time = array();
-                                          if(isset($lesson_details['time'])) {
-                                              $selected_time[$lesson_details['time']] = "selected";
-                                          }
-                                          $count = 0;
-                                          foreach ($times as $value => $i) {
-                                              $count++;
-                                              echo '<option value="' . $value . '" ' . ($selected_time[$value] ?? '') . '>' . $i . '</option>';
-                                          }
-                                          ?>
-                                       </select>
-                                    </div>
-                                 </div>
-                                 <!-- /.card-body -->
-                              </div>
-                              <!-- /.card -->
-                           </div>
-                           <!-- /.col -->
+
+                             <label for="location"></label>
+                             <label for="time"></label>
+                             <select hidden name="location" class="form-control dropdown" id="location" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
+                                 <?php
+                                 $selected_location = array();
+                                 if(isset($lesson_details['location'])) {
+                                     $selected_location[$lesson_details['location']] = "selected";
+                                 }
+                                 $count = 0;
+                                 foreach ($room_names as $value => $i) {
+                                     $count++;
+                                     echo '<option value="' . $value . '" ' . ($selected_location[$value] ?? '') . '>' . $i . '</option>';
+                                 }
+                                 ?>
+
+                             </select>
+                             <select hidden name="time" class="form-control" id="time" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
+                                 <?php
+                                 $selected_time = array();
+                                 if(isset($lesson_details['time'])) {
+                                     $selected_time[$lesson_details['time']] = "selected";
+                                 }
+                                 $count = 0;
+                                 foreach ($times as $value => $i) {
+                                     $count++;
+                                     echo '<option value="' . $value . '" ' . ($selected_time[$value] ?? '') . '>' . $i . '</option>';
+                                 }
+                                 ?>
+                             </select>
 
                              <div class="col-md-12 mb-4">
                                  <div class="card shadow">

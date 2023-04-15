@@ -38,7 +38,7 @@ body {
     border-width: 0.15vw;
     border-spacing: 0;
     border-radius: 0 0 0 0;
-    padding: 3px 5px;
+    padding: 5px 3px;
     border-collapse: collapse;
     margin: 0 auto;
     vertical-align: top;
@@ -60,7 +60,7 @@ body {
     max-height: 100%;
 }
 .db_text {
-    padding: 0 0 0 0;
+    padding: 7px 0 0 0;
 }
 
 .heading {
