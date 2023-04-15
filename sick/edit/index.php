@@ -47,16 +47,20 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
 
          if (isset($_GET["remove"])) {
              $sick_note_to_delete = $_GET["remove"];
-             if ($permission_level > $create_lessons_for_others) {
+             $user_permission_level = GetUserByID($_SESSION['asl_userid'], "permission_level", $pdo);
+
+             if ($user_permission_level >= $create_lessons_for_others) {
                  DeleteSickNote($sick_note_to_delete, $pdo);
                  GoPageBack("");
-             } elseif ($id == GetSickNoteByID($sick_note_to_delete, "userid", $pdo)) {
+             } elseif ($_SESSION['asl_userid'] == GetSickNoteByID($sick_note_to_delete, "userid", $pdo) AND $user_permission_level >= $create_lessons) {
                  DeleteSickNote($sick_note_to_delete, $pdo);
                  GoPageBack("");
              } else {
                  GoPageBack("");
              }
          }
+
+
          if(isset($old_url) AND $new_url = $old_url) {
 
              $new_assigned_user_id = ($_POST['userid'] ?? '');

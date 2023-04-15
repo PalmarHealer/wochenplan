@@ -51,10 +51,11 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
          if (isset($_GET["remove_lesson_with_id"])) {
              $lesson_to_delete = $_GET["remove_lesson_with_id"];
-             if ($permission_level > $create_lessons_for_others) {
+             $user_permission_level = GetUserByID($_SESSION['asl_userid'], "permission_level", $pdo);
+             if ($user_permission_level >= $create_lessons_for_others) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  GoPageBack("");
-             } elseif ($id == GetLessonInfoByID($lesson_to_delete, "userid", $pdo)) {
+             } elseif ($_SESSION['asl_userid'] == GetLessonInfoByID($lesson_to_delete, "userid", $pdo) AND $user_permission_level >= $create_lessons) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  GoPageBack("");
              } else {
