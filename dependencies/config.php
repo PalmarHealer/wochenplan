@@ -151,4 +151,4 @@ $times = array(
 //website are not able to work properly
 
 $header = "true";
-$ver = "1.1.4.7";
+$ver = "1.1.4.8";
