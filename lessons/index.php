@@ -107,11 +107,11 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
 	<script>
       $('#dataTable-1').DataTable(
       {
-        autoWidth: true,
-        "lengthMenu": [
-            [ -1, 4, 8, 16, 32, 64],
-            ["Alle", 4, 8, 16, 32, 64]
-        ]
+          autoWidth: true,
+          "lengthMenu": [
+              [ 4, 8, 16, 32, 64, -1],
+              [ 4, 8, 16, 32, 64, "Alle"]
+          ]
       });
     </script>
 
