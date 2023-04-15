@@ -170,15 +170,11 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
          <main role="main" class="main-content">
             <div class="container-fluid">
                <div class="row justify-content-center">
-                   <?php
-                   if (!isset($_GET['id'])) {
-                       echo '<div id="availability" class="center2 availability">';
-                       echo '<div class="alert alert-secondary center" role="alert">';
-                       echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Lade Slot info...';
-                       echo '</div>';
-                       echo '</div>';
-                   }
-                   ?>
+                   <div id="availability" class="center2 availability">
+                       <div class="alert alert-secondary center" role="alert">
+                           <span class="fe fe-alert-octagon fe-16 mr-2"></span>Lade Slot info...
+                       </div>
+                   </div>
                   <form action="./" method="post">
                      <div class="col-12">
                          <h2 class="page-title">
@@ -219,7 +215,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
                              <label for="location"></label>
                              <label for="time"></label>
-                             <select hidden name="location" class="form-control dropdown" id="location" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
+                             <select hidden name="location" class="form-control dropdown" id="location" onchange="updateAvailability()">
                                  <?php
                                  $selected_location = array();
                                  if(isset($lesson_details['location'])) {
@@ -233,7 +229,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  ?>
 
                              </select>
-                             <select hidden name="time" class="form-control" id="time" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?>>
+                             <select hidden name="time" class="form-control" id="time" onchange="updateAvailability()">
                                  <?php
                                  $selected_time = array();
                                  if(isset($lesson_details['time'])) {
@@ -503,7 +499,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
                                                    </div>
-                                                   <select id="day" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability()"';} ?> name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
+                                                   <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
                                                       <?php if($lesson_details['date-type'] == "1") {
                                                          $selected_date = array();
                                                          if (!isset($lesson_details['date'])) {
@@ -524,7 +520,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
                                                    </div>
-                                                   <input id="day2" <?php if (!isset($_GET['id'])) { echo 'onchange="updateAvailability2()"';} ?> name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
+                                                   <input id="day2" onchange="updateAvailability2()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
                                                          if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
                                                          	echo $lesson_details['date']; 
