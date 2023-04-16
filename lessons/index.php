@@ -109,8 +109,8 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
       {
           autoWidth: true,
           "lengthMenu": [
-              [ 4, 8, 16, 32, 64, -1],
-              [ 4, 8, 16, 32, 64, "Alle"]
+              [ 8, 16, 32, 64, -1],
+              [ 8, 16, 32, 64, "Alle"]
           ]
       });
     </script>

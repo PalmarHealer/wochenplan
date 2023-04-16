@@ -106,8 +106,8 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
         {
             autoWidth: true,
             "lengthMenu": [
-                [ -1, 4, 8, 16, 32, 64],
-                ["All", 4, 8, 16, 32, 64]
+                [ 8, 16, 32, 64, -1],
+                [ 8, 16, 32, 64, "Alle"]
             ]
         });
 </script>
