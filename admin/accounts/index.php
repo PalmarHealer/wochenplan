@@ -5,6 +5,16 @@ require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
 
 CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
+
+if (isset($_GET['login-to-id'])) {
+    if ($permission_level >= 100) {
+        $new_userid = $_GET['login-to-id'];
+        $_SESSION['asl_userid']= $new_userid;
+        Redirect($domain . '/dashboard');
+    } else {
+        Redirect("./");
+    }
+}
 ?>
 <!doctype html>
 <html lang="de">

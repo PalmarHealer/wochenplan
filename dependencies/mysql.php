@@ -334,6 +334,7 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
                         <span class="text-muted sr-only">Aktion</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="./?login-to-id='. $id . '">Anmelden als dieser</a>
                         <a class="dropdown-item" href="./edit/?id='. $id . '">Bearbeiten</a>
                         <a class="dropdown-item" href="./edit/?delete='. $id . '">Löschen</a>
                     </div>
