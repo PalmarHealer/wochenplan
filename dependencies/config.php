@@ -58,6 +58,7 @@ $domain = "http://localhost:63342/wochenplan"; //please also change that in fram
 $allowed_domains = array(
     "test.com",
     "nauren.de",
+    "gmail.com",
 );
 
 $smtp = array(
@@ -151,4 +152,4 @@ $times = array(
 //website are not able to work properly
 
 $header = "true";
-$ver = "1.1.4.8";
+$ver = "1.1.5.0";

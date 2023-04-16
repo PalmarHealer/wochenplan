@@ -196,100 +196,56 @@ function GetSickNoteByID($id, $info, $pdo) {
     }
 }
 
-function GetUserByID($UserID, $InfomationType, $pdo) {
+function GetUserByID($UserID, $InformationType, $pdo) {
     if (!is_numeric($UserID)) {
         return "Error loading user information (you have to provide a id)";
     }
-    $lessons = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-    $lessons->execute(array($UserID));
-    if ($InfomationType == "vorname") {
-        return $lessons->fetch()["vorname"];
+    $information = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $information->execute(array($UserID));
+    return Loop($InformationType, $information);
+
+}
+function GetUserByEmail($Email, $InformationType, $pdo) {
+    $information = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $information->execute(array($Email));
+    return Loop($InformationType, $information);
+
+}
+
+
+function Loop($InformationType, $information) {
+
+    if ($InformationType == "id") {
+        return $information->fetch()["id"];
     }
-    if ($InfomationType == "nachname") {
-        return $lessons->fetch()["nachname"];
+    if ($InformationType == "vorname") {
+        return $information->fetch()["vorname"];
     }
-    if ($InfomationType == "name") {
-        $tmp = $lessons->fetch();
+    if ($InformationType == "nachname") {
+        return $information->fetch()["nachname"];
+    }
+    if ($InformationType == "name") {
+        $tmp = $information->fetch();
         return $tmp["vorname"] . " " . $tmp["nachname"];
     }
-    if ($InfomationType == "email") {
-        return $lessons->fetch()["email"];
+    if ($InformationType == "email") {
+        return $information->fetch()["email"];
     }
-    if ($InfomationType == "permission_level") {
-        return $lessons->fetch()["permission_level"];
+    if ($InformationType == "permission_level") {
+        return $information->fetch()["permission_level"];
     }
-    if ($InfomationType == "created") {
-        return $lessons->fetch()["created_at"];
+    if ($InformationType == "created") {
+        return $information->fetch()["created_at"];
     }
-    if ($InfomationType == "updated") {
-        return $lessons->fetch()["updated_at"];
+    if ($InformationType == "updated") {
+        return $information->fetch()["updated_at"];
     }
-    if ($InfomationType == "available") {
-        if ($lessons->fetch()["id"] == $UserID) {
-            return true;
-        } else {
-            return false;
-        }
+    if ($InformationType == "available") {
+        return $information->rowCount() > 0;
     } else {
-        return "Error loading user information. You probably set the wrong information type (there is: vorname, nachname, email, permission_level, created, updated and available";
+        return "Error loading user information. You probably set the wrong information type (there is: id, vorname, nachname, email, permission_level, created, updated and available";
     }
-
 }
-
-function GetUserByName($Name, $InfomationType, $pdo) {
-    $lessons = $pdo->prepare("SELECT * FROM users WHERE vorname = ?");
-    $lessons->execute(array($Name));
-    if ($InfomationType == "id") {
-        return $lessons->fetch()["id"];
-    }
-    if ($InfomationType == "nachname") {
-        return $lessons->fetch()["nachname"];
-    }
-    if ($InfomationType == "name") {
-        $tmp = $lessons->fetch();
-        return $tmp["vorname"] . " " . $tmp["nachname"];
-    }
-    if ($InfomationType == "email") {
-        return $lessons->fetch()["email"];
-    }
-    if ($InfomationType == "permission_level") {
-        return $lessons->fetch()["permission_level"];
-    }
-    if ($InfomationType == "created") {
-        return $lessons->fetch()["created_at"];
-    }
-    if ($InfomationType == "updated") {
-        return $lessons->fetch()["updated_at"];
-    }
-    if ($InfomationType == "available") {
-        if ($lessons->fetch()["vorname"] == $Name) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return "Error loading user information. You probably set the wrong information type (there is: id, nachname, email, permission_level, created, updated and available";
-    }
-
-}
-
-
-function GetAllUsers($pdo): array {
-
-    $users = $pdo->prepare("SELECT * FROM users");
-    $users->execute();
-    $user_list = array();
-
-    while($sl = $users->fetch()) {
-
-        $username = $sl["vorname"];
-        $id = $sl["id"];
-        $user_list[$username] = $id;
-
-    }
-    return $user_list;
-}
-
 
 function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname, email = :email, permission_level = :permission_level WHERE id = :id");
@@ -303,6 +259,15 @@ function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     return $statement->rowCount();
 }
 
+function ChangeUserPassword($password, $id, $pdo) {
+    $new_password = password_hash($password, PASSWORD_DEFAULT);
+    $statement = $pdo->prepare("UPDATE users SET passwort = :passwort WHERE id = :id");
+    $statement->execute(array(
+        'id' => $id,
+        'passwort' => $new_password,
+    ));
+    return $statement->rowCount();
+}
 function UpdateUsername($id, $vorname, $nachname, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname WHERE id = :id");
     $statement->execute(array(
@@ -387,9 +352,18 @@ function DeleteLesson($lessonid, $pdo): bool|string {
     }
 }
 
-function DeleteToken($token, $pdo): bool|string {
+function DeleteRegisterToken($token, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM registertokens WHERE token = ?");
+        $delete_lesson->execute(array($token));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+    }
+}
+function DeleteResetToken($token, $pdo): bool|string {
+    try {
+        $delete_lesson = $pdo->prepare("DELETE FROM psswdresettokens WHERE token = ?");
         $delete_lesson->execute(array($token));
         return true;
     } catch (PDOException $e) {
@@ -624,7 +598,8 @@ function GetEmailFromToken($token, $pdo) {
     }
 
 }
-function GetDateFromToken($token, $pdo) {
+
+function GetDateFromRegisterToken($token, $pdo) {
 
     $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
     $tokens->execute(array($token));
@@ -633,12 +608,38 @@ function GetDateFromToken($token, $pdo) {
     }
 }
 
-function CreateToken($email, $pdo): string {
+function GetDateFromResetToken($token, $pdo) {
+
+    $tokens = $pdo->prepare("SELECT * FROM psswdresettokens WHERE token = ?");
+    $tokens->execute(array($token));
+    while($sl = $tokens->fetch()) {
+        return $sl['created'] ?? 'false';
+    }
+}
+function GetUserIDFromResetToken($token, $pdo) {
+
+    $tokens = $pdo->prepare("SELECT * FROM psswdresettokens WHERE token = ?");
+    $tokens->execute(array($token));
+    while($sl = $tokens->fetch()) {
+        return $sl['userid'] ?? 'false';
+    }
+}
+function CreateTokenForRegistrationAndSaveThem($email, $pdo): string {
     $token = GenerateRandomString();
     $statement = $pdo->prepare("INSERT INTO registertokens (token, email) VALUES (:token, :email)");
     $result = $statement->execute(array(
         'token' => $token,
         'email' => $email
+    ));
+    return $token;
+}
+
+function CreateTokenForPasswordResetAndSaveThem($userid, $pdo): string {
+    $token = GenerateRandomString();
+    $statement = $pdo->prepare("INSERT INTO psswdresettokens (token, userid) VALUES (:token, :userid)");
+    $result = $statement->execute(array(
+        'token' => $token,
+        'userid' => $userid
     ));
     return $token;
 }

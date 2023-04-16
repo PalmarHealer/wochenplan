@@ -68,6 +68,7 @@ if(!isset($_SESSION['asl_userid'])) {
 			exit;
 		} else {
 			$errorMessage = "E-Mail oder Passwort war ungültig<br>";
+            $tip = '<h2 align="center" class="h6 mb-3">Hast du dein Passwort vergessen? Dann <a href="' . $relative_path . '/reset-password">setzte es zurück</a>.</h2>';
 		}
 	}
 } else {
@@ -152,6 +153,7 @@ $pdo = null;
               <input type="checkbox" name="angemeldet_bleiben" value="1" value="remember-me"> Angemeldet bleiben (dafür werden Cookies genutzt)</label>
           </div>
             <h2 align="center" class="h6 mb-3">Hast du noch kein Account? Dann <a href="<?php echo $relative_path; ?>/register">frag hier einen an</a>.</h2>
+            <?php echo ($tip ?? ''); ?>
           <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
           <p class="mt-5 mb-3 text-muted">© 2023</p>
         </form>

@@ -26,18 +26,18 @@ if (isset($_GET['token'])) {
         Redirect("./?message=invalid_token");
     }
 
-    if (!IsDateOlderThat10Minutes(GetDateFromToken($token, $pdo))) {
-        DeleteToken($token, $pdo);
+    if (!IsDateOlderThat10Minutes(GetDateFromRegisterToken($token, $pdo))) {
+        DeleteRegisterToken($token, $pdo);
         $_GET['token'] = null;
         Redirect("./?message=token_expired");
     }
 
-} else {
-    if (isset($_GET['email-send'])) {
-        $showEmailSend = true;
-        $showEmailValidate = false;
-    }
 }
+if (isset($_GET['email-send'])) {
+    $showEmailSend = true;
+    $showEmailValidate = false;
+}
+
 
 if(isset($_GET['email'])) {
     $email = $_GET['email'];
@@ -58,7 +58,7 @@ if(isset($_GET['email'])) {
         $error = true;
     }
     if(!$error) {
-        $token = CreateToken($email, $pdo);
+        $token = CreateTokenForRegistrationAndSaveThem($email, $pdo);
         $recipient = array('mail' => $email);
         try {
             SendVerificationMail($smtp, $sender, $recipient, $domain . "/register/?token=" . $token);
@@ -128,7 +128,7 @@ if(isset($_GET['register'])) {
         $result = $statement->execute(array('email' => $email, 'passwort' => $passwort_hash, 'vorname' => $vorname, 'nachname' => $nachname));
          
         if($result) {
-            DeleteToken($token, $pdo);
+            DeleteRegisterToken($token, $pdo);
 			header('Location: ' . $webroot . '/login?message=register-success');
 			die();
         } else {
@@ -289,8 +289,6 @@ if($showRegisterFormular) {
 
   </body>
 </html>
-</body>
-</html>
 
 <?php
 }
@@ -384,12 +382,6 @@ if ($showEmailValidate) {
 
     </body>
     </html>
-    </body>
-    </html>
-
-
-
-
 
 
 
@@ -475,9 +467,6 @@ if ($showEmailSend) {
 
     </body>
     </html>
-    </body>
-    </html>
-
 <?php
 }
 ?>

@@ -33,6 +33,14 @@ CREATE TABLE IF NOT EXISTS `registertokens` (
                                                 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `psswdresettokens` (
+                                                `id` int(11) NOT NULL AUTO_INCREMENT,
+                                                `token` varchar(255) NOT NULL,
+                                                `userid` varchar(255) NOT NULL,
+                                                `created` timestamp NOT NULL DEFAULT current_timestamp(),
+                                                PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `securitytokens` (
                                                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                                                 `user_id` int(11) NOT NULL,
@@ -59,8 +67,6 @@ CREATE TABLE IF NOT EXISTS `users` (
                                        `nachname` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
                                        `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
                                        `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-                                       `passwortcode` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-                                       `passwortcode_time` timestamp NULL DEFAULT NULL,
                                        PRIMARY KEY (`id`),
                                        UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
