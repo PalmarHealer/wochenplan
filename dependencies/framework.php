@@ -1,6 +1,26 @@
 <?php
 use JetBrains\PhpStorm\NoReturn;
 
+function GetCurrentUrl(): string
+{
+
+    //Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
+    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+        $current_url = "https://";
+    else {
+        $current_url = "http://";
+        // Append the host(domain name, ip) to the URL.
+        $current_url = $_SERVER['HTTP_HOST'];
+        $current_url = "https://wochenplan.nauren.de";
+    }
+
+    // Append the requested resource location to the URL
+    $current_url.= $_SERVER['REQUEST_URI'];
+
+
+    return $current_url;
+}
+
 function random_string(): string {
     if(function_exists('random_bytes')) {
         $bytes = random_bytes(16);
@@ -84,10 +104,6 @@ function PrintInfo($date, $time, $room, $pdo, $webroot) {
 
 }
 
-function replaceString($string, $search, $replace) {
-    return str_replace($search, $replace, $string);
-}
-
 function surroundString($originalString, $stringToSurround) {
     $position = strpos($originalString, $stringToSurround);
     if ($position !== false) {
@@ -111,17 +127,6 @@ function ExplodeStringToArray($string): array {
     return $return;
 }
 
-function CompareArrays($array1, $array2) {
-    foreach($array1 as $value) {
-        $index = array_search($value, $array2);
-        if($index !== false) {
-            return $index;
-        }
-    }
-    return false;
-}
-
-
 function replacePlaceholders($string): string {
 
     $placeholders = array(
@@ -138,26 +143,6 @@ function replacePlaceholders($string): string {
     }
 
     return $string;
-}
-
-function GetCurrentUrl(): string
-{
-
-    //Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
-    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-        $current_url = "https://";
-    else {
-        $current_url = "http://";
-        // Append the host(domain name, ip) to the URL.
-        $current_url = $_SERVER['HTTP_HOST'];
-        $current_url = "https://wochenplan.nauren.de";
-    }
-
-    // Append the requested resource location to the URL
-    $current_url.= $_SERVER['REQUEST_URI'];
-
-
-    return $current_url;
 }
 
 function Alert($msg): void
@@ -220,6 +205,7 @@ function PrintDays($date, $weekday_names_long) {
                         </div>
                     </div>'; }
 }
+
 function PrintDay($date, $name) {
 
         echo '<div onclick="window.location=\'../plan/?date='. $date . '\'" class="pointer align-items-center col-md-4 center2">
