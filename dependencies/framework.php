@@ -58,7 +58,6 @@ function PrintInfo($date, $time, $room, $pdo, $webroot) {
 
     $user_names = ExplodeStringToArray($value);
     $sick_notes = GetAllSickNotesRaw($pdo);
-    //$loop = array_intersect($user_names, $sick_notes);
     $return = $value;
     foreach ($sick_notes as $sickNote) {
 
@@ -68,14 +67,15 @@ function PrintInfo($date, $time, $room, $pdo, $webroot) {
             $dates[1] = $sickNote['start_date'];
             $dates[2] = $sickNote['end_date'];
             if (IsDateBetween($dates, $date)) {
-                $new_username = "<s>" . $username . "</s>";
-                $return = replaceString($return, $username, $new_username);
+
+                $value = surroundString($return, $username);
+                //$new_username = "<s>" . $username . "</s>";
+                //$return = replaceString($return, $username, $new_username);
             }
 
         }
 
     }
-    $value = $return;
 
 
     echo "<div class='lessons pointer' onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, 'id', $pdo) . "\"'>";
@@ -86,6 +86,15 @@ function PrintInfo($date, $time, $room, $pdo, $webroot) {
 
 function replaceString($string, $search, $replace) {
     return str_replace($search, $replace, $string);
+}
+
+function surroundString($originalString, $stringToSurround) {
+    $position = strpos($originalString, $stringToSurround);
+    if ($position !== false) {
+        $surroundedString = "<s class='strikethrough'>" . $stringToSurround . "</s>";
+        $originalString = substr_replace($originalString, $surroundedString, $position, strlen($stringToSurround));
+    }
+    return $originalString;
 }
 
 function ExplodeStringToArray($string): array {
