@@ -181,7 +181,7 @@ if (!isset($_GET["date"])) {
           if (isset($_GET['skip'])) {
               echo "setTimeout(hide_btn, 6000);";
               echo "reloadData();";
-              //echo "setInterval(reloadData, 6000);";
+              echo "setInterval(reloadData, 6000);";
           }
           else {
               echo '$(document).ready(function() {
