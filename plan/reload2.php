@@ -60,16 +60,16 @@ $current_day = $_POST['date'];
     </thead>
     <tbody>
     <tr class="name_badge center small_piece">
-        <td class="color-6 db_text"><b class="bold">Zeiten l/ll</b></td>
-        <td class="color-1 db_text"><b class="bold">Raum 1</b></td>
-        <td class="color-1 db_text"><b class="bold">Freiarbeit</b></td>
-        <td class="color-6 db_text"><b class="bold">Zeiten ll-lV</b></td>
-        <td class="color-1 db_text"><b class="bold">Raum 2</b></td>
-        <td class="color-1 db_text"><b class="bold">Raum 3 (HS)</b></td>
-        <td class="color-1 db_text"><b class="bold">Raum 4 (RS)</b></td>
-        <td class="color-1 db_text"><b class="bold">Gesprächsraum</b></td>
-        <td class="color-1 db_text"><b class="bold">SZ/Praxisber.</b></td>
-        <td class="color-1 db_text"><b class="bold">Sport</b></td>
+        <td class="color-6 db_text rooms"><b class="bold">Zeiten l/ll</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">Raum 1</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">Freiarbeit</b></td>
+        <td class="color-6 db_text rooms"><b class="bold">Zeiten ll-lV</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">Raum 2</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">Raum 3 (HS)</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">Raum 4 (RS)</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">Gesprächsraum</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">SZ/Praxisber.</b></td>
+        <td class="color-1 db_text rooms"><b class="bold">Sport</b></td>
     </tr>
 
 

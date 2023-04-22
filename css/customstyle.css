@@ -59,7 +59,12 @@ body {
     font-size: 100%;
     max-height: 100%;
 }
+
 .db_text {
+    padding: 0;
+}
+
+.rooms {
     padding: 7px 0 0 0;
 }
 
