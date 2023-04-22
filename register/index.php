@@ -438,7 +438,7 @@ if ($showEmailSend) {
                     </a>
                     <h4 class="my-3">Email wurde verschickt!</h4>
                 </div>
-                <div class="alert alert-success" role="alert"> Eine E-Mail wurde an <strong><?php echo ($_GET['email-send'] ?? 'placeholder@mail.de') ?></strong> geschickt. Bitte schau in deinem Postfach nach.</div>
+                <div class="alert alert-success" role="alert"> Eine E-Mail wurde an <strong><?php echo ($_GET['email-send'] ?? 'placeholder@mail.de') ?></strong> geschickt. Bitte schau in deinem <b>Postfach</b> und im <b>Spamordner</b> nach.</div>
                 <a href="<?php echo $relative_path; ?>/login" class="btn btn-lg btn-primary btn-block">Zurück zum Login</a>
                 <p class="mt-5 mb-3 text-muted">© 2023</p>
             </form>
