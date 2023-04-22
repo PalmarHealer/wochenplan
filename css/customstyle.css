@@ -64,6 +64,12 @@ body {
     padding: 0;
 }
 
+.sticky-using-fixed {
+    position: fixed;
+    z-index: 1;
+    top: 20px;
+}
+
 .rooms {
     padding: 7px 0 0 0;
 }

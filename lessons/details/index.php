@@ -171,7 +171,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
          <main role="main" class="main-content">
             <div class="container-fluid">
                <div class="row justify-content-center">
-                   <div id="availability" class="center2 availability">
+                   <div id="availability" class="center2 availability sticky-using-fixed">
                        <div class="alert alert-secondary center" role="alert">
                            <span class="fe fe-alert-octagon fe-16 mr-2"></span>Lade Slot info...
                        </div>
@@ -274,16 +274,16 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                              </thead>
                                              <tbody>
                                              <tr class="name-badge center">
-                                                 <td class="color-6 db_text"><b class="bold">Zeiten l/ll</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">Raum 1</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">Freiarbeit</b></td>
-                                                 <td class="color-6 db_text"><b class="bold">Zeiten ll-lV</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">Raum 2</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">Raum 3 (HS)</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">Raum 4 (RS)</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">Gesprächsraum</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">SZ/Praxisber.</b></td>
-                                                 <td class="color-1 db_text"><b class="bold">Sport</b></td>
+                                                 <td class="color-6 db_text rooms"><b class="bold">Zeiten l/ll</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 1</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Freiarbeit</b></td>
+                                                 <td class="color-6 db_text rooms"><b class="bold">Zeiten ll-lV</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 2</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 3 (HS)</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 4 (RS)</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Gesprächsraum</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">SZ/Praxisber.</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Sport</b></td>
                                              </tr>
 
 
@@ -637,11 +637,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <!-- Custom JS code -->
       <script>
           function updateAvailability() {
-              var date = $('#day').val();
-              var time = $('#time').val();
-              var location = $('#location').val();
+              const date = $('#day').val();
+              const time = $('#time').val();
+              const location = $('#location').val();
 
-              $(`[time="${time}"][room="${location}"]`).addClass("preview-selected");
               $.ajax({
                   url: './check.php',
                   type: 'GET',
@@ -655,12 +654,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
               });
           }
           function updateAvailability2() {
-              var date = $('#day2').val();
-              var time = $('#time').val();
-              var location = $('#location').val();
+              const date = $('#day2').val();
+              const time = $('#time').val();
+              const location = $('#location').val();
 
-
-              $(`[time="${time}"][room="${location}"]`).addClass("preview-selected");
               $.ajax({
 
                   url: './check.php',
@@ -673,6 +670,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                       console.log("Error: " + error);
                   }
               });
+          }
+          function removeSelection() {
+              $('.preview-hover').removeClass("preview-selected");
+
           }
           $(document).ready(function(){
               updateAvailability();
