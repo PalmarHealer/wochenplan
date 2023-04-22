@@ -58,7 +58,7 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot) {
     $lesson_username    = replacePlaceholders(GetUserByID($userid, "vorname", $pdo));
     $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo));
 
-    echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
+    echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
     echo "<br>";
     echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . $lesson_username . ")"; if ($sick) { echo "</s>"; } echo "</p>";
 
@@ -69,7 +69,8 @@ function modNumber($number, $mod) {
     return $number % $mod +1;
 }
 
-function PrintInfo($date, $time, $room, $pdo, $webroot) {
+function PrintInfo($date, $time, $room, $pdo, $webroot): void
+{
 
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
@@ -89,8 +90,6 @@ function PrintInfo($date, $time, $room, $pdo, $webroot) {
             if (IsDateBetween($dates, $date)) {
 
                 $value = surroundString($return, $username);
-                //$new_username = "<s>" . $username . "</s>";
-                //$return = replaceString($return, $username, $new_username);
             }
 
         }
@@ -98,7 +97,7 @@ function PrintInfo($date, $time, $room, $pdo, $webroot) {
     }
 
 
-    echo "<div class='lessons pointer' onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, 'id', $pdo) . "\"'>";
+    echo "<div class='lessons pointer' onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, 'id', $pdo) . "&date=" . $date . "\"'>";
     echo $value;
     echo "</div>";
 

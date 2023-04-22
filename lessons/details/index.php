@@ -166,6 +166,33 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              }
 
          }
+         if (isset($_GET['load_id'])) {
+             $lesson_id = $_GET['load_id'];
+
+             if($permission_level < $create_lessons_for_others AND ($_SESSION['asl_userid'] ?? '') != GetLessonInfoByID($lesson_id, "userid", $pdo)) {
+                 Redirect("../?message=unauthorized");
+             }
+
+             if (GetLessonInfoByID($lesson_id, "available", $pdo)) {
+
+                 $lesson_details['name'] = GetLessonInfoByID($lesson_id, "name", $pdo);
+                 $lesson_details['description'] = GetLessonInfoByID($lesson_id, "description", $pdo);
+                 $lesson_details['location'] = GetLessonInfoByID($lesson_id, "location", $pdo);
+                 $lesson_details['time'] = GetLessonInfoByID($lesson_id, "time", $pdo);
+
+                 $lesson_details['notes'] = GetLessonInfoByID($lesson_id, "notes", $pdo);
+
+                 $lesson_details['box-color'] = GetLessonInfoByID($lesson_id, "box-color", $pdo);
+
+
+                 $lesson_details['userid'] = GetLessonInfoByID($lesson_id, "userid", $pdo);
+                 $lesson_details['creator'] = GetUserByID($lesson_details['userid'], "name", $pdo);
+
+             } else {
+                 Redirect("../");
+             }
+
+         }
 ?>
 
          <main role="main" class="main-content">
@@ -478,9 +505,12 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 									
 										<?php 
 										    $date_type = array();
+                                            if (isset($_GET['load_id'])) {
+                                                $lesson_details['date-type'] = 2;
+                                            }
                                             if(isset($lesson_details['date-type'])) {
 											    $date_type[$lesson_details['date-type']] = "active";
-										    }  else {
+										    } else {
                                                 $date_type[1] = "active";
                                                 $lesson_details['date-type'] = 1;
                                             }
@@ -501,13 +531,15 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
                                                    </div>
                                                    <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
-                                                      <?php if($lesson_details['date-type'] == "1") {
-                                                         $selected_date = array();
-                                                         if (!isset($lesson_details['date'])) {
-                                                             $lesson_details['date'] = 1;
-                                                         }
-                                                         $selected_date[$lesson_details['date']] = "selected";
-                                                         }?>
+                                                      <?php
+                                                      if($lesson_details['date-type'] == "1") {
+                                                          $selected_date = array();
+                                                          if (!isset($lesson_details['date'])) {
+                                                              $lesson_details['date'] = 1;
+                                                          }
+                                                          $selected_date[$lesson_details['date']] = "selected";
+                                                      }
+                                                      ?>
                                                       <option value="1" <?php if(isset($selected_date[1])) { echo $selected_date[1]; }?>>Montag</option>
                                                       <option value="2" <?php if(isset($selected_date[2])) { echo $selected_date[2]; }?>>Dienstag</option>
                                                       <option value="3" <?php if(isset($selected_date[3])) { echo $selected_date[3]; }?>>Mittwoch</option>
@@ -523,8 +555,11 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                    </div>
                                                    <input id="day2" onchange="updateAvailability2()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
-                                                         if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
+                                                         if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2" AND !isset($_GET['load_id'])) {
                                                          	echo $lesson_details['date']; 
+                                                         } elseif (isset($_GET['date']) OR isset($_POST['date'])) {
+                                                             $date_tmp = ($_GET['date'] ?? $_POST['date']);
+                                                             echo date("d/m/Y", strtotime($date_tmp));
                                                          } else {
                                                              echo date("d/m/Y");
 
@@ -583,11 +618,14 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
                                  if(isset($_GET['id'])) {
-                                     echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
-                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
+                                     echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                     if ($lesson_details['date-type'] == "1") {
+                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?load_id=' . $_GET['id'] . '">Angebot nur für einen Tag Aktualisieren</button>';
+                                     }
+                                     echo '<button type="button summit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
                                  } else {
-                                     echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
-                                     echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
+                                     echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
+                                     echo '<button type="button" class="lesson-details-btn btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
                                  }
                                  ?>
                            </div>
@@ -676,6 +714,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
           }
           $(document).ready(function(){
+
+              const time = $('#time').val();
+              const location = $('#location').val();
+              $(`[time="${time}"][room="${location}"]`).addClass("preview-selected");
               updateAvailability();
 
               $(".date_selector1").click(function(){
@@ -699,6 +741,24 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   $(this).addClass("preview-selected");
                   $('#location').val(room).change();
                   $('#time').val(time).change();
+                  if (room === "10" && time === "13") {
+                      $("#helping").attr("disabled", true);
+                      $("#color-picker").attr("disabled", true);
+                  } else if (room === "9") {
+                      if (time === "2" || time === "3" || time === "4" || time === "5") {
+                          $("#helping").attr("disabled", true);
+                      }
+                  } else if (time === "12") {
+                      $("#color-picker").attr("disabled", true);
+                      if (room === "11" || room === "12" || room === "13") {
+                          $("#helping").attr("disabled", true);
+                      }
+                  } else {
+
+                      $("#helping").removeAttr("disabled");
+                      $("#color-picker").removeAttr("disabled");
+
+                  }
               });
 
 
@@ -713,7 +773,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   format: 'hex',
                   alpha: false,
                   swatches: [
-                      '#ffffff',
                       '#f6e9e6',
                       '#ecd3cd',
                       '#e3bdb4',

@@ -109,6 +109,10 @@ body {
     margin-right: 0; !important;
 }
 
+.lesson-details-btn {
+    margin-left: 2px;
+    margin-right: 2px;
+}
 
 .lesson {
     width: 100%;
