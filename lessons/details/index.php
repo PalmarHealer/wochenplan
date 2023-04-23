@@ -89,15 +89,15 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
 
              $return_to = ($_POST['return_to'] ?? null);
+             $dub_id = ($_GET['dub_id'] ?? null);
              $tmp_plan_date = ($_POST['plan_date'] ?? '');
              $plan_date = date("Y-m-d", strtotime($tmp_plan_date));
-
 
              if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
                  $new_assigned_user_id = $id;
              }
 
-             if (isset($return_to)) {
+             if (isset($dub_id)) {
 
                  UpdateOrInsertLesson("create", $pdo, "",
                      "2",
@@ -619,7 +619,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  if(isset($_GET['id'])) {
                                      echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
                                      if (isset($_GET['date']) AND $lesson_details['date-type'] == "1") {
-                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?save_id=' . $_GET['id'] . '">Angebot nur für einen Tag Aktualisieren</button>';
+                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?dub_id=' . $_GET['id'] . '">Angebot nur für einen Tag Aktualisieren</button>';
                                      }
                                      echo '<button type="button summit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
                                  } else {
@@ -687,7 +687,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
               $.ajax({
                   url: './check.php',
                   type: 'POST',
-                  data: {date: date, time: time, location: location, id: <?php echo $_GET['id'] ?>},
+                  data: {date: date, time: time, location: location, id: <?php echo ($_GET['id'] ?? 0) ?>},
                   success: function (result) {
                       $('#availability').html(result);
                   },
