@@ -23,7 +23,7 @@ if (!GetLessonInfo($newDate, $time, $location, "available", $pdo)) {
     echo '<span class="fe fe-alert-octagon fe-16 mr-2"></span>Das ist dein Slot.';
 } else {
     echo '<div class="alert alert-danger center" role="alert">';
-    echo '<span class="fe fe-minus-circle fe-16 mr-2"></span>In diesem Slot wurde schon das Angebot <b>' . $id . replacePlaceholders(GetLessonInfo($newDate, $time, $location, "name", $pdo)) . "</b> von <b>" . GetUserByID(GetLessonInfo($newDate, $time, $location, "userid", $pdo), "vorname", $pdo) . " </b> eingespeichert";
+    echo '<span class="fe fe-minus-circle fe-16 mr-2"></span>In diesem Slot wurde schon das Angebot <b>' . replacePlaceholders(GetLessonInfo($newDate, $time, $location, "name", $pdo)) . "</b> von <b>" . GetUserByID(GetLessonInfo($newDate, $time, $location, "userid", $pdo), "vorname", $pdo) . " </b> eingespeichert";
 }
 echo '</div>';
 $pdo = null;

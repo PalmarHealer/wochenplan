@@ -682,6 +682,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   const date = $('#day').val();
               }
 
+              $('#availability').html('<div class="alert alert-secondary center" role="alert"><span class="fe fe-alert-octagon fe-16 mr-2"></span>Lade Slot info...</div>');
+
               $.ajax({
                   url: './check.php',
                   type: 'POST',
@@ -691,6 +693,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   },
                   error: function (xhr, status, error) {
                       console.log("Error: " + error);
+                      $('#availability').html('<div class="alert alert-warning center" role="alert"><span class="fe fe-minus-circle fe-16 mr-2"></span>Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung</div>');
                   }
               });
           }
