@@ -21,6 +21,24 @@ function GetCurrentUrl(): string
     return $current_url;
 }
 
+function replacePlaceholders($string): string {
+
+    $placeholders = array(
+        '%knr%'   => modNumber(intval(date("W")), 3) + 2,
+        '%knr:1%' => modNumber(intval(date("W")) + 1, 3) + 2,
+        '%knr:2%' => modNumber(intval(date("W")) + 2, 3) + 2,
+        '%knr:3%' => modNumber(intval(date("W")) + 3, 3) + 2,
+        '%knr:4%' => modNumber(intval(date("W")) + 4, 3) + 2,
+        '%knr:5%' => modNumber(intval(date("W")) + 5, 3) + 2,
+        '%<3%' => "manu ist der beste",
+    );
+    foreach ($placeholders as $placeholder => $replacement) {
+        $string = str_replace($placeholder, $replacement, $string);
+    }
+
+    return $string;
+}
+
 function random_string(): string {
     if(function_exists('random_bytes')) {
         $bytes = random_bytes(16);
@@ -126,24 +144,6 @@ function ExplodeStringToArray($string): array {
     return $return;
 }
 
-function replacePlaceholders($string): string {
-
-    $placeholders = array(
-        '%knr%'   => modNumber(intval(date("W")), 3),
-        '%knr:1%' => modNumber(intval(date("W")) + 1, 3),
-        '%knr:2%' => modNumber(intval(date("W")) + 2, 3),
-        '%knr:3%' => modNumber(intval(date("W")) + 3, 3),
-        '%knr:4%' => modNumber(intval(date("W")) + 4, 3),
-        '%knr:5%' => modNumber(intval(date("W")) + 5, 3),
-        '%<3%' => "manu ist der beste",
-    );
-    foreach ($placeholders as $placeholder => $replacement) {
-        $string = str_replace($placeholder, $replacement, $string);
-    }
-
-    return $string;
-}
-
 function Alert($msg): void
 {
     echo "<script type='text/javascript'>alert('$msg');</script>";
@@ -167,16 +167,24 @@ function GetHighestValueBelowValueName($value, $array) {
 
 function GetDaysOfWeek($date) {
     $days = array();
-    $monday = date("Y-m-d", strtotime("monday this week", strtotime($date)));
-    $days[] = $monday;
-    $days[] = date("Y-m-d", strtotime("tuesday this week", strtotime($date)));
-    $days[] = date("Y-m-d", strtotime("wednesday this week", strtotime($date)));
-    $days[] = date("Y-m-d", strtotime("thursday this week", strtotime($date)));
-    $days[] = date("Y-m-d", strtotime("friday this week", strtotime($date)));
-    $days[] = date("Y-m-d", strtotime("saturday this week", strtotime($date)));
-    $days[] = date("Y-m-d", strtotime("sunday this week", strtotime($date)));
+    $input_date = strtotime($date);
+    $week_day = date('w', $input_date);
+
+    // Add days to shift input date to the following Monday
+    $days_to_add = $week_day == 0 ? 1 : ($week_day == 6 ? 2 : 0);
+    $next_monday = date('Y-m-d', strtotime("+$days_to_add day", $input_date));
+
+    $days[] = $next_monday;
+    $days[] = date("Y-m-d", strtotime("tuesday this week", strtotime($next_monday)));
+    $days[] = date("Y-m-d", strtotime("wednesday this week", strtotime($next_monday)));
+    $days[] = date("Y-m-d", strtotime("thursday this week", strtotime($next_monday)));
+    $days[] = date("Y-m-d", strtotime("friday this week", strtotime($next_monday)));
+    $days[] = date("Y-m-d", strtotime("saturday this week", strtotime($next_monday)));
+    $days[] = date("Y-m-d", strtotime("sunday this week", strtotime($next_monday)));
+
     return $days;
 }
+
 
 function PrintDays($date, $weekday_names_long) {
     foreach (GetDaysOfWeek($date) as $key => $day) {

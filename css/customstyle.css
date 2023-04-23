@@ -262,3 +262,11 @@ body {
 .close_fullscreen {
     display: none;
 }
+
+.full {
+    position: relative;
+}
+
+.days {
+    margin-top: 100px;
+}

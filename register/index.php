@@ -53,10 +53,10 @@ if(isset($_GET['email'])) {
     }
 
 
-    if (IsMailAllowed($email, $allowed_domains)) {
-        $mailalredyused = "Diese E-Mail-Adresse darfst du nicht verwenden";
-        $error = true;
-    }
+    //if (IsMailAllowed($email, $allowed_domains)) {
+    //    $mailalredyused = "Diese E-Mail-Adresse darfst du nicht verwenden";
+    //    $error = true;
+    //}
     if(!$error) {
         $token = CreateTokenForRegistrationAndSaveThem($email, $pdo);
         $recipient = array('mail' => $email);
@@ -115,10 +115,10 @@ if(isset($_GET['register'])) {
         }    
     }
 
-    if (IsMailAllowed($email, $allowed_domains)) {
-        $mailalredyused = "Diese E-Mail-Adresse darfst du nicht verwenden";
-        $error = true;
-    }
+    //if (IsMailAllowed($email, $allowed_domains)) {
+    //    $mailalredyused = "Diese E-Mail-Adresse darfst du nicht verwenden";
+    //    $error = true;
+    //}
     
     //Keine Fehler, wir können den Nutzer registrieren
     if(!$error) {    

@@ -51,7 +51,7 @@ function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_dat
 function GetLessonInfo($day, $time, $room, $info, $pdo) {
 
 
-    $lessons = $pdo->prepare("SELECT * FROM angebot ORDER BY id ASC");
+    $lessons = $pdo->prepare("SELECT * FROM angebot ORDER BY id DESC");
     $lessons->execute();
     if (str_contains($day, "-")) {
         $repeating_day = date('N', strtotime($day));
@@ -64,45 +64,14 @@ function GetLessonInfo($day, $time, $room, $info, $pdo) {
         if (!isset($sl)) {
             continue;
         }
-        if ($day == $sl['date'] OR $repeating_day == $sl['date_repeating']) {
+        if ($day == $sl['date']) {
             if ($time == $sl['time'] AND $room == $sl['location']) {
-
-                if ($info == "id") {
-                    return $sl['id'];
-                }
-                if ($info == "name") {
-                    return $sl['name'];
-                }
-                if ($info == "description") {
-                    return $sl['description'];
-                }
-                if ($info == "date") {
-                    if ($sl['date_type'] == 1) {
-                        return $sl['date_repeating'];
-                    } elseif ($sl['date_type'] == 2) {
-                        return $sl['date'];
-                    } else {
-                        return "Error loading date";
-                    }
-                }
-                if ($info == "location") {
-                    return $sl['location'];
-                }
-                if ($info == "time") {
-                    return $sl['time'];
-                }
-                if ($info == "box-color") {
-                    return $sl['box_color'];
-                }
-                if ($info == "notes") {
-                    return $sl['notes'];
-                }
-                if ($info == "userid") {
-                    return $sl['assigned_user_id'];
-                }
-                if ($info == "available") {
-                    return true;
-                }
+                return ProcessInformation($sl, $info);
+            }
+        }
+        elseif ($repeating_day == $sl['date_repeating']) {
+            if ($time == $sl['time'] AND $room == $sl['location']) {
+                return ProcessInformation($sl, $info);
             }
         }
     }
@@ -124,45 +93,52 @@ function GetLessonInfoByID($id, $info, $pdo) {
         if (!isset($sl)) {
             continue;
         }
-        if ($info == "name") {
-            return $sl['name'];
-        }
-        if ($info == "description") {
-            return $sl['description'];
-        }
-        if ($info == "date") {
-            if ($sl['date_type'] == 1) {
-                return $sl['date_repeating'];
-            } elseif ($sl['date_type'] == 2) {
-                return $sl['date'];
-            } else {
-                return "Error loading date";
-            }
-        }
-        if ($info == "location") {
-            return $sl['location'];
-        }
-        if ($info == "time") {
-            return $sl['time'];
-        }
-        if ($info == "box-color") {
-            return $sl['box_color'];
-        }
-        if ($info == "notes") {
-            return $sl['notes'];
-        }
-        if ($info == "userid") {
-            return $sl['assigned_user_id'];
-        }
-        if ($info == "available") {
-            return true;
-        }
+        return ProcessInformation($sl, $info);
     }
     if ($info == "available") {
         return false;
     } else {
         return "Error loading data";
     }
+}
+function ProcessInformation($sl, $info) {
+    if ($info == "id") {
+        return $sl['id'];
+    }
+    if ($info == "name") {
+        return $sl['name'];
+    }
+    if ($info == "description") {
+        return $sl['description'];
+    }
+    if ($info == "date") {
+        if ($sl['date_type'] == 1) {
+            return $sl['date_repeating'];
+        } elseif ($sl['date_type'] == 2) {
+            return $sl['date'];
+        } else {
+            return "Error loading date";
+        }
+    }
+    if ($info == "location") {
+        return $sl['location'];
+    }
+    if ($info == "time") {
+        return $sl['time'];
+    }
+    if ($info == "box-color") {
+        return $sl['box_color'];
+    }
+    if ($info == "notes") {
+        return $sl['notes'];
+    }
+    if ($info == "userid") {
+        return $sl['assigned_user_id'];
+    }
+    if ($info == "available") {
+        return true;
+    }
+    return "no further information";
 }
 
 function GetSickNoteByID($id, $info, $pdo) {

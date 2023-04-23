@@ -143,7 +143,7 @@ $times = array(
 
 //Placeholders
 //you can use them to replace something
-//the placeholder are written in framework.php in line 66
+//the placeholder are written in framework.php in line 27
 
 
 
@@ -152,4 +152,4 @@ $times = array(
 //website are not able to work properly
 
 $header = "true";
-$ver = "1.1.6.0";
+$ver = "1.1.7.0";

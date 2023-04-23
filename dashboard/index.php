@@ -55,11 +55,7 @@
 			  
 			  
                 <div class="col-md-3 text-center mb-5">
-				
-		    	<!-- 	<div class="avatar avatar-xl">
-						<i class="fe fe-user fe-32"></i>
-						<img src="./assets/avatars/face-1.jpg" alt="..." class="avatar-img rounded-circle">
-					</div> -->
+
                 </div>
 				
 				

@@ -88,10 +88,30 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              $new_assigned_user_id = ($_POST['creator'] ?? '');
 
 
+             $return_to = ($_POST['return_to'] ?? null);
+             $tmp_plan_date = ($_POST['plan_date'] ?? '');
+             $plan_date = date("Y-m-d", strtotime($tmp_plan_date));
+
+
              if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
                  $new_assigned_user_id = $id;
              }
 
+             if (isset($return_to)) {
+
+                 UpdateOrInsertLesson("create", $pdo, "",
+                     "2",
+                     $plan_date,
+                     $new_name,
+                     $new_description,
+                     $new_location,
+                     $new_time,
+                     $new_box_color,
+                     $new_notes,
+                     $new_assigned_user_id
+                 );
+                 Redirect($return_to);
+             }
              // Update Lesson
              if (isset($_POST["update_lesson_with_id"])) {
 
@@ -107,7 +127,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $new_assigned_user_id
                  );
 
-                 Redirect("../");
+                 Redirect($return_to);
 
                  // Create Lesson
              } elseif (($_POST['save'] ?? 0) == "1") {
@@ -123,7 +143,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $new_notes,
                      $new_assigned_user_id
                  );
-                 Redirect("../");
+                 Redirect($return_to);
              }
 
          }
@@ -166,33 +186,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              }
 
          }
-         if (isset($_GET['load_id'])) {
-             $lesson_id = $_GET['load_id'];
-
-             if($permission_level < $create_lessons_for_others AND ($_SESSION['asl_userid'] ?? '') != GetLessonInfoByID($lesson_id, "userid", $pdo)) {
-                 Redirect("../?message=unauthorized");
-             }
-
-             if (GetLessonInfoByID($lesson_id, "available", $pdo)) {
-
-                 $lesson_details['name'] = GetLessonInfoByID($lesson_id, "name", $pdo);
-                 $lesson_details['description'] = GetLessonInfoByID($lesson_id, "description", $pdo);
-                 $lesson_details['location'] = GetLessonInfoByID($lesson_id, "location", $pdo);
-                 $lesson_details['time'] = GetLessonInfoByID($lesson_id, "time", $pdo);
-
-                 $lesson_details['notes'] = GetLessonInfoByID($lesson_id, "notes", $pdo);
-
-                 $lesson_details['box-color'] = GetLessonInfoByID($lesson_id, "box-color", $pdo);
-
-
-                 $lesson_details['userid'] = GetLessonInfoByID($lesson_id, "userid", $pdo);
-                 $lesson_details['creator'] = GetUserByID($lesson_details['userid'], "name", $pdo);
-
-             } else {
-                 Redirect("../");
-             }
-
-         }
 ?>
 
          <main role="main" class="main-content">
@@ -204,7 +197,13 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                        </div>
                    </div>
                   <form action="./" method="post">
-                     <div class="col-12">
+                      <label>
+                          <input hidden type="text" name="return_to" value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                      </label>
+                      <label>
+                          <input hidden type="text" name="plan_date" value="<?php echo ($_GET['date'] ?? null); ?>">
+                      </label>
+                      <div class="col-12">
                          <h2 class="page-title">
                              <?php
                              if(isset($_GET['id'])) {
@@ -501,7 +500,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                              <div class="col-md-6 mb-4">
                               <div class="card shadow">
                                  <div class="d-flex flex-row tab-icon">
-                                    <div class="nav flex-column nav-pills" aria-orientation="vertical">
+                                    <div id="date_type" class="nav flex-column nav-pills" aria-orientation="vertical" date_type="<?php echo $lesson_details['date-type']; ?>">
 									
 										<?php 
 										    $date_type = array();
@@ -553,7 +552,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                    <div class="input-group-append">
                                                       <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
                                                    </div>
-                                                   <input id="day2" onchange="updateAvailability2()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
+                                                   <input id="day2" onchange="updateAvailability()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
                                                          if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2" AND !isset($_GET['load_id'])) {
                                                          	echo $lesson_details['date']; 
@@ -619,8 +618,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <?php
                                  if(isset($_GET['id'])) {
                                      echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
-                                     if ($lesson_details['date-type'] == "1") {
-                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?load_id=' . $_GET['id'] . '">Angebot nur für einen Tag Aktualisieren</button>';
+                                     if (isset($_GET['date']) AND $lesson_details['date-type'] == "1") {
+                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?save_id=' . $_GET['id'] . '">Angebot nur für einen Tag Aktualisieren</button>';
                                      }
                                      echo '<button type="button summit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
                                  } else {
@@ -675,56 +674,60 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <!-- Custom JS code -->
       <script>
           function updateAvailability() {
-              const date = $('#day').val();
               const time = $('#time').val();
               const location = $('#location').val();
-
-              $.ajax({
-                  url: './check.php',
-                  type: 'GET',
-                  data: {date: date, time: time, location: location},
-                  success: function(result) {
-                      $('#availability').html(result);
-                  },
-                  error: function(xhr, status, error) {
-                      console.log("Error: " + error);
-                  }
-              });
-          }
-          function updateAvailability2() {
               const date = $('#day2').val();
-              const time = $('#time').val();
-              const location = $('#location').val();
+
+              if ($('#date_type').attr('date_type') === 1) {
+                  const date = $('#day').val();
+              }
 
               $.ajax({
-
                   url: './check.php',
-                  type: 'GET',
-                  data: {date: date, time: time, location: location},
-                  success: function(result) {
+                  type: 'POST',
+                  data: {date: date, time: time, location: location, id: <?php echo $_GET['id'] ?>},
+                  success: function (result) {
                       $('#availability').html(result);
                   },
-                  error: function(xhr, status, error) {
+                  error: function (xhr, status, error) {
                       console.log("Error: " + error);
                   }
               });
           }
-          function removeSelection() {
-              $('.preview-hover').removeClass("preview-selected");
 
-          }
           $(document).ready(function(){
 
               const time = $('#time').val();
               const location = $('#location').val();
               $(`[time="${time}"][room="${location}"]`).addClass("preview-selected");
-              updateAvailability();
+
+              if (location === "10" && time === "13") {
+                  $("#helping").attr("disabled", true);
+                  $("#color-picker").attr("disabled", true);
+              } else if (location === "9") {
+                  if (time === "2" || time === "3" || time === "4" || time === "5") {
+                      $("#helping").attr("disabled", true);
+                  }
+              } else if (time === "12") {
+                  $("#color-picker").attr("disabled", true);
+                  $("#name").attr("maxlength", "50");
+                  if (location === "11" || location === "12" || location === "13") {
+                      $("#helping").attr("disabled", true);
+                  }
+              } else {
+
+                  $("#helping").removeAttr("disabled");
+                  $("#color-picker").removeAttr("disabled");
+                  $("#name").attr("maxlength", "30");
+
+              }
 
               $(".date_selector1").click(function(){
                   $(".repeating").show();
                   $(".toggle_date_input1").removeAttr("disabled", "");
                   $(".toggle_date_input2").attr("disabled", "");
                   $(".once").hide();
+                  $("#date_type").attr("date_type", "1");
               });
 
               $(".date_selector2").click(function(){
@@ -732,6 +735,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   $(".toggle_date_input2").removeAttr("disabled", "");
                   $(".toggle_date_input1").attr("disabled", "");
                   $(".repeating").hide();
+                  $("#date_type").attr("date_type", "2");
               });
 
               $('.preview-hover, .preview-lighthover').click(function() {
@@ -750,6 +754,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                       }
                   } else if (time === "12") {
                       $("#color-picker").attr("disabled", true);
+                      $("#name").attr("maxlength", "50");
                       if (room === "11" || room === "12" || room === "13") {
                           $("#helping").attr("disabled", true);
                       }
@@ -757,6 +762,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
                       $("#helping").removeAttr("disabled");
                       $("#color-picker").removeAttr("disabled");
+                      $("#name").attr("maxlength", "30");
 
                   }
               });
