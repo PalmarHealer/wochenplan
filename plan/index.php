@@ -32,7 +32,7 @@ if (!isset($_GET["date"])) {
       <!-- Simple bar CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
       <!-- Fonts CSS -->
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abel">
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/abel.css">
       <!-- Icons CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
