@@ -189,6 +189,7 @@ if (!isset($_GET["date"])) {
       }
       else {
         echo '$(document).ready(function() {
+                        setTimeout(reloadData, 2500);
                         setTimeout(hide_btn, 6000);
                         let $ = (t) => document.querySelector(t),
                         dots = $(".dots");
