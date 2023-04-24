@@ -250,15 +250,5 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
       <script src="<?php echo $relative_path; ?>/js/uppy.min.js"></script>
       <script src="<?php echo $relative_path; ?>/js/quill.min.js"></script>
       <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
-      <!-- Google tag (gtag.js) -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-YL7H2T9DF4"></script>
-      <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-YL7H2T9DF4');
-      </script>
-      <!-- Custom JS code -->
    </body>
 </html>

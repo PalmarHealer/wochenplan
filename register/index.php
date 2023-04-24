@@ -276,17 +276,6 @@ if($showRegisterFormular) {
     <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
     <script src="<?php echo $relative_path; ?>/js/config.js"></script>
     <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YL7H2T9DF4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-YL7H2T9DF4');
-    </script>
-
   </body>
 </html>
 
@@ -369,17 +358,6 @@ if ($showEmailValidate) {
     <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
     <script src="<?php echo $relative_path; ?>/js/config.js"></script>
     <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YL7H2T9DF4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-YL7H2T9DF4');
-    </script>
-
     </body>
     </html>
 
@@ -454,16 +432,6 @@ if ($showEmailSend) {
     <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
     <script src="<?php echo $relative_path; ?>/js/config.js"></script>
     <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YL7H2T9DF4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-YL7H2T9DF4');
-    </script>
 
     </body>
     </html>
