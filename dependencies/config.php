@@ -118,8 +118,8 @@ $room_names = array(
     8 => "Ausflug",
     9 => "Freiarbeit",
     11 => "Putzen EG",
-    12 => "Putzen UG/OG",
-    13 => "Putzen Garten",
+    12 => "Putzen Garten",
+    13 => "Putzen UG/OG",
 );
 
 //Available times
@@ -152,4 +152,4 @@ $times = array(
 //website are not able to work properly
 
 $header = "true";
-$ver = "1.1.8.3";
+$ver = "1.1.8.4";
