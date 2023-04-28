@@ -7,7 +7,7 @@ body {
 }
 
 .modt {
-    font-size: 120%;
+    font-size: 115%;
 }
 
 .pointer {
@@ -27,7 +27,7 @@ body {
     vertical-align: top;
     horiz-align: left;
     table-layout: fixed;
-    font-size: 110%;
+    font-size: 105%;
 }
 
 .tg-small-preview * {
@@ -56,7 +56,7 @@ body {
     margin-left: -5px;
     margin-right: -34%;
     margin-bottom: -5%;
-    font-size: 100%;
+    font-size: 105%;
     max-height: 100%;
 }
 
@@ -82,6 +82,11 @@ body {
     border: none;
     overflow: hidden;
     margin-left: -30px;
+}
+
+.no_border_no_margin * {
+    border: none;
+    overflow: hidden;
 }
 
 .availability {
@@ -269,4 +274,13 @@ body {
 
 .days {
     margin-top: 100px;
+}
+
+.tb_header {
+    padding: 0.5% 0;
+    font-size: 115%;
+}
+
+.no_padding {
+    padding: 0;
 }

@@ -16,7 +16,7 @@ if (!isset($_GET["date"])) {
 }
 
 ?>
-<!-- Custom CSS (this has to be here, otherwise it will do randomly things) -->
+
 <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
 <!doctype html>
 <html lang="de">

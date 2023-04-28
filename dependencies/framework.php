@@ -52,7 +52,7 @@ function random_string(): string {
     return $str;
 }
 
-function PrintLessonToPlan($date, $time, $room, $pdo, $webroot) {
+function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void {
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
@@ -83,6 +83,33 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot) {
     echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo $lesson_description; if ($sick) { echo "</s>"; } echo "</p></div>";
 }
 
+function PrintInfoWithDesc($date, $time, $room, $pdo, $webroot): void {
+    if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
+        return;
+    }
+    $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
+    $sick = false;
+    foreach (GetAllSickNotesRaw($pdo) as $sickNote) {
+
+        if (intval($sickNote['userid']) == $userid) {
+            $dates = array();
+            $dates[1] = $sickNote['start_date'];
+            $dates[2] = $sickNote['end_date'];
+            if (IsDateBetween($dates, $date)) {
+                $sick = true;
+            }
+
+        }
+
+    }
+
+    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo));
+    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
+
+    echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='no_padding bold lessons pointer'><b class='no_padding lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
+
+    echo "<p class='no_padding font-weight-normal description'>"; if ($sick) { echo "<s>"; } echo $lesson_description; if ($sick) { echo "</s>"; } echo "</p></div>";
+}
 function modNumber($number, $mod) {
     return $number % $mod +1;
 }

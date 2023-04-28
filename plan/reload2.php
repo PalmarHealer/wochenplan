@@ -20,10 +20,10 @@ $current_day = $_POST['date'];
         <col/>
     </colgroup>
     <thead>
-    <tr class="small_piece">
-        <th class="color-3 no_border text-center" style='text-align: center;'>
-            <div class="text-center db_text">
-            <b class="white_text modt ">
+    <tr class="small_piece tb_header">
+        <th class="tb_header color-3 no_border_no_margin text-center" style='text-align: center;'>
+            <div class="text-center">
+            <b class="white_text modt">
                 <?php
                 $weekday = (new DateTime($current_day))->format('N');
                 echo $weekday_names[$weekday] . " " . date('d.m.Y', strtotime($current_day));
@@ -31,8 +31,9 @@ $current_day = $_POST['date'];
             </b>
             </div>
         </th>
-        <th class="color-1 text-left db_text text-left" colspan="4"><?php PrintInfo($current_day, 13, 10, $pdo, $webroot); ?></th>
-        <th class="color-3 white_text modt text-left" colspan="5">
+        <th class="tb_header color-1 text-left db_text" colspan="4"><?php PrintInfo($current_day, 13, 10, $pdo, $webroot); ?></th>
+        <th class="tb_header color-3 no_border_no_margin modt text-left" colspan="5">
+            <p class="white_text">
             <?php
 
             $names = array();
@@ -55,6 +56,7 @@ $current_day = $_POST['date'];
                 }
             }
             ?>
+            </p>
         </th>
     </tr>
     </thead>
@@ -185,7 +187,7 @@ $current_day = $_POST['date'];
             <b class="bold">Mittagspause</b>
         </td>
 
-        <td class="color-4 db_text text-center bold" colspan="9"><?php PrintInfo($current_day, 14, 10, $pdo, $webroot); ?></td>
+        <td class="color-4 no_border_no_margin text-center" colspan="9"><?php PrintInfoWithDesc($current_day, 14, 10, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -228,7 +230,7 @@ $current_day = $_POST['date'];
             14:30 – 15:00<br/>
             <b class="bold">Putzen</b>
         </td>
-        <td class="color-5 text-center db_text bold" colspan="8"><?php PrintInfo($current_day, 12, 10, $pdo, $webroot); ?></td>
+        <td class="color-5 text-center no_border_no_margin bold" colspan="8"><?php PrintInfoWithDesc($current_day, 12, 10, $pdo, $webroot); ?></td>
     </tr>
 
     <tr class="small_piece">
