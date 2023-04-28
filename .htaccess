@@ -1,12 +1,12 @@
-ErrorDocument 400 https://wochenplan.nauren.de/error/400
+ErrorDocument 400 http://localhost:81/error/400
 
-ErrorDocument 401 https://wochenplan.nauren.de/error/401
+ErrorDocument 401 http://localhost:81/error/401
 
-ErrorDocument 403 https://wochenplan.nauren.de/error/403
+ErrorDocument 403 http://localhost:81/error/403
 
-ErrorDocument 404 https://wochenplan.nauren.de/error/404
+ErrorDocument 404 http://localhost:81/error/404
 
-ErrorDocument 500 https://wochenplan.nauren.de/error/500
+ErrorDocument 500 http://localhost:81/error/500
 
 DirectoryIndex index.php
 
