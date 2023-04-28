@@ -22,6 +22,9 @@ CREATE TABLE IF NOT EXISTS `angebot` (
                                          `box_color` varchar(20) NOT NULL DEFAULT '#f6e9e6',
                                          `notes` varchar(255) DEFAULT NULL,
                                          `assigned_user_id` int(11) NOT NULL,
+                                         `last_change_from_userid` int(11) DEFAULT NULL,
+                                         `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+                                         `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
                                          PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
