@@ -1,6 +1,6 @@
 <?php
 
-function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id): bool {
+function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $user_that_made_the_change): bool {
 
     try {
         // Determine the column names based on the $date_type value
@@ -15,11 +15,11 @@ function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name
 
         // Prepare and execute the SQL query
         if ($type == "update") {
-            $stmt = $pdo->prepare("UPDATE angebot SET date_type = ?, $set_date_column = ?, $empty_date_column = NULL, name = ?, description = ?, location = ?, time = ?, box_color = ?, notes = ?, assigned_user_id = ? WHERE id = ?");
-            $stmt->execute([$date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $id]);
+            $stmt = $pdo->prepare("UPDATE angebot SET date_type = ?, $set_date_column = ?, $empty_date_column = NULL, name = ?, description = ?, location = ?, time = ?, box_color = ?, notes = ?, assigned_user_id = ?, last_change_from_userid = ? WHERE id = ?");
+            $stmt->execute([$date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $user_that_made_the_change, $id]);
         } else {
-            $stmt = $pdo->prepare("INSERT INTO angebot (date_type, $set_date_column, $empty_date_column, name, description, location, time, box_color, notes, assigned_user_id) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id]);
+            $stmt = $pdo->prepare("INSERT INTO angebot (date_type, $set_date_column, $empty_date_column, name, description, location, time, box_color, notes, assigned_user_id, last_change_from_userid) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $user_that_made_the_change]);
         }
         return true;
     } catch(PDOException $e) {

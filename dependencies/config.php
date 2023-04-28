@@ -152,4 +152,4 @@ $times = array(
 //website are not able to work properly
 
 $header = "true";
-$ver = "1.1.8.6";
+$ver = "1.1.9.0";

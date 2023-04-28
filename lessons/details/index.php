@@ -108,7 +108,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $new_time,
                      $new_box_color,
                      $new_notes,
-                     $new_assigned_user_id
+                     $new_assigned_user_id,
+                     $_SESSION['asl_userid']
                  );
                  Redirect($return_to);
              }
@@ -124,7 +125,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $new_time,
                      $new_box_color,
                      $new_notes,
-                     $new_assigned_user_id
+                     $new_assigned_user_id,
+                     $_SESSION['asl_userid']
                  );
 
                  Redirect($return_to);
@@ -141,7 +143,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $new_time,
                      $new_box_color,
                      $new_notes,
-                     $new_assigned_user_id
+                     $new_assigned_user_id,
+                     $_SESSION['asl_userid']
                  );
                  Redirect($return_to);
              }
