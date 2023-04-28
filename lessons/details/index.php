@@ -204,15 +204,18 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                           <input hidden type="text" name="plan_date" value="<?php echo ($_GET['date'] ?? null); ?>">
                       </label>
                       <div class="col-12">
-                         <h2 class="page-title">
                              <?php
                              if(isset($_GET['id'])) {
-                                 echo "Angebot bearbeiten";
+                                 echo "<h2 class='page-title'>Angebot bearbeiten</h2>";
                              } else {
-                                 echo "Angebot erstellen";
+                                 echo "<h2 class='page-title'>Angebot erstellen</h2>";
+                             }
+
+                             if($permission_level >= $manage_other_users) {
+                                 echo '<p class="text-muted">Letzte Änderung am: ' . date("d.m.Y H:i", strtotime(GetLessonInfoByID($lesson_id, "updated_at", $pdo))) . ' von: '. GetUserByID(GetLessonInfoByID($lesson_id, "last_change", $pdo), "vorname", $pdo) . '</p>';
                              }
                              ?>
-                         </h2>
+
                          <div class="card shadow mb-4">
                            <div class="card-header">
                               <strong class="card-title">Angebot details</strong>

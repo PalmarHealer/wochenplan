@@ -135,6 +135,15 @@ function ProcessInformation($sl, $info) {
     if ($info == "userid") {
         return $sl['assigned_user_id'];
     }
+    if ($info == "last_change") {
+        return $sl['last_change_from_userid'];
+    }
+    if ($info == "created_at") {
+        return $sl['created_at'];
+    }
+    if ($info == "updated_at") {
+        return $sl['updated_at'];
+    }
     if ($info == "available") {
         return true;
     }
@@ -174,7 +183,7 @@ function GetSickNoteByID($id, $info, $pdo) {
 
 function GetUserByID($UserID, $InformationType, $pdo) {
     if (!is_numeric($UserID)) {
-        return "Error loading user information (you have to provide a id)";
+        return "niemanden";
     }
     $information = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $information->execute(array($UserID));
@@ -281,8 +290,8 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
         //$permission_level = $sl["permission_level"];
         $permission_level = GetHighestValueBelowValueName($sl["permission_level"], $permission_level_names);
 
-        $created_at = date("d.m.Y", strtotime($sl["created_at"]));
-        $updated_at = date("d.m.Y", strtotime($sl["updated_at"]));
+        $created_at = date("d.m.Y H:i", strtotime($sl["created_at"]));
+        $updated_at = date("d.m.Y H:i", strtotime($sl["updated_at"]));
 
         echo '<tr>
                 <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
