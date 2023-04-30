@@ -144,6 +144,9 @@ function ProcessInformation($sl, $info) {
     if ($info == "updated_at") {
         return $sl['updated_at'];
     }
+    if ($info == "disabled") {
+        return $sl['disabled'];
+    }
     if ($info == "available") {
         return true;
     }
@@ -326,6 +329,16 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
                 </td>
               </tr>';
     }
+}
+
+function EnableLesson($userID, $lessonID, $pdo) {
+    $stmt = $pdo->prepare("UPDATE angebot SET disabled = false, last_change_from_userid = ? WHERE id = ?");
+    $stmt->execute([$userID, $lessonID]);
+}
+
+function DisableLesson($userID, $lessonID, $pdo) {
+    $stmt = $pdo->prepare("UPDATE angebot SET disabled = true, last_change_from_userid = ? WHERE id = ?");
+    $stmt->execute([$userID, $lessonID]);
 }
 
 function DeleteLesson($lessonid, $pdo): bool|string {

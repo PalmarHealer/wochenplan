@@ -52,24 +52,29 @@ function random_string(): string {
     return $str;
 }
 
-function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void {
+function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void
+{
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
     $sick = false;
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
-    foreach (GetAllSickNotesRaw($pdo) as $sickNote) {
+    if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
+        $sick = true;
+    } else {
+        foreach (GetAllSickNotesRaw($pdo) as $sickNote) {
 
-        if (intval($sickNote['userid']) == $userid) {
-            $dates = array();
-            $dates[1] = $sickNote['start_date'];
-            $dates[2] = $sickNote['end_date'];
-            if (IsDateBetween($dates, $date)) {
-                $sick = true;
+            if (intval($sickNote['userid']) == $userid) {
+                $dates = array();
+                $dates[1] = $sickNote['start_date'];
+                $dates[2] = $sickNote['end_date'];
+                if (IsDateBetween($dates, $date)) {
+                    $sick = true;
+                }
+
             }
 
         }
-
     }
 
     $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
