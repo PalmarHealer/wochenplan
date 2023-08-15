@@ -182,7 +182,7 @@ if (!isset($_GET["date"])) {
         echo "setTimeout(hide_btn, 6000);";
         echo "reloadData();";
       }
-      elseif (isset($_GET['skip'])) {
+      elseif (!isset($_GET['show_loading'])) {
         echo "setTimeout(hide_btn, 6000);";
         echo "reloadData();";
         echo "setInterval(reloadData, 6000);";
@@ -200,6 +200,27 @@ if (!isset($_GET["date"])) {
       ?>
 
       const elem = document.documentElement;
+
+      function customPrint() {
+        if (navigator.userAgent.indexOf("Firefox") === -1) {
+          // Browser ist nicht Firefox
+          window.print();
+        } else {
+          // Browser ist Firefox
+          const html = `
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Nicht Unterstützt</strong> das Drucken in Firefox wird leider noch nicht unterstützt. Aber es wird dran gearbeitet :)<button onclick="closePrintAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>`;
+          $(".alert-message").html(html);
+            }
+
+      }
+
+      function closePrintAlert() {
+        $(".alert-dismissible").fadeOut();
+      }
 
       function openFullscreen() {
         if (elem.requestFullscreen) {
