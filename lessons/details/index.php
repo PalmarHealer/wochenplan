@@ -640,7 +640,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <?php
                                  if(isset($_GET['id'])) {
 
-                                     if (isset($_GET['date']) AND $lesson_details['date-type'] == "1") {
+                                     if (isset($_GET['date'])) {
                                          echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
                                          echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
 
