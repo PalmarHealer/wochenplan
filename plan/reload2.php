@@ -6,6 +6,9 @@ require_once  $include_path . "/dependencies/framework.php";
 
 $current_day = $_POST['date'];
 ?>
+<div class="alert-message col-12 mb-4">
+
+</div>
 <table class="full tg">
     <colgroup>
         <col class="lesson_signs"/>
@@ -19,7 +22,7 @@ $current_day = $_POST['date'];
         <col/>
         <col/>
     </colgroup>
-    <thead>
+    <tbody>
     <tr class="small_piece tb_header">
         <th class="tb_header color-3 no_border_no_margin text-center" style='text-align: center;'>
             <div class="text-center">
@@ -59,8 +62,6 @@ $current_day = $_POST['date'];
             </p>
         </th>
     </tr>
-    </thead>
-    <tbody>
     <tr class="name_badge center small_piece">
         <td class="color-6 db_text rooms"><b class="bold">Zeiten l/ll</b></td>
         <td class="color-1 db_text rooms"><b class="bold">Raum 1</b></td>
@@ -219,11 +220,12 @@ $current_day = $_POST['date'];
 
     <tr class="small_piece">
         <td class="white-col align-bottom" rowspan="3" colspan="3">
-            <span onclick="openFullscreen()" class="open_fullscreen fe fe-32 fe-maximize-2 pointer"></span>
-            <span onclick="closeFullscreen()" class="close_fullscreen fe fe-32 fe-minimize-2 pointer"></span>
-            <span onclick="updateDateInUrl(-1)" class="fe fe-24 fe-arrow-left pointer"></span>
-            <span onclick="updateDateInUrl(1)" class="fe fe-24 fe-arrow-right pointer"></span>
-            <span onclick="window.location.href='../dashboard'" class="fe fe-24 fe-home pointer"></span>
+            <span onclick="openFullscreen()"    class="plan_btn open_fullscreen fe fe-32 fe-maximize-2 pointer"></span>
+            <span onclick="closeFullscreen()"   class="plan_btn close_fullscreen fe fe-32 fe-minimize-2 pointer"></span>
+            <span onclick="updateDateInUrl(-1)" class="plan_btn fe fe-24 fe-arrow-left pointer"></span>
+            <span onclick="updateDateInUrl(1)"  class="plan_btn fe fe-24 fe-arrow-right pointer"></span>
+            <span onclick='customPrint()' class="plan_btn fe fe-24 fe-download pointer"></span>
+            <span onclick="window.location.href='../dashboard'" class="plan_btn fe fe-24 fe-home pointer"></span>
         </td>
 
         <td class="color-6 no_border" rowspan="2">

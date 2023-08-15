@@ -231,7 +231,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                              <?php
                              if(isset($_GET['id'])) {
                                  echo "<h2 class='page-title'>Angebot bearbeiten</h2>";
-                                 if($permission_level >= $manage_other_users) {
+                                 if($permission_level >= $create_lessons_for_others) {
                                      echo '<p class="text-muted">Letzte Änderung am: ' . date("d.m.Y H:i", strtotime(GetLessonInfoByID($lesson_id, "updated_at", $pdo))) . ' von: '. GetUserByID(GetLessonInfoByID($lesson_id, "last_change", $pdo), "vorname", $pdo) . '</p>';
                                  }
                              } else {

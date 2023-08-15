@@ -152,4 +152,11 @@ $times = array(
 //website are not able to work properly
 
 $header = "true";
-$ver = "1.1.11.0";
+
+// State.Update.Feature.Bug
+// States:
+// 0: Beta
+// 1: Tested
+// 2: Stable
+// 3: Release
+$version = "1.1.12.0";

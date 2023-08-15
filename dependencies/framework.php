@@ -21,8 +21,23 @@ function GetCurrentUrl(): string
     return $current_url;
 }
 
-function replacePlaceholders($string): string {
 
+//Thanks to php.net for the code snippet https://www.php.net/manual/en/function.checkdate.php
+function validateDate($date, $format = 'Y-m-d H:i:s'): bool
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
+}
+
+
+
+
+
+function replacePlaceholders($string, $date): string {
+
+    if (!validateDate($date, 'Y-m-d')) {
+        return $string;
+    }
     $placeholders = array(
         '%knr%'   => modNumber(intval(date("W")), 3) + 2,
         '%knr:1%' => modNumber(intval(date("W")) + 1, 3) + 2,
@@ -30,6 +45,7 @@ function replacePlaceholders($string): string {
         '%knr:3%' => modNumber(intval(date("W")) + 3, 3) + 2,
         '%knr:4%' => modNumber(intval(date("W")) + 4, 3) + 2,
         '%knr:5%' => modNumber(intval(date("W")) + 5, 3) + 2,
+        '%mte%' => "Mittagessen",
         '%<3%' => "manu ist der beste",
     );
     foreach ($placeholders as $placeholder => $replacement) {
@@ -77,9 +93,9 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void
         }
     }
 
-    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
-    $lesson_username    = replacePlaceholders(GetUserByID($userid, "vorname", $pdo));
-    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo));
+    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo), $date);
+    $lesson_username    = replacePlaceholders(GetUserByID($userid, "vorname", $pdo), $date);
+    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo), $date);
 
     echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
     echo "<br>";
@@ -108,8 +124,8 @@ function PrintInfoWithDesc($date, $time, $room, $pdo, $webroot): void {
 
     }
 
-    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo));
-    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
+    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo), $date);
+    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo), $date);
 
     echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='no_padding bold lessons pointer'><b class='no_padding lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
 
@@ -125,7 +141,7 @@ function PrintInfo($date, $time, $room, $pdo, $webroot): void
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
-    $value = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
+    $value = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo), $date);
 
     $user_names = ExplodeStringToArray($value);
     $sick_notes = GetAllSickNotesRaw($pdo);
