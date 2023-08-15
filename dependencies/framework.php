@@ -403,6 +403,7 @@ if (!$page == "external") {
         $securitytoken_row = $statement->fetch();
 
         if (sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
+            Redirect($domain . '/error/cookie/');
             die('Ein vermutlich gestohlener Security Token wurde identifiziert');
         } else { //Token war korrekt
             //Setze neuen Token
