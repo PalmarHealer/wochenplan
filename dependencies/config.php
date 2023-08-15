@@ -159,4 +159,4 @@ $header = "true";
 // 1: Tested
 // 2: Stable
 // 3: Release
-$version = "1.1.12.2";
+$version = "1.1.12.3";
