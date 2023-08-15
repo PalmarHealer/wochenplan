@@ -129,7 +129,6 @@ function PrintInfo($date, $time, $room, $pdo, $webroot): void
 
     $user_names = ExplodeStringToArray($value);
     $sick_notes = GetAllSickNotesRaw($pdo);
-    $return = $value;
     foreach ($sick_notes as $sickNote) {
 
         $username = GetUserByID($sickNote["userid"], "vorname", $pdo);
@@ -139,7 +138,7 @@ function PrintInfo($date, $time, $room, $pdo, $webroot): void
             $dates[2] = $sickNote['end_date'];
             if (IsDateBetween($dates, $date)) {
 
-                $value = surroundString($return, $username);
+                $value = surroundString($value, $username);
             }
 
         }
