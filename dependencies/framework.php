@@ -292,6 +292,13 @@ function CheckPermission($required, $present, $redirect): void {
     }
 }
 
+function IsPermitted($required, $present): bool {
+    if($present >= $required) {
+        return true;
+    }
+    return false;
+}
+
 function IsDateBetween($dates, $date_to_check) {
     $start_timestamp = strtotime($dates[1]);
     $end_timestamp = strtotime($dates[2]);

@@ -225,6 +225,11 @@ $current_day = $_POST['date'];
             <span onclick="updateDateInUrl(-1)" class="plan_btn fe fe-24 fe-arrow-left pointer"></span>
             <span onclick="updateDateInUrl(1)"  class="plan_btn fe fe-24 fe-arrow-right pointer"></span>
             <span onclick='customPrint()' class="plan_btn fe fe-24 fe-download pointer"></span>
+            <?php
+            if (IsPermitted($create_lessons, $permission_level)) {
+                echo '<span onclick="window.location.href=\'../lessons/details/?date=' . $current_day . '\'" class="plan_btn fe fe-24 fe-plus pointer"></span>';
+            }
+            ?>
             <span onclick="window.location.href='../dashboard'" class="plan_btn fe fe-24 fe-home pointer"></span>
         </td>
 

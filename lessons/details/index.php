@@ -524,7 +524,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
                              <?php
                              $date_type = array();
-                             if (isset($_GET['load_id'])) {
+
+                             if (isset($_GET['date'])) {
                                  $lesson_details['date-type'] = 2;
                              }
                              if(isset($lesson_details['date-type'])) {
@@ -557,13 +558,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                    </div>
                                                    <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
                                                       <?php
-                                                      if($lesson_details['date-type'] == "1") {
                                                           $selected_date = array();
-                                                          if (!isset($lesson_details['date'])) {
-                                                              $lesson_details['date'] = 1;
-                                                          }
-                                                          $selected_date[$lesson_details['date']] = "selected";
-                                                      }
+                                                          $selected_date[$lesson_details['date'] ?? date("N")] = "selected";
                                                       ?>
                                                       <option value="1" <?php if(isset($selected_date[1])) { echo $selected_date[1]; }?>>Montag</option>
                                                       <option value="2" <?php if(isset($selected_date[2])) { echo $selected_date[2]; }?>>Dienstag</option>
@@ -580,11 +576,11 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                    </div>
                                                    <input id="day2" onchange="updateAvailability()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
-                                                         if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2" AND !isset($_GET['load_id'])) {
-                                                         	echo $lesson_details['date']; 
-                                                         } elseif (isset($_GET['date']) OR isset($_POST['date'])) {
+                                                         if(isset($_GET['date']) OR isset($_POST['date'])) {
                                                              $date_tmp = ($_GET['date'] ?? $_POST['date']);
                                                              echo date("d/m/Y", strtotime($date_tmp));
+                                                         } elseif (isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
+                                                         	echo $lesson_details['date'];
                                                          } else {
                                                              echo date("d/m/Y");
 
@@ -643,10 +639,16 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
                                  if(isset($_GET['id'])) {
-                                     echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+
                                      if (isset($_GET['date']) AND $lesson_details['date-type'] == "1") {
-                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?dub_id=' . $_GET['id'] . '">Angebot nur für einen Tag Aktualisieren</button>';
+                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
+                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
+
+                                     } else {
+                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+
                                      }
+
                                      echo '<button type="button summit" class="lesson-details-btn btn mb-2 btn-outline-warning" formaction="./?disable_enable_lesson=' . $_GET['id'] . '">Angebot ' . $disable_enable_text . '</button>';
                                      echo '<button type="button summit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
                                  } else {
@@ -701,32 +703,38 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <!-- Custom JS code -->
       <script>
           function updateAvailability() {
-              let time = $('#time').val();
-              let location = $('#location').val();
-
-              let date;
-              date = $('#day').val();
-
-              let date_type = $('#date_type').attr('date_type');
-              if (date_type === "2") {
-                  date = $('#day2').val();
-              }
 
               $('#availability').html('<div class="alert alert-secondary center" role="alert"><span class="fe fe-alert-octagon fe-16 mr-2"></span>Lade Slot info...</div>');
 
-              $.ajax({
-                  url: './check.php',
-                  type: 'POST',
-                  data: {date: date, time: time, location: location, id: <?php echo ($_GET['id'] ?? 0) ?>},
-                  success: function (result) {
-                      $('#availability').html(result);
 
-                  },
-                  error: function (xhr, status, error) {
-                      console.log("Error: " + error);
-                      $('#availability').html('<div class="alert alert-warning center" role="alert"><span class="fe fe-minus-circle fe-16 mr-2"></span>Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung</div>');
+              setTimeout(func, 100);
+              function func() {
+                  let time = $('#time').val();
+                  let location = $('#location').val();
+
+                  let date;
+                  date = $('#day').val();
+
+                  let date_type = $('#date_type').attr('date_type');
+                  if (date_type === "2") {
+                      date = $('#day2').val();
                   }
-              });
+
+
+                  $.ajax({
+                      url: './check.php',
+                      type: 'POST',
+                      data: {date: date, time: time, location: location, id: <?php echo ($_GET['id'] ?? 0) ?>},
+                      success: function (result) {
+                          $('#availability').html(result);
+
+                      },
+                      error: function (xhr, status, error) {
+                          console.log("Error: " + error);
+                          $('#availability').html('<div class="alert alert-warning center" role="alert"><span class="fe fe-minus-circle fe-16 mr-2"></span>Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung</div>');
+                      }
+                  });
+              }
           }
 
           function enableAndDisableInputs(room, time, ) {
