@@ -312,3 +312,11 @@ body {
 .no_padding {
     padding: 0;
 }
+
+.list-group-item {
+    cursor: pointer;
+}
+
+.disabled_cursor {
+    cursor: not-allowed;
+}
