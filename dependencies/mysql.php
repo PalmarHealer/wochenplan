@@ -1,7 +1,7 @@
 <?php
-
 function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $user_that_made_the_change): bool {
 
+    $identifier = GetSetting("identifier", $pdo);
     try {
         // Determine the column names based on the $date_type value
         if ($date_type == 1) {
@@ -15,11 +15,11 @@ function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name
 
         // Prepare and execute the SQL query
         if ($type == "update") {
-            $stmt = $pdo->prepare("UPDATE angebot SET date_type = ?, $set_date_column = ?, $empty_date_column = NULL, name = ?, description = ?, location = ?, time = ?, box_color = ?, notes = ?, assigned_user_id = ?, last_change_from_userid = ? WHERE id = ?");
-            $stmt->execute([$date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $user_that_made_the_change, $id]);
+            $stmt = $pdo->prepare("UPDATE angebot SET identifier = ?, date_type = ?, $set_date_column = ?, $empty_date_column = NULL, name = ?, description = ?, location = ?, time = ?, box_color = ?, notes = ?, assigned_user_id = ?, last_change_from_userid = ? WHERE id = ?");
+            $stmt->execute([$identifier, $date_type, $new_date, EncodeToJson($new_name), EncodeToJson($new_description), $new_location, $new_time, $new_box_color, EncodeToJson($new_notes), $new_assigned_user_id, $user_that_made_the_change, $id]);
         } else {
-            $stmt = $pdo->prepare("INSERT INTO angebot (date_type, $set_date_column, $empty_date_column, name, description, location, time, box_color, notes, assigned_user_id, last_change_from_userid) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $user_that_made_the_change]);
+            $stmt = $pdo->prepare("INSERT INTO angebot (identifier, date_type, $set_date_column, $empty_date_column, name, description, location, time, box_color, notes, assigned_user_id, last_change_from_userid) VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$identifier, $date_type, $new_date, EncodeToJson($new_name), EncodeToJson($new_description), $new_location, $new_time, $new_box_color, EncodeToJson($new_notes), $new_assigned_user_id, $user_that_made_the_change]);
         }
         return true;
     } catch(PDOException $e) {
@@ -28,11 +28,8 @@ function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name
         return false;
     }
 }
-
 function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_date): bool {
-
     try {
-        // Prepare and execute the SQL query
         if ($type == "update") {
             $stmt = $pdo->prepare("UPDATE sick SET start = ?, end = ?, userid = ? WHERE id = ?");
             $stmt->execute([$start_date, $end_date, $userid, $id]);
@@ -42,17 +39,18 @@ function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_dat
         }
         return true;
     } catch(PDOException $e) {
-        // Handle errors here
         echo "Error: " . $e->getMessage();
         return false;
     }
 }
 
+
+
+
 function GetLessonInfo($day, $time, $room, $info, $pdo) {
-
-
-    $lessons = $pdo->prepare("SELECT * FROM angebot ORDER BY id DESC");
-    $lessons->execute();
+    $identifier = GetSetting("identifier", $pdo);
+    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? ORDER BY id DESC");
+    $lessons->execute(array($identifier));
     if (str_contains($day, "-")) {
         $repeating_day = date('N', strtotime($day));
     } else {
@@ -81,12 +79,10 @@ function GetLessonInfo($day, $time, $room, $info, $pdo) {
         return "Error loading data";
     }
 }
-
 function GetLessonInfoByID($id, $info, $pdo) {
-
-
-    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = ?");
-    $lessons->execute(array($id));
+    $identifier = GetSetting("identifier", $pdo);
+    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = ? AND identifier = ?");
+    $lessons->execute(array($id, $identifier));
 
     while($sl = $lessons->fetch()) {
 
@@ -101,15 +97,21 @@ function GetLessonInfoByID($id, $info, $pdo) {
         return "Error loading data";
     }
 }
+
+
+
+
+
+
 function ProcessInformation($sl, $info) {
     if ($info == "id") {
         return $sl['id'];
     }
     if ($info == "name") {
-        return $sl['name'];
+        return DecodeFromJson($sl['name']);
     }
     if ($info == "description") {
-        return $sl['description'];
+        return DecodeFromJson($sl['description']);
     }
     if ($info == "date") {
         if ($sl['date_type'] == 1) {
@@ -130,7 +132,7 @@ function ProcessInformation($sl, $info) {
         return $sl['box_color'];
     }
     if ($info == "notes") {
-        return $sl['notes'];
+        return DecodeFromJson($sl['notes']);
     }
     if ($info == "userid") {
         return $sl['assigned_user_id'];
@@ -152,10 +154,7 @@ function ProcessInformation($sl, $info) {
     }
     return "no further information";
 }
-
 function GetSickNoteByID($id, $info, $pdo) {
-
-
     $sick = $pdo->prepare("SELECT * FROM sick WHERE id = ?");
     $sick->execute(array($id));
 
@@ -183,38 +182,35 @@ function GetSickNoteByID($id, $info, $pdo) {
         return "Error loading data";
     }
 }
-
 function GetUserByID($UserID, $InformationType, $pdo) {
     if (!is_numeric($UserID)) {
         return "niemanden";
     }
     $information = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $information->execute(array($UserID));
-    return Loop($InformationType, $information);
+    return Identify($InformationType, $information);
 
 }
 function GetUserByEmail($Email, $InformationType, $pdo) {
     $information = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $information->execute(array($Email));
-    return Loop($InformationType, $information);
+    return Identify($InformationType, $information);
 
 }
-
-
-function Loop($InformationType, $information) {
+function Identify($InformationType, $information) {
 
     if ($InformationType == "id") {
         return $information->fetch()["id"];
     }
     if ($InformationType == "vorname") {
-        return $information->fetch()["vorname"];
+        return DecodeFromJson($information->fetch()["vorname"]);
     }
     if ($InformationType == "nachname") {
-        return $information->fetch()["nachname"];
+        return DecodeFromJson($information->fetch()["nachname"]);
     }
     if ($InformationType == "name") {
         $tmp = $information->fetch();
-        return $tmp["vorname"] . " " . $tmp["nachname"];
+        return DecodeFromJson($tmp["vorname"] . " " . $tmp["nachname"]);
     }
     if ($InformationType == "email") {
         return $information->fetch()["email"];
@@ -234,19 +230,17 @@ function Loop($InformationType, $information) {
         return "Error loading user information. You probably set the wrong information type (there is: id, vorname, nachname, email, permission_level, created, updated and available";
     }
 }
-
 function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname, email = :email, permission_level = :permission_level WHERE id = :id");
     $statement->execute(array(
         'id' => $id,
-        'vorname' => $vorname,
-        'nachname' => $nachname,
+        'vorname' => EncodeToJson($vorname),
+        'nachname' => EncodeToJson($nachname),
         'email' => $email,
         'permission_level' => $permission_level
     ));
     return $statement->rowCount();
 }
-
 function ChangeUserPassword($password, $id, $pdo) {
     $new_password = password_hash($password, PASSWORD_DEFAULT);
     $statement = $pdo->prepare("UPDATE users SET passwort = :passwort WHERE id = :id");
@@ -260,23 +254,21 @@ function UpdateUsername($id, $vorname, $nachname, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname WHERE id = :id");
     $statement->execute(array(
         'id' => $id,
-        'vorname' => $vorname,
-        'nachname' => $nachname
+        'vorname' => EncodeToJson($vorname),
+        'nachname' => EncodeToJson($nachname)
     ));
     return $statement->rowCount();
 }
-
 function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_level, $pdo): void {
     $statement = $pdo->prepare("INSERT INTO users (email, passwort, vorname, nachname, permission_level) VALUES (:email, :passwort, :vorname, :nachname, :permission_level)");
     $result = $statement->execute(array(
         'email' => $email,
         'passwort' => $passwort_hash,
-        'vorname' => $vorname,
-        'nachname' => $nachname,
+        'vorname' => EncodeToJson($vorname),
+        'nachname' => EncodeToJson($nachname),
         'permission_level' => $permission_level
     ));
 }
-
 function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
 
     $users = $pdo->prepare("SELECT * FROM users");
@@ -288,7 +280,7 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
         if ($id == $_SESSION['asl_userid']) {
             continue;
         }
-        $username = $sl["vorname"] . " " . $sl["nachname"];
+        $username = DecodeFromJson($sl["vorname"] . " " . $sl["nachname"]);
         $email = $sl["email"];
         //$permission_level = $sl["permission_level"];
         $permission_level = GetHighestValueBelowValueName($sl["permission_level"], $permission_level_names);
@@ -330,27 +322,23 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
               </tr>';
     }
 }
-
-function EnableLesson($userID, $lessonID, $pdo) {
+function EnableLesson($userID, $lessonID, $pdo): void {
     $stmt = $pdo->prepare("UPDATE angebot SET disabled = false, last_change_from_userid = ? WHERE id = ?");
     $stmt->execute([$userID, $lessonID]);
 }
-
-function DisableLesson($userID, $lessonID, $pdo) {
+function DisableLesson($userID, $lessonID, $pdo): void {
     $stmt = $pdo->prepare("UPDATE angebot SET disabled = true, last_change_from_userid = ? WHERE id = ?");
     $stmt->execute([$userID, $lessonID]);
 }
-
-function DeleteLesson($lessonid, $pdo): bool|string {
+function DeleteLesson($lessonId, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM angebot WHERE id = ?");
-        $delete_lesson->execute(array($lessonid));
+        $delete_lesson->execute(array($lessonId));
         return true;
     } catch (PDOException $e) {
         return "Fehler beim Löschen: " . $e->getMessage();
     }
 }
-
 function DeleteRegisterToken($token, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM registertokens WHERE token = ?");
@@ -378,20 +366,23 @@ function DeleteUser($userid, $pdo): bool|string {
         return "Fehler beim Löschen: " . $e->getMessage();
     }
 }
-function DeleteSickNote($sickid, $pdo): bool|string {
+function DeleteSickNote($sickID, $pdo): bool|string {
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM sick WHERE id = ?");
-        $delete_lesson->execute(array($sickid));
+        $delete_lesson->execute(array($sickID));
         return true;
     } catch (PDOException $e) {
         return "Fehler beim Löschen: " . $e->getMessage();
     }
 }
 
-function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo, $webroot): void {
 
-    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE assigned_user_id = ? ORDER BY date ASC");
-    $lessons->execute(array($userid));
+
+
+function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo, $webroot): void {
+    $identifier = GetSetting("identifier", $pdo);
+    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE assigned_user_id = ? AND identifier = ? ORDER BY date ASC");
+    $lessons->execute(array($userid, $identifier));
     $counter = 1;
     $pdo = null;
 
@@ -431,13 +422,13 @@ function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times,
         echo '<tr>
 										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">
 										  </td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders($sl['name'], $date) . '</td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders($sl['description'], $date) . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['name']), $date) . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['description']), $date) . '</td>
 										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
 										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
 										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $date_formatted . '</td>
 										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';"><span class="dot dot-lg" style="background-color: ' . $sl['box_color'] .'"></span></td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
+										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . DecodeFromJson($sl['notes']) . '</td>
 										
 										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<span class="text-muted sr-only">Aktion</span>
@@ -451,10 +442,10 @@ function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times,
     }
 
 }
-
 function GetAllLessons($room_names, $times, $pdo): void {
-    $lessons = $pdo->prepare("SELECT * FROM angebot");
-    $lessons->execute();
+    $identifier = GetSetting("identifier", $pdo);
+    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ?");
+    $lessons->execute(array($identifier));
     while($sl = $lessons->fetch()) {
 
         if ($sl['date_type'] == "2") {
@@ -479,19 +470,19 @@ function GetAllLessons($room_names, $times, $pdo): void {
             }
         }
 
-        $creator_fomatted = GetUserByID($sl['assigned_user_id'], "name", $pdo);
+        $creator_formatted = GetUserByID($sl['assigned_user_id'], "name", $pdo);
 
         echo '<tr>
 										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">
 										  </td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders($sl['name'], $date) . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders($sl['description'], $date) . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['name']), $date) . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['description']), $date) . '</td>
 										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
 										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
 										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $date_formatted . '</td>
 										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';"><span class="dot dot-lg" style="background-color: ' . $sl['box_color'] .'"></td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $creator_fomatted . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $sl['notes'] . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $creator_formatted . '</td>
+										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . DecodeFromJson($sl['notes']) . '</td>
 										
 										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<span class="text-muted sr-only">Aktion</span>
@@ -507,6 +498,9 @@ function GetAllLessons($room_names, $times, $pdo): void {
 
 
 }
+
+
+
 
 function GetAllSickNotes($pdo): void {
     $lessons = $pdo->prepare("SELECT * FROM sick");
@@ -543,7 +537,6 @@ function GetAllSickNotes($pdo): void {
 
 
 }
-
 function GetAllSickNotesRaw($pdo): array {
     $lessons = $pdo->prepare("SELECT * FROM sick");
     $lessons->execute();
@@ -573,7 +566,9 @@ function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect): void {
     $get_usernames = "SELECT * FROM users ORDER BY permission_level desc";
     foreach ($pdo->query($get_usernames) as $other_users) {
 
-        if ($other_users['id'] == $IdToSelect) {
+        if ($other_users['permission_level'] >= 99) {
+            continue;
+        } elseif ($other_users['id'] == $IdToSelect) {
             echo "<option selected value='";
         } else {
             echo "<option value='";
@@ -586,61 +581,119 @@ function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect): void {
     }
 
 }
-
 function GetEmailFromToken($token, $pdo) {
 
     $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
     $tokens->execute(array($token));
+    $sl = $tokens->fetch();
+    return $sl['email'] ?? 'false';
 
-
-    while($sl = $tokens->fetch()) {
-
-        return $sl['email'] ?? 'false';
-    }
 
 }
-
 function GetDateFromRegisterToken($token, $pdo) {
 
     $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
     $tokens->execute(array($token));
-    while($sl = $tokens->fetch()) {
-        return $sl['created'] ?? 'false';
-    }
+    $sl = $tokens->fetch();
+    return $sl['created'] ?? 'false';
 }
-
 function GetDateFromResetToken($token, $pdo) {
 
     $tokens = $pdo->prepare("SELECT * FROM psswdresettokens WHERE token = ?");
     $tokens->execute(array($token));
-    while($sl = $tokens->fetch()) {
-        return $sl['created'] ?? 'false';
-    }
+    $sl = $tokens->fetch();
+    return $sl['created'] ?? 'false';
 }
 function GetUserIDFromResetToken($token, $pdo) {
 
     $tokens = $pdo->prepare("SELECT * FROM psswdresettokens WHERE token = ?");
     $tokens->execute(array($token));
-    while($sl = $tokens->fetch()) {
-        return $sl['userid'] ?? 'false';
-    }
+    $sl = $tokens->fetch();
+    return $sl['userid'] ?? 'false';
+
 }
 function CreateTokenForRegistrationAndSaveThem($email, $pdo): string {
     $token = GenerateRandomString();
     $statement = $pdo->prepare("INSERT INTO registertokens (token, email) VALUES (:token, :email)");
-    $result = $statement->execute(array(
+    $statement->execute(array(
         'token' => $token,
         'email' => $email
     ));
     return $token;
 }
-
 function CreateTokenForPasswordResetAndSaveThem($userid, $pdo): string {
     $token = GenerateRandomString();
     $statement = $pdo->prepare("INSERT INTO psswdresettokens (token, userid) VALUES (:token, :userid)");
-    $result = $statement->execute(array(
+    $statement->execute(array(
         'token' => $token,
         'userid' => $userid
     ));
     return $token;
+}
+
+
+function GetSetting($setting, $pdo) {
+    $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ?");
+    $information->execute(array($setting));
+    return $information->fetch()["value"];
+
+}
+
+
+function GetSettingWithSuffix($setting, $suffix, $pdo) {
+    $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ? AND suffix = ?");
+    $information->execute(array($setting, $suffix));
+    return $information->fetch()["value"];
+
+}
+function SetSettingWithSuffix($setting, $suffix, $value, $pdo): bool|string {
+    try {
+        $statement = $pdo->prepare("INSERT INTO settings (setting, suffix, value) VALUES (:setting, :suffix, :value)");
+        $statement->execute(array(
+            'setting' => $setting,
+            'suffix' => $suffix,
+            'value' => $value
+        ));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+
+
+    }
+}
+function SetSetting($setting, $value, $pdo): bool|string {
+    try {
+        $statement = $pdo->prepare("INSERT INTO settings (setting, value) VALUES (:setting, :value)");
+        $statement->execute(array(
+            'setting' => $setting,
+            'value' => $value
+        ));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+
+
+    }
+}
+function DeleteSetting($setting, $pdo): bool|string {
+    try {
+        $delete_lesson = $pdo->prepare("DELETE FROM settings WHERE setting = ?");
+        $delete_lesson->execute(array($setting));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+
+
+    }
+}
+function DeleteSettingWithSuffix($setting, $suffix, $pdo): bool|string {
+    try {
+        $delete_lesson = $pdo->prepare("DELETE FROM settings WHERE setting = ? AND suffix = ?");
+        $delete_lesson->execute(array($setting, $suffix));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+
+
+    }
 }

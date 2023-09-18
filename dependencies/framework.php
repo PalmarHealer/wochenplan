@@ -50,6 +50,16 @@ function replacePlaceholders($string, $date): string {
     return $string;
 }
 
+function EncodeToJson($string):string {
+    return trim(json_encode($string), '"');
+}
+function DecodeFromJson($string):string {
+    return json_decode("\"" . $string . "\"");
+}
+
+
+
+
 function random_string(): string {
     if(function_exists('random_bytes')) {
         $bytes = random_bytes(16);
@@ -63,36 +73,7 @@ function random_string(): string {
     return $str;
 }
 
-
-
-
-function convertEmojisToUnicodeEntities($text): array|string|null {
-    return preg_replace_callback(
-        '/./u',  // Match any Unicode character
-        function($matches) {
-            $char = $matches[0];
-            $charUnicode = bin2hex(mb_convert_encoding($char, 'UTF-32BE', 'UTF-8'));
-            $charUnicode = substr($charUnicode, 4); // Remove the BOM (Byte Order Mark)
-            return '&#x' . $charUnicode . ';';
-        },
-        $text
-    );
-}
-
-function convertUnicodeEntitiesToEmojis($text): array|string|null {
-    return preg_replace_callback(
-        '/&#x([0-9a-fA-F]+);/u',  // Match Unicode entities
-        function($matches) {
-            $unicodeString = $matches[1];
-            return mb_convert_encoding('&#x' . $unicodeString . ';', 'UTF-8', 'HTML-ENTITIES');
-        },
-        $text
-    );
-}
-
-
-function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void
-{
+function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void {
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
@@ -116,9 +97,9 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void
         }
     }
 
-    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo), $date);
-    $lesson_username    = replacePlaceholders(GetUserByID($userid, "vorname", $pdo), $date);
-    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo), $date);
+    $lesson_name        = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)), $date);
+    $lesson_username    = replacePlaceholders(DecodeFromJson(GetUserByID($userid, "vorname", $pdo)), $date);
+    $lesson_description = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "description", $pdo)), $date);
 
     echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
     echo "<br>";
@@ -411,6 +392,8 @@ function RequestAPI($url, $secret, $date): string {
 
     Redirect($webroot);
 }
+
+
 
 
 //Functions framework end
