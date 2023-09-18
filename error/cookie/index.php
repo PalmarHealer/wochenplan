@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="../../favicon.ico">
-    <title>404 - Error</title>
+    <title>Cookie - Error</title>
     <!-- Fonts CSS -->
     <link rel="stylesheet" href="/css/overpass.css">
     <!-- App CSS -->
@@ -18,7 +18,7 @@
           <h1 class="display-1 m-0 font-weight-bolder text-muted" style="font-size:80px;">Login Error</h1>
           <h1 class="mb-1 text-muted font-weight-bold">OOPS!</h1>
           <h6 class="mb-3 text-muted">Das kann passieren, du musst dich aber neu anmelden. Das ist eine Sicherheitsmaßname da wir nicht bestätigen konnten das die Cookies, die auf deinem Gerät gespeichert sind, wirklich deine sind.</h6>
-          <a href="../../dashboard/?logout=true" class="btn btn-lg btn-primary px-5">Back to Login</a>
+          <a href="../../lessons/?logout=true" class="btn btn-lg btn-primary px-5">Back to Login</a>
         </div>
       </div>
     </div>

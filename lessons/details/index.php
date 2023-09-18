@@ -653,7 +653,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                      echo '<button type="button summit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
                                  } else {
                                      echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
-                                     echo '<button type="button" class="lesson-details-btn btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
+                                     echo '<button type="button" class="disabled_cursor lesson-details-btn btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
                                  }
                                  ?>
                            </div>

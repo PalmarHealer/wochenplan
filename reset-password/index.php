@@ -84,17 +84,13 @@ if(isset($_GET['register'])) {
         $passwdmatch = "<br>Die Passwörter müssen übereinstimmen";
         $error = true;
     }
-    Alert("Registrierung gestartet");
-    Alert("Error:" . $error);
 
     if(!$error) {
 
         Alert("passwort geändert");
 
         ChangeUserPassword("$passwort", GetUserIDFromResetToken($token, $pdo), $pdo);
-        Alert("token gelöscht");
         DeleteResetToken($token, $pdo);
-        Alert("weiterleitung wird gestartet");
         Redirect($domain . '/login?message=reset-success');
     }
 }
