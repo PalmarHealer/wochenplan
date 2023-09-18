@@ -36,6 +36,15 @@ $manage_other_users = 10; //default 10
 
 
 
+//---------- MittagessenAPI: ----------
+//For simpleness is mte used for Mittagessen
+
+//URL where the request is made
+$mte_url = "https://example.com";
+
+//API secret
+$mte_secret = "your secret goes here";
+
 //---------- MySQL connection Information: ----------
 
 //This is where the credentials for the code come in.
@@ -159,4 +168,4 @@ $header = "true";
 // 1: Tested
 // 2: Stable
 // 3: Release
-$version = "1.1.12.3";
+$version = "1.1.13.0";
