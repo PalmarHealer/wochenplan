@@ -22,16 +22,11 @@ function GetCurrentUrl(): string
 }
 
 
+function validateDate($date, $format = 'Y-m-d H:i:s'): bool {
 //Thanks to php.net for the code snippet https://www.php.net/manual/en/function.checkdate.php
-function validateDate($date, $format = 'Y-m-d H:i:s'): bool
-{
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) == $date;
 }
-
-
-
-
 
 function replacePlaceholders($string, $date): string {
 
@@ -67,6 +62,34 @@ function random_string(): string {
     }
     return $str;
 }
+
+
+
+
+function convertEmojisToUnicodeEntities($text): array|string|null {
+    return preg_replace_callback(
+        '/./u',  // Match any Unicode character
+        function($matches) {
+            $char = $matches[0];
+            $charUnicode = bin2hex(mb_convert_encoding($char, 'UTF-32BE', 'UTF-8'));
+            $charUnicode = substr($charUnicode, 4); // Remove the BOM (Byte Order Mark)
+            return '&#x' . $charUnicode . ';';
+        },
+        $text
+    );
+}
+
+function convertUnicodeEntitiesToEmojis($text): array|string|null {
+    return preg_replace_callback(
+        '/&#x([0-9a-fA-F]+);/u',  // Match Unicode entities
+        function($matches) {
+            $unicodeString = $matches[1];
+            return mb_convert_encoding('&#x' . $unicodeString . ';', 'UTF-8', 'HTML-ENTITIES');
+        },
+        $text
+    );
+}
+
 
 function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void
 {
@@ -232,7 +255,6 @@ function GetDaysOfWeek($date) {
     return $days;
 }
 
-
 function PrintDays($date, $weekday_names_long) {
     foreach (GetDaysOfWeek($date) as $key => $day) {
         if ($key >= 5) {
@@ -343,6 +365,28 @@ function GenerateRandomString($length = 128) {
     return $randomString;
 }
 
+function RequestAPI($url, $secret, $date): string {
+    //Thanks goes to https://reqbin.com/ for the code
+
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    $headers = array(
+        "Content-Type: application/json",
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+    $data = '{"secret": "' . $secret . '", "date": "' . $date . '"}';
+
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    return $response;
+}
+
 #[NoReturn] function Redirect($newURL) {
     header("Location: $newURL");
     echo "<script>window.location.href='$newURL';</script>";
@@ -362,13 +406,14 @@ function GenerateRandomString($length = 128) {
     session_destroy();
 
     //Cookies entfernen
-    setcookie("asl_identifier", "", time() - 3600, "$webroot/login");
-    setcookie("asl_securitytoken", "", time() - 3600, "$webroot/login");
+    setcookie("asl_identifier", "", time() - 3600, "/login");
+    setcookie("asl_securitytoken", "", time() - 3600, "/login");
 
     Redirect($webroot);
-    die();
 }
 
+
+//Functions framework end
 $old_url_array = explode("?", GetCurrentUrl());
 $old_url = $old_url_array[0];
 if (isset($_SERVER['HTTP_REFERER'])) {
@@ -382,10 +427,10 @@ else {
 if (!isset($page)) {
     $page = "";
 }
-
 if(isset($_GET["logout"])) {
     if ($_GET["logout"] == "true") { //Logout script
         Logout($domain);
+        die();
     }
 }
 
