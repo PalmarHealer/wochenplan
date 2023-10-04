@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480.362" height="122.022" viewBox="0 0 480.362 122.022">
+    <g stroke-miterlimit="10" style="mix-blend-mode:normal">
+        <path d="M.25 121.32V.606l60.213 60.618L120.929.606V121.32H90.522l.452-47.586-30.34 30.171-30.05-30.052-.132 47.915z" fill="#ccc" stroke="#ccc" stroke-width=".5" stroke-dasharray="655.892" stroke-dashoffset="655.892"/>
+        <path d="M119.554 121.32 179.498 1.458l60.309 119.886-33.523-.024-26.92-53.977-26.024 53.668z" fill="#ccc" stroke="#ccc" stroke-width=".5" stroke-dasharray="457.489" stroke-dashoffset="457.489"/>
+        <path d="M240.799 121.32V.606l89.834 62.784V.606h30.283V121.32l-89.942-63.068v63.068z" fill="#ccc" stroke="#ccc" stroke-width=".5" stroke-dasharray="649.189" stroke-dashoffset="649.189"/>
+        <path d="M360.445 71.604V.606l30.1.365.357 63.305s.697 10.812 8.286 17.844c9.115 8.446 17.93 8.784 17.93 8.784l33.447.232L450.282.89l29.83-.284V121.32l-70.714-.392s-16.972-.465-32.236-14.349c-14.932-13.581-16.717-34.975-16.717-34.975z" fill="#ccc" stroke="#ccc" stroke-width=".5" stroke-dasharray="627.244" stroke-dashoffset="627.244"/>
+        <path d="M121.14 121.558 90.567 90.983l.168-16.538-8.499 8.348-21.82-22.022L121.158.004z" fill="#0334FF"/>
+    </g>
+</svg>
