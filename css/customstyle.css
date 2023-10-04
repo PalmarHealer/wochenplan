@@ -23,6 +23,47 @@ body {
     }
 }
 
+.logo {
+    width: 50px;
+    height: 50px;
+}
+
+.logo-footer {
+    width: 25px;
+    height: 25px;
+    filter: grayscale(100%);
+    transition: filter 0.3s;
+}
+
+.logo-footer-manu {
+    width:  50px;
+    height: 25px;
+    filter: grayscale(100%);
+    transition: filter 0.3s;
+ }
+
+.logo-footer:hover {
+    filter: none;
+}
+
+.logo-footer-manu:hover {
+    filter: none;
+}
+
+.logo-footer-div {
+    width: fit-content;
+    vertical-align: middle;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.bottom-navbar-elements {
+    display: inline-flex !important;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
 .alert-message {
     z-index: 1;
     top: 1px;
@@ -54,7 +95,7 @@ body {
     vertical-align: top;
     horiz-align: left;
     table-layout: fixed;
-    font-size: 105%;
+    font-size: 103%;
 }
 
 .tg-small-preview * {
@@ -222,9 +263,9 @@ body {
 }
 
 .small_piece {
-    height: 5%;
+    height: 20px;
     width: 8%;
-    max-height: 6px;
+    max-height: 25px;
     max-width: 10px;
 }
 
