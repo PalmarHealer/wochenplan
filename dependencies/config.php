@@ -35,6 +35,8 @@ $create_lessons_for_others = 6; //default 6
 $manage_other_users = 10; //default 10
 
 
+//Donation link. This is where the user will be directed to if they click on the paypal icon
+$donation_link = "https://www.paypal.com/donate/buttons"; //Default is where you can create one for your own
 
 //---------- MittagessenAPI: ----------
 //For simpleness is mte used for Mittagessen
@@ -122,9 +124,10 @@ $room_names = array(
     3 => "Raum 3 (HS)",
     4 => "Raum 4 (RS)",
     5 => "Gesprächsraum",
-    6 => "SZ/Praxisber.",
+    6 => "SZ/Garten",
     7 => "Sport",
-    8 => "Ausflug",
+    8 => "Extern",
+    14 => "Ext.",
     9 => "Freiarbeit",
     11 => "Putzen EG",
     12 => "Putzen Garten",
@@ -138,7 +141,9 @@ $times = array(
     2 => "l/ll Morgenkreise - 9:00 – 9:30",
     3 => "l/ll Angebot 1 - 9:30 – 10:30",
     4 => "l/ll Angebot 2 - 10:45 – 11:45",
-    5 => "l/ll Nachmittagsband - 13:00 – 14:30",
+    16 => "l/ll Logbuchzeit - 11:45 – 13:00",
+    5 => "l/ll Nachmittagsband - 13:00 – 14:15",
+    15 => "l/ll Logbuchzeit - 14:15 – 14:30",
 
     14 => "Mittagspause - 12:00 – 13:00",
 
@@ -162,10 +167,10 @@ $times = array(
 
 $header = "true";
 
-// State.Update.Feature.Bug
+// state.version.feature.patch/fix
 // States:
 // 0: Beta
 // 1: Tested
 // 2: Stable
 // 3: Release
-$version = "1.1.13.0";
+$version = "1.2.0.0";

@@ -468,4 +468,7 @@ if (!$page == "external") {
     $vorname = GetUserByID($id, "vorname", $pdo);
     $nachname = GetUserByID($id, "nachname", $pdo);
 
+
+    //GetSetting("maintenance", $pdo);
+
 }

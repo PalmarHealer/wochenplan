@@ -200,9 +200,11 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
                  if (str_contains($lesson_details['date-raw'], "-")) {
                      $lesson_details['date-type'] = 2;
+                     $lesson_details['lesson-type-text'] = "Einmaliges Angebot";
                      $lesson_details['date'] = date("d/m/Y", strtotime($lesson_details['date-raw']));
                  } else {
                      $lesson_details['date-type'] = 1;
+                     $lesson_details['lesson-type-text'] = "Wiederholendes Angebot";
                      $lesson_details['date'] = $lesson_details['date-raw'];
                  }
              } else {
@@ -210,6 +212,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              }
 
          }
+
+
 ?>
 
          <main role="main" class="main-content">
@@ -222,7 +226,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                    </div>
                   <form action="./" method="post">
                       <label>
-                          <input hidden type="text" name="return_to" value="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                          <input hidden type="text" name="return_to" value="<?php echo $_SERVER['HTTP_REFERER'] ?? "/dashboard"; ?>">
                       </label>
                       <label>
                           <input hidden type="text" name="plan_date" value="<?php echo ($_GET['date'] ?? null); ?>">
@@ -230,7 +234,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                       <div class="col-12">
                              <?php
                              if(isset($_GET['id'])) {
+                                 echo "<div class='vertical-alignment align-items-center'>";
                                  echo "<h2 class='page-title'>Angebot bearbeiten</h2>";
+                                 echo '<div class="alert alert-success lesson-type-indicator display-inherit">  <span class="fe fe-help-circle fe-16 mr-2"></span><p class="no_margin""> ' . $lesson_details['lesson-type-text'] . ' </p></div>';
+                                 echo "</div>";
                                  if($permission_level >= $create_lessons_for_others) {
                                      echo '<p class="text-muted">Letzte Änderung am: ' . date("d.m.Y H:i", strtotime(GetLessonInfoByID($lesson_id, "updated_at", $pdo))) . ' von: '. GetUserByID(GetLessonInfoByID($lesson_id, "last_change", $pdo), "vorname", $pdo) . '</p>';
                                  }
@@ -318,7 +325,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      <br>
                                                      <br>
                                                  </th>
-                                                 <th class="color-1 preview-hover" colspan="4" time="13" room="10"></th>
+                                                 <th class="color-1 preview-hover" colspan="5" time="13" room="10"></th>
                                                  <th class="color-3 white_text modt text-left" colspan="5">
 
                                                  </th>
@@ -334,8 +341,9 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-1 db_text rooms"><b class="bold">Raum 3 (HS)</b></td>
                                                  <td class="color-1 db_text rooms"><b class="bold">Raum 4 (RS)</b></td>
                                                  <td class="color-1 db_text rooms"><b class="bold">Gesprächsraum</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">SZ/Praxisber.</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Sport</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">SZ/Garten</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Extern</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Ext.</b></td>
                                              </tr>
 
 
@@ -352,7 +360,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      <b class="bold">Morgenband</b>
                                                  </td>
 
-                                                 <td class="color-2 preview-hover center" time="1" room="10" colspan="6"></td>
+                                                 <td class="color-2 preview-hover center" time="1" room="10" colspan="7"></td>
                                              </tr>
                                              <tr class="">
 
@@ -372,8 +380,9 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="6" room="3" rowspan="2"></td>
                                                  <td class="color-2 preview-hover" time="6" room="4" rowspan="2"></td>
                                                  <td class="color-2 preview-hover" time="6" room="5" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="13" room="6" rowspan="5"></td>
-                                                 <td class="color-2 preview-hover" time="13" room="7" rowspan="5"></td>
+                                                 <td class="color-2 preview-hover" time="13" room="6" rowspan="6"></td>
+                                                 <td class="color-2 preview-hover" time="13" room="7" rowspan="6"></td>
+                                                 <td class="color-2 preview-hover" time="13" room="14" rowspan="6"></td>
                                              </tr>
 
 
@@ -411,15 +420,15 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2"></td>
                                                  <td class="color-1"></td>
 
-                                                 <td class="color-6 no_border" rowspan="2">
+                                                 <td class="color-6 no_border" rowspan="3">
                                                      10:30 – 12:00<br/>
                                                      <b class="bold">Großes Band</b>
                                                  </td>
 
-                                                 <td class="color-2 preview-hover" time="8" room="2" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="3" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="4" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="5" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="2" rowspan="3"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="3" rowspan="3"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="4" rowspan="3"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="5" rowspan="3"></td>
                                              </tr>
 
 
@@ -434,6 +443,16 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-1 preview-hover" time="4" room="9"></td>
                                              </tr>
 
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     11:45 – 12:00<br>
+                                                     <b class="bold">Logbuchzeit</b>
+                                                 </td>
+
+                                                 <td class="color-2"></td>
+                                                 <td class="color-1"></td>
+                                             </tr>
 
                                              <tr class="">
 
@@ -442,7 +461,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      <b class="bold">Mittagspause</b>
                                                  </td>
 
-                                                 <td class="color-4 preview-hover no_border center2" colspan="9" time="14" room="10"><b class="bold">Mittagessen</b>
+                                                 <td class="color-4 preview-hover no_border center2" colspan="10" time="14" room="10"><b class="bold"></b>
                                                  </td>
                                              </tr>
 
@@ -468,8 +487,25 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="9" room="5"></td>
                                                  <td class="color-2 preview-hover" time="9" room="6"></td>
                                                  <td class="color-2 preview-hover" time="9" room="7"></td>
+                                                 <td class="color-2 preview-hover" time="5" room="14"></td>
                                              </tr>
 
+                                             <tr class="">
+
+                                                 <td class="color-6 no_border">
+                                                     14:15 – 14:30<br>
+                                                     <b class="bold">Logbuchzeit</b>
+                                                 </td>
+
+                                                 <td class="color-2 db_text" colspan="1"></td>
+                                                 <td class="color-1 db_text" colspan="1"></td>
+
+                                                 <td class="color-6 no_border">
+                                                     14:15 – 14:30<br>
+                                                     <b class="bold">Logbuchzeit</b>
+                                                 </td>
+                                                 <td class="color-2 db_text" colspan="7"></td>
+                                             </tr>
 
                                              <tr class="">
                                                  <td class="white-col" rowspan="3"></td>
@@ -485,7 +521,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
                                              <tr class="">
                                                  <td class="color-5 preview-lighthover" time="12" room="11" colspan="2"></td>
-                                                 <td class="color-5 preview-lighthover" time="12" room="12" colspan="2"></td>
+                                                 <td class="color-5 preview-lighthover" time="12" room="12" colspan="3"></td>
                                                  <td class="color-5 preview-lighthover" time="12" room="13" colspan="2"></td>
                                              </tr>
 
@@ -501,6 +537,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="10" room="5"></td>
                                                  <td class="color-2 preview-hover" time="10" room="6"></td>
                                                  <td class="color-2 preview-hover" time="10" room="7"></td>
+                                                 <td class="color-2 preview-hover" time="9" room="14"></td>
                                              </tr>
                                              </tbody>
                                          </table>
@@ -525,9 +562,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                              <?php
                              $date_type = array();
 
-                             if (isset($_GET['date'])) {
-                                 $lesson_details['date-type'] = 2;
-                             }
                              if(isset($lesson_details['date-type'])) {
                                  $date_type[$lesson_details['date-type']] = "active";
                              } else {
@@ -640,7 +674,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <?php
                                  if(isset($_GET['id'])) {
 
-                                     if (isset($_GET['date'])) {
+                                     if ($lesson_details['date-type'] == 1) {
                                          echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
                                          echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
 
