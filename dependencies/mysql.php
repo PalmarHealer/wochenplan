@@ -1,5 +1,20 @@
 <?php
-function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name, $new_description, $new_location, $new_time, $new_box_color, $new_notes, $new_assigned_user_id, $user_that_made_the_change): bool {
+function UpdateOrInsertLesson(
+    $type,
+    $pdo,
+    $id,
+    $parent_lesson_id,
+    $date_type,
+    $new_date,
+    $new_name,
+    $new_description,
+    $new_location,
+    $new_time,
+    $new_box_color,
+    $new_notes,
+    $new_assigned_user_id,
+    $user_that_made_the_change
+): bool {
 
     $identifier = GetSetting("identifier", $pdo);
     try {
@@ -15,11 +30,68 @@ function UpdateOrInsertLesson($type, $pdo, $id, $date_type, $new_date, $new_name
 
         // Prepare and execute the SQL query
         if ($type == "update") {
-            $stmt = $pdo->prepare("UPDATE angebot SET identifier = ?, date_type = ?, $set_date_column = ?, $empty_date_column = NULL, name = ?, description = ?, location = ?, time = ?, box_color = ?, notes = ?, assigned_user_id = ?, last_change_from_userid = ? WHERE id = ?");
-            $stmt->execute([$identifier, $date_type, $new_date, EncodeToJson($new_name), EncodeToJson($new_description), $new_location, $new_time, $new_box_color, EncodeToJson($new_notes), $new_assigned_user_id, $user_that_made_the_change, $id]);
+            $stmt = $pdo->prepare(
+                   "UPDATE angebot SET
+                   parent_lesson_id = NULL,
+                   identifier = ?,
+                   date_type = ?,
+                   $set_date_column = ?,
+                   $empty_date_column = NULL,
+                   name = ?,
+                   description = ?,
+                   location = ?,
+                   time = ?,
+                   box_color = ?,
+                   notes = ?,
+                   assigned_user_id = ?,
+                   last_change_from_userid = ? 
+                   WHERE id = ?"
+            );
+            $stmt->execute([
+                $identifier,
+                $date_type,
+                $new_date,
+                EncodeToJson($new_name),
+                EncodeToJson($new_description),
+                $new_location,
+                $new_time,
+                $new_box_color,
+                EncodeToJson($new_notes),
+                $new_assigned_user_id,
+                $user_that_made_the_change,
+                $id
+            ]);
+
         } else {
-            $stmt = $pdo->prepare("INSERT INTO angebot (identifier, date_type, $set_date_column, $empty_date_column, name, description, location, time, box_color, notes, assigned_user_id, last_change_from_userid) VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$identifier, $date_type, $new_date, EncodeToJson($new_name), EncodeToJson($new_description), $new_location, $new_time, $new_box_color, EncodeToJson($new_notes), $new_assigned_user_id, $user_that_made_the_change]);
+            $stmt = $pdo->prepare("INSERT INTO angebot (
+                parent_lesson_id,
+                identifier, 
+                date_type, 
+                $set_date_column, 
+                $empty_date_column,
+                name,
+                description,
+                location,
+                time,
+                box_color,
+                notes,
+                assigned_user_id,
+                last_change_from_userid
+            ) VALUES (?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $parent_lesson_id,
+                $identifier,
+                $date_type,
+                $new_date,
+                EncodeToJson($new_name),
+                EncodeToJson($new_description),
+                $new_location,
+                $new_time,
+                $new_box_color,
+                EncodeToJson($new_notes),
+                $new_assigned_user_id,
+                $user_that_made_the_change
+            ]);
         }
         return true;
     } catch(PDOException $e) {
@@ -261,7 +333,7 @@ function UpdateUsername($id, $vorname, $nachname, $pdo) {
 }
 function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_level, $pdo): void {
     $statement = $pdo->prepare("INSERT INTO users (email, passwort, vorname, nachname, permission_level) VALUES (:email, :passwort, :vorname, :nachname, :permission_level)");
-    $result = $statement->execute(array(
+    $statement->execute(array(
         'email' => $email,
         'passwort' => $passwort_hash,
         'vorname' => EncodeToJson($vorname),
@@ -288,9 +360,9 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
         $created_at = date("d.m.Y H:i", strtotime($sl["created_at"]));
         $updated_at = date("d.m.Y H:i", strtotime($sl["updated_at"]));
 
-        echo '<tr>
-                <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
-                </td>
+        echo '
+            <tr>
+                <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';"></td>
                 <td class="pointer" onclick="window.location=\'./edit/?id='. $id . '\';">
                     <div class="avatar avatar-md">
                         <span class="fe fe-user fe-32"></span>
@@ -319,7 +391,8 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
                         <a class="dropdown-item" href="./edit/?delete='. $id . '">Löschen</a>
                     </div>
                 </td>
-              </tr>';
+            </tr>
+        ';
     }
 }
 function EnableLesson($userID, $lessonID, $pdo): void {
@@ -376,16 +449,11 @@ function DeleteSickNote($sickID, $pdo): bool|string {
     }
 }
 
-
-
-
 function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo, $webroot): void {
     $identifier = GetSetting("identifier", $pdo);
     $lessons = $pdo->prepare("SELECT * FROM angebot WHERE assigned_user_id = ? AND identifier = ? ORDER BY date ASC");
     $lessons->execute(array($userid, $identifier));
     $counter = 1;
-    $pdo = null;
-
 
     while($sl = $lessons->fetch()) {
 
@@ -404,41 +472,30 @@ function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times,
         } else {
             $date_day = $sl['date_repeating'];
             $date = $date_day;
-            if ($date_day == "1") {
-                $date_formatted = "Jeden Montag";
-            } elseif ($date_day == "2") {
-                $date_formatted = "Jeden Dienstag";
-            } elseif ($date_day == "3") {
-                $date_formatted = "Jeden Mittwoch";
-            } elseif ($date_day == "4") {
-                $date_formatted = "Jeden Donnerstag";
-            } elseif ($date_day == "5") {
-                $date_formatted = "Jeden Freitag";
-            } else {
-                $date_formatted = "Fehler beim Laden des Datums";
-            }
+            $date_formatted = NumberOfWeekToText($date_day);
         }
 
-        echo '<tr>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">
-										  </td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['name']), $date) . '</td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['description']), $date) . '</td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $date_formatted . '</td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';"><span class="dot dot-lg" style="background-color: ' . $sl['box_color'] .'"></span></td>
-										  <td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . DecodeFromJson($sl['notes']) . '</td>
-										
-										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="text-muted sr-only">Aktion</span>
-											  </button>
-											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="../lessons/details/?id=' . $sl['id'] . '">Bearbeiten</a>
-												<a class="dropdown-item" href="../lessons/details/?remove_lesson_with_id=' . $sl['id'] . '">Löschen</a>
-											  </div>
-										  </td>
-										  </tr>';
+        echo '
+            <tr>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';"></td>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['name']), $date) . '</td>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['description']), $date) . '</td>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . $date_formatted . '</td>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';"><span class="dot dot-lg" style="background-color: ' . $sl['box_color'] .'"></span></td>
+		    	<td class="pointer" onClick="window.location=\'' . $webroot  . '/lessons/details/?id=' . $sl['id'] . '\';">' . DecodeFromJson($sl['notes']) . '</td>
+		    	<td>
+		    	    <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    			<span class="text-muted sr-only">Aktion</span>
+		    		</button>
+		    		<div class="dropdown-menu dropdown-menu-right">
+		    		    <a class="dropdown-item" href="../lessons/details/?id=' . $sl['id'] . '">Bearbeiten</a>
+		    			<a class="dropdown-item" href="../lessons/details/?remove_lesson_with_id=' . $sl['id'] . '">Löschen</a>
+		    		</div>
+		    	</td>
+		    </tr>
+		';
     }
 
 }
@@ -448,6 +505,7 @@ function GetAllLessons($room_names, $times, $pdo): void {
     $lessons->execute(array($identifier));
     while($sl = $lessons->fetch()) {
 
+
         if ($sl['date_type'] == "2") {
             $date = $sl['date'];
             $single_date1 = explode("-", $date);
@@ -455,52 +513,54 @@ function GetAllLessons($room_names, $times, $pdo): void {
         } else {
             $date_day = $sl['date_repeating'];
             $date = $date_day;
-            if ($date_day == "1") {
-                $date_formatted = "Jeden Montag";
-            } elseif ($date_day == "2") {
-                $date_formatted = "Jeden Dienstag";
-            } elseif ($date_day == "3") {
-                $date_formatted = "Jeden Mittwoch";
-            } elseif ($date_day == "4") {
-                $date_formatted = "Jeden Donnerstag";
-            } elseif ($date_day == "5") {
-                $date_formatted = "Jeden Freitag";
-            } else {
-                $date_formatted = "Fehler beim Laden des Datums";
-            }
+            $date_formatted = NumberOfWeekToText($date_day);
         }
 
         $creator_formatted = GetUserByID($sl['assigned_user_id'], "name", $pdo);
 
-        echo '<tr>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">
-										  </td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['name']), $date) . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['description']), $date) . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $date_formatted . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';"><span class="dot dot-lg" style="background-color: ' . $sl['box_color'] .'"></td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $creator_formatted . '</td>
-										  <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . DecodeFromJson($sl['notes']) . '</td>
-										
-										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="text-muted sr-only">Aktion</span>
-											  </button>
-											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="./details/?id=' . $sl['id'] . '">Bearbeiten</a>
-												<a class="dropdown-item" href="./details/?remove_lesson_with_id=' . $sl['id'] . '">Löschen</a>
-											  </div>
-										  </td>
-										  </tr>';
+        echo '
+            <tr>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';"></td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['name']), $date) . '</td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . replacePlaceholders(DecodeFromJson($sl['description']), $date) . '</td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $room_names[$sl['location']] . '</td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $times[$sl['time']] . '</td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $date_formatted . '</td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';"><span class="dot dot-lg" style="background-color: ' . $sl['box_color'] .'"></td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . $creator_formatted . '</td>
+			    <td class="pointer" onClick="window.location=\'./details/?id=' . $sl['id'] . '\';">' . DecodeFromJson($sl['notes']) . '</td>
+			    <td>
+			        <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    		<span class="text-muted sr-only">Aktion</span>
+			    	</button>
+			    	<div class="dropdown-menu dropdown-menu-right">
+			    	    <a class="dropdown-item" href="./details/?id=' . $sl['id'] . '">Bearbeiten</a>
+			    		<a class="dropdown-item" href="./details/?remove_lesson_with_id=' . $sl['id'] . '">Löschen</a>
+			    	</div>
+			    </td>
+			</tr>
+		';
 
     }
 
 
 }
 
-
-
+function NumberOfWeekToText($date_day): string {
+    if ($date_day == "1") {
+        return "Jeden Montag";
+    } elseif ($date_day == "2") {
+        return "Jeden Dienstag";
+    } elseif ($date_day == "3") {
+        return "Jeden Mittwoch";
+    } elseif ($date_day == "4") {
+        return "Jeden Donnerstag";
+    } elseif ($date_day == "5") {
+        return "Jeden Freitag";
+    } else {
+        return "Fehler beim Laden des Datums";
+    }
+}
 
 function GetAllSickNotes($pdo): void {
     $lessons = $pdo->prepare("SELECT * FROM sick");
@@ -516,22 +576,24 @@ function GetAllSickNotes($pdo): void {
 
         $username = GetUserByID($new_assigned_user_id, "name", $pdo);
 
-        echo '<tr>
-										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">
-										  </td>
-										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $username . '</td>
-										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $start_date2 . '</td>
-										  <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $end_date2 . '</td>
-										
-										  <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="text-muted sr-only">Aktion</span>
-											  </button>
-											  <div class="dropdown-menu dropdown-menu-right">
-												<a class="dropdown-item" href="./edit/?id=' . $sl['id'] . '">Bearbeiten</a>
-												<a class="dropdown-item" href="./edit/?remove=' . $sl['id'] . '">Löschen</a>
-											  </div>
-										  </td>
-										  </tr>';
+        echo '
+            <tr>
+			    <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">
+			    </td>
+			    <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $username . '</td>
+			    <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $start_date2 . '</td>
+			    <td class="pointer" onClick="window.location=\'./edit/?id=' . $sl['id'] . '\';">' . $end_date2 . '</td>
+			    <td>
+			        <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			            <span class="text-muted sr-only">Aktion</span>
+			        </button>
+			        <div class="dropdown-menu dropdown-menu-right">
+			            <a class="dropdown-item" href="./edit/?id=' . $sl['id'] . '">Bearbeiten</a>
+			            <a class="dropdown-item" href="./edit/?remove=' . $sl['id'] . '">Löschen</a>
+			        </div>
+			    </td>
+			</tr>
+		';
 
     }
 
