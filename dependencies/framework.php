@@ -9,10 +9,10 @@ function GetCurrentUrl(): string
         $current_url = "https://";
     else {
         $current_url = "http://";
-        // Append the host(domain name, ip) to the URL.
-        $current_url = $_SERVER['HTTP_HOST'];
-        $current_url = "https://wochenplan.nauren.de";
     }
+    // Append the host(domain name, ip) to the URL.
+    //$current_url.= $_SERVER['HTTP_HOST'];
+    $current_url = "http://localhost:63342";
 
     // Append the requested resource location to the URL
     $current_url.= $_SERVER['REQUEST_URI'];
@@ -368,14 +368,14 @@ function RequestAPI($url, $secret, $date): string {
     return $response;
 }
 
-#[NoReturn] function Redirect($newURL) {
-    header("Location: $newURL");
-    echo "<script>window.location.href='$newURL';</script>";
+#[NoReturn] function Redirect($redirectURL): void {
+    header("Location: $redirectURL");
+    echo "<script>window.location.href='$redirectURL';</script>";
     $pdo = null;
     exit();
 }
 
-#[NoReturn] function GoPageBack($Parameter) {
+#[NoReturn] function GoPageBack($Parameter): void {
     header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
     echo "<script>history.back()</script>";
     $pdo = null;
@@ -399,13 +399,16 @@ function RequestAPI($url, $secret, $date): string {
 //Functions framework end
 $old_url_array = explode("?", GetCurrentUrl());
 $old_url = $old_url_array[0];
+$new_url = "";
 if (isset($_SERVER['HTTP_REFERER'])) {
     $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
     $new_url = $new_url_array[0];
 }
-else {
-    $new_url = "";
-}
+
+
+
+
+
 
 if (!isset($page)) {
     $page = "";
@@ -416,6 +419,12 @@ if(isset($_GET["logout"])) {
         die();
     }
 }
+
+
+
+
+
+
 
 if (!$page == "external") {
 
