@@ -9,11 +9,11 @@ $permission_level = 0; //default 0
 
 //Where is the Webroot from this Software
 //ex. if it's reachable from my-host.com/test that its "/test"
-//or if it's on a subdomain installed that simply enter "/"
+//or if it's on a subdomain installed that simply enter "/my-folder"
 $webroot = "/wochenplan";  //default /wochenplan
-$relative_path = $webroot; //Set this to "" when / is the webroot
+//Set this to "" when / is the webroot
 
-//Default website theming - CURRENTLY NOT FUNCTIONAL - 
+//Default website theming - CURRENTLY NOT FUNCTIONAL -
 //"light" for light, "dark" for dark...
 //Please only use light or dark otherwise errors can happen.
 $theme = "light"; //default light
@@ -63,7 +63,7 @@ $pdo = new PDO('mysql:host=localhost:3306;dbname=wochenplan', $db_user, $db_pass
 
 $keep_dpo = false;
 
-$domain = "http://localhost:63342/wochenplan"; //please also change that in framework.php line 14
+$domain = "http://localhost:63342/wochenplan"; //please also change that in framework.php line 15
 
 //here you can list all allowed domains that emails allowed to register
 $allowed_domains = array(
@@ -124,7 +124,7 @@ $room_names = array(
     3 => "Raum 3 (HS)",
     4 => "Raum 4 (RS)",
     5 => "Gesprächsraum",
-    6 => "SZ/Garten",
+    6 => "Sonnenzimmer",
     7 => "Sport",
     8 => "Extern",
     14 => "Ext.",
@@ -143,7 +143,7 @@ $times = array(
     4 => "l/ll Angebot 2 - 10:45 – 11:45",
     16 => "l/ll Logbuchzeit - 11:45 – 13:00",
     5 => "l/ll Nachmittagsband - 13:00 – 14:15",
-    15 => "l/ll Logbuchzeit - 14:15 – 14:30",
+    15 => "l-lV Logbuchzeit - 14:15 – 14:30",
 
     14 => "Mittagspause - 12:00 – 13:00",
 
@@ -162,8 +162,11 @@ $times = array(
 
 
 //---------- DO NOT TOUCH (general software information) ----------
-//If you do some changes here, some or hole parts of the 
+//If you do some changes here, some or hole parts of the
 //website are not able to work properly
+
+$relative_path = $webroot;
+
 
 $header = "true";
 
