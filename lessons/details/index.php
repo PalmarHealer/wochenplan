@@ -1,4 +1,5 @@
 <?php
+global $create_lessons_for_others;
 $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
@@ -13,30 +14,30 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <meta name="description" content="">
       <meta name="author" content="">
-      <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
+      <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 
 
       <title>Angebot Verwalten</title>
 
 
       <!-- Simple bar CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css?version=<?php echo $version; ?>">
       <!-- Fonts CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/abel.css">
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/overpass.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/abel.css?version=<?php echo $version; ?>">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/overpass.css?version=<?php echo $version; ?>">
       <!-- Icons CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css?version=<?php echo $version; ?>">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css?version=<?php echo $version; ?>">
       <!-- Date Range Picker CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
       <!-- App CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
       <!-- Custom CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
       <!-- Site Css -->
-       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/select2.css">
-       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/coloris.min.css">
+       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/select2.css?version=<?php echo $version; ?>">
+       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/coloris.min.css?version=<?php echo $version; ?>">
    </head>
    <body class="vertical light">
       <div class="wrapper">
@@ -51,21 +52,30 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
          require $include_path. "/include/nav.php";
 
          $return_to = ($_POST['return_to'] ?? null);
+         $get_date = ($_GET['date'] ?? null);
 
          if (isset($_GET["remove_lesson_with_id"])) {
              $lesson_to_delete = $_GET["remove_lesson_with_id"];
              $user_permission_level = GetUserByID($_SESSION['asl_userid'], "permission_level", $pdo);
+
+
              if ($user_permission_level >= $create_lessons_for_others) {
                  DeleteLesson($lesson_to_delete, $pdo);
-                 Redirect($return_to);
+                 if ($return_to == null) {
+                     GoPageBack("");
+                 } else {
+                     Redirect($return_to);
+                 }
              } elseif ($_SESSION['asl_userid'] == GetLessonInfoByID($lesson_to_delete, "userid", $pdo) AND $user_permission_level >= $create_lessons) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  Redirect($return_to);
+
+
              } else {
                  GoPageBack("");
              }
          }
-         if(isset($old_url) AND $new_url = $old_url) {
+         if(isset($old_url) AND isset($new_url) AND $new_url == $old_url) {
 
 
              //Get form data
@@ -82,7 +92,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                  $date_type = "0";
              }
 
-             $new_name = ($_POST['name'] ?? '');
+             $new_name = ($_POST['name'] ?? 'test');
              $new_description = ($_POST['description'] ?? '');
              $new_location = ($_POST['location'] ?? '');
              $new_time = ($_POST['time'] ?? '');
@@ -92,65 +102,82 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
 
              $dub_id = ($_GET['dub_id'] ?? null);
+             $lesson_id = ($_POST["update_lesson_with_id"] ?? null);
              $tmp_plan_date = ($_POST['plan_date'] ?? '');
              $plan_date = date("Y-m-d", strtotime($tmp_plan_date));
 
              if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
                  $new_assigned_user_id = $id;
              }
+             if (!EncodeToJson($new_name . $new_description)) {
+                 if (!EncodetoJson($new_name)) {
+                     $error = "Der Name des Angebotes enthält ein Zeichen das nicht abgespeichert werden konnte.";
+                 } else {
+                     $error = "Die Beschreibung des Angebotes enthält ein Zeichen das nicht abgespeichert werden konnte.";
+                 }
+                 die();
+                     //if ($_POST['save']) {
+                     //    Redirect("./?error=1");
+                     //} elseif (isset($lesson_id)) {
+                     //    Redirect("./?id=$lesson_id&error=1");
+                     //} else {
+                     //    Redirect("./?id=$dub_id&error=1");
+                     //}
 
-             if (isset($dub_id)) {
+             } elseif (!isset($_GET['error'])) {
+                 if (isset($dub_id)) {
 
-                 UpdateOrInsertLesson("create", $pdo, "",
-                     "2",
-                     $plan_date,
-                     $new_name,
-                     $new_description,
-                     $new_location,
-                     $new_time,
-                     $new_box_color,
-                     $new_notes,
-                     $new_assigned_user_id,
-                     $_SESSION['asl_userid']
-                 );
-                 Redirect($return_to);
+                     UpdateOrInsertLesson("create", $pdo, "",
+                         $dub_id,
+                         "2",
+                         $plan_date,
+                         $new_name,
+                         $new_description,
+                         $new_location,
+                         $new_time,
+                         $new_box_color,
+                         $new_notes,
+                         $new_assigned_user_id,
+                         $_SESSION['asl_userid']
+                     );
+                     Redirect($return_to);
+                 }
+                 // Update Lesson
+                 if (isset($_POST["update_lesson_with_id"])) {
+
+                     UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], null,
+                         $date_type,
+                         $new_date,
+                         $new_name,
+                         $new_description,
+                         $new_location,
+                         $new_time,
+                         $new_box_color,
+                         $new_notes,
+                         $new_assigned_user_id,
+                         $_SESSION['asl_userid']
+                     );
+
+                     Redirect($return_to);
+
+                     // Create Lesson
+                 } elseif (($_POST['save'] ?? 0) == "1") {
+
+                     UpdateOrInsertLesson("create", $pdo, "", null,
+                         $date_type,
+                         $new_date,
+                         $new_name,
+                         $new_description,
+                         $new_location,
+                         $new_time,
+                         $new_box_color,
+                         $new_notes,
+                         $new_assigned_user_id,
+                         $_SESSION['asl_userid']
+                     );
+                     Redirect($return_to);
+                 }
              }
-             // Update Lesson
-             if (isset($_POST["update_lesson_with_id"])) {
-
-                 UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"],
-                     $date_type,
-                     $new_date,
-                     $new_name,
-                     $new_description,
-                     $new_location,
-                     $new_time,
-                     $new_box_color,
-                     $new_notes,
-                     $new_assigned_user_id,
-                     $_SESSION['asl_userid']
-                 );
-
-                 Redirect($return_to);
-
-                 // Create Lesson
-             } elseif (($_POST['save'] ?? 0) == "1") {
-
-                 UpdateOrInsertLesson("create", $pdo, "",
-                     $date_type,
-                     $new_date,
-                     $new_name,
-                     $new_description,
-                     $new_location,
-                     $new_time,
-                     $new_box_color,
-                     $new_notes,
-                     $new_assigned_user_id,
-                     $_SESSION['asl_userid']
-                 );
-                 Redirect($return_to);
-             }
-
          }
 
          if (isset($_GET['disable_enable_lesson'])) {
@@ -229,7 +256,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                           <input hidden type="text" name="return_to" value="<?php echo $_SERVER['HTTP_REFERER'] ?? "/dashboard"; ?>">
                       </label>
                       <label>
-                          <input hidden type="text" name="plan_date" value="<?php echo ($_GET['date'] ?? null); ?>">
+                          <input hidden type="text" name="plan_date" value="<?php echo ($get_date ?? null); ?>">
                       </label>
                       <div class="col-12">
                              <?php
@@ -255,7 +282,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="name">Name des Angebotes</label>
-                                       <input name="name" type="text" id="name" class="form-control" placeholder="Name des Angebotes" maxlength="30" value="<?php echo ($lesson_details['name'] ?? '');?>" required>
+                                       <input name="name" type="text" id="name" class="form-control" placeholder="Name des Angebotes" value="<?php echo ($lesson_details['name'] ?? '');?>" required>
                                        </input>
                                     </div>
                                  </div>
@@ -263,7 +290,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="helping">Weitere Beschreibung</label>
-                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." maxlength="60" value="<?php echo ($lesson_details['description'] ?? '');?>">
+                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." value="<?php echo ($lesson_details['description'] ?? '');?>">
                                     </div>
                                  </div>
                               </div>
@@ -341,7 +368,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-1 db_text rooms"><b class="bold">Raum 3 (HS)</b></td>
                                                  <td class="color-1 db_text rooms"><b class="bold">Raum 4 (RS)</b></td>
                                                  <td class="color-1 db_text rooms"><b class="bold">Gesprächsraum</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">SZ/Garten</b></td>
+                                                 <td class="color-1 db_text rooms"><b class="bold">Sonnenzimmer</b></td>
                                                  <td class="color-1 db_text rooms"><b class="bold">Extern</b></td>
                                                  <td class="color-1 db_text rooms"><b class="bold">Ext.</b></td>
                                              </tr>
@@ -353,7 +380,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      8:00 – 9:00<br/>
                                                      <b class="bold">Morgenband</b>
                                                  </td>
-                                                 <td class="color-2 db_text" colspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="1" room="1" colspan="2"></td>
 
                                                  <td class="color-6 no_border">
                                                      8:00 – 9:00<br/>
@@ -407,7 +434,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="7" room="2"></td>
                                                  <td class="color-2 preview-hover" time="7" room="3"></td>
                                                  <td class="color-2 preview-hover" time="7" room="4"></td>
-                                                 <td class="color-2 preview-hover" time="7" room="5"></td>
+                                                 <td class="color-2 preview-hover" time="7" room="5" rowspan="2"></td>
                                              </tr>
 
 
@@ -428,7 +455,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="8" room="2" rowspan="3"></td>
                                                  <td class="color-2 preview-hover" time="8" room="3" rowspan="3"></td>
                                                  <td class="color-2 preview-hover" time="8" room="4" rowspan="3"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="5" rowspan="3"></td>
                                              </tr>
 
 
@@ -441,6 +467,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
                                                  <td class="color-2 preview-hover" time="4" room="1"></td>
                                                  <td class="color-1 preview-hover" time="4" room="9"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="5" rowspan="2"></td>
                                              </tr>
 
                                              <tr class="">
@@ -450,8 +477,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      <b class="bold">Logbuchzeit</b>
                                                  </td>
 
-                                                 <td class="color-2"></td>
-                                                 <td class="color-1"></td>
+                                                 <td class="color-2 preview-hover" time="16" room="1"></td>
+                                                 <td class="color-1 preview-hover" time="16" room="9"></td>
                                              </tr>
 
                                              <tr class="">
@@ -497,14 +524,17 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      <b class="bold">Logbuchzeit</b>
                                                  </td>
 
-                                                 <td class="color-2 db_text" colspan="1"></td>
-                                                 <td class="color-1 db_text" colspan="1"></td>
+                                                 <td class="color-2 preview-hover" time="15" room="1" colspan="1"></td>
+                                                 <td class="color-1 preview-hover" time="15" room="9" colspan="1"></td>
 
                                                  <td class="color-6 no_border">
                                                      14:15 – 14:30<br>
                                                      <b class="bold">Logbuchzeit</b>
                                                  </td>
-                                                 <td class="color-2 db_text" colspan="7"></td>
+                                                 <td class="color-2 preview-hover" time="15" room="2" colspan="3"></td>
+                                                 <td class="color-2 preview-hover" time="15" room="5"></td>
+                                                 <td class="color-2 preview-hover" time="15" room="6"></td>
+                                                 <td class="color-2 preview-hover" time="15" room="8" colspan="2"></td>
                                              </tr>
 
                                              <tr class="">
@@ -516,13 +546,13 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                      14:30 – 15:00<br/>
                                                      <b class="bold">Putzen</b>
                                                  </td>
-                                                 <td class="color-5 preview-lighthover" time="12" room="10" colspan="8"></td>
+                                                 <td class="color-5 preview-lighthover" time="12" room="10" colspan="7"></td>
                                              </tr>
 
                                              <tr class="">
                                                  <td class="color-5 preview-lighthover" time="12" room="11" colspan="2"></td>
-                                                 <td class="color-5 preview-lighthover" time="12" room="12" colspan="3"></td>
-                                                 <td class="color-5 preview-lighthover" time="12" room="13" colspan="2"></td>
+                                                 <td class="color-5 preview-lighthover" time="12" room="12" colspan="2"></td>
+                                                 <td class="color-5 preview-lighthover" time="12" room="13" colspan="3"></td>
                                              </tr>
 
 
@@ -537,7 +567,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="10" room="5"></td>
                                                  <td class="color-2 preview-hover" time="10" room="6"></td>
                                                  <td class="color-2 preview-hover" time="10" room="7"></td>
-                                                 <td class="color-2 preview-hover" time="9" room="14"></td>
+                                                 <td class="color-2 preview-hover" time="10" room="14"></td>
                                              </tr>
                                              </tbody>
                                          </table>
@@ -610,8 +640,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                    </div>
                                                    <input id="day2" onchange="updateAvailability()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
                                                       <?php
-                                                         if(isset($_GET['date']) OR isset($_POST['date'])) {
-                                                             $date_tmp = ($_GET['date'] ?? $_POST['date']);
+                                                         if(isset($get_date) OR isset($_POST['date'])) {
+                                                             $date_tmp = ($get_date ?? $_POST['date']);
                                                              echo date("d/m/Y", strtotime($date_tmp));
                                                          } elseif (isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
                                                          	echo $lesson_details['date'];
@@ -674,8 +704,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                               <?php
                                  if(isset($_GET['id'])) {
 
-                                     if ($lesson_details['date-type'] == 1) {
-                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date"'; if (isset($_GET['date'])) { echo " value=" . $_GET['date'];} echo ' formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
+                                     if ($lesson_details['date-type'] == 1 && isset($get_date)) {
+                                         echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date" value="' . $get_date . '" formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
                                          echo '<button style="float:right;" type="button summit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
 
                                      } else {
@@ -775,9 +805,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
               let description = $("#helping");
               let color_picker = $("#color-picker");
-              let name = $("#name");
+              //let name = $("#name");
 
-              name.attr("maxlength", "30");
               description.removeAttr("disabled");
               color_picker.removeAttr("disabled");
 
@@ -792,14 +821,13 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   }
               } else if (time === "12") {
                   color_picker.attr("disabled", true);
-                  name.attr("maxlength", "50");
                   if (room === "11" || room === "12" || room === "13") {
                       description.attr("disabled", true);
                   }
               }
           }
 
-          $(document).ready(function(){
+          $(document).ready(function() {
 
               let time = $('#time').val();
               let location = $('#location').val();

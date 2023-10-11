@@ -148,28 +148,27 @@ if($showRegisterFormular) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico">
+    <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 
 
 
     <title>Register</title>
 
 
-
-
       <!-- Simple bar CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css?version=<?php echo $version; ?>">
       <!-- Fonts CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/overpass.css">
+      <link href="<?php echo $relative_path; ?>/css/overpass.css?version=<?php echo $version; ?>" rel="stylesheet">
       <!-- Icons CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css?version=<?php echo $version; ?>">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css?version=<?php echo $version; ?>">
       <!-- Date Range Picker CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
       <!-- App CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
       <!-- Custom CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
 
 
 
@@ -292,7 +291,7 @@ if ($showEmailValidate) {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="icon" href="../favicon.ico">
+        <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 
 
 
@@ -301,18 +300,20 @@ if ($showEmailValidate) {
 
 
         <!-- Simple bar CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css?version=<?php echo $version; ?>">
         <!-- Fonts CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/overpass.css">
+        <link href="<?php echo $relative_path; ?>/css/overpass.css?version=<?php echo $version; ?>" rel="stylesheet">
         <!-- Icons CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css?version=<?php echo $version; ?>">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css?version=<?php echo $version; ?>">
         <!-- Date Range Picker CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
         <!-- App CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
         <!-- Custom CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
+
 
     </head>
     <body class="light">
@@ -365,7 +366,7 @@ if ($showEmailSend) {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="icon" href="../favicon.ico">
+        <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 
 
 
@@ -374,18 +375,19 @@ if ($showEmailSend) {
 
 
         <!-- Simple bar CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css?version=<?php echo $version; ?>">
         <!-- Fonts CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/overpass.css">
+        <link href="<?php echo $relative_path; ?>/css/overpass.css?version=<?php echo $version; ?>" rel="stylesheet">
         <!-- Icons CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css?version=<?php echo $version; ?>">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css?version=<?php echo $version; ?>">
         <!-- Date Range Picker CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
         <!-- App CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css" id="lightTheme">
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css" id="darkTheme" disabled>
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
         <!-- Custom CSS -->
-        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
+        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
 
     </head>
     <body class="light">
