@@ -51,12 +51,12 @@ function UpdateOrInsertLesson(
                 $identifier,
                 $date_type,
                 $new_date,
-                EncodeToJson($new_name),
-                EncodeToJson($new_description),
+                CodeToJson($new_name),
+                CodeToJson($new_description),
                 $new_location,
                 $new_time,
                 $new_box_color,
-                EncodeToJson($new_notes),
+                CodeToJson($new_notes),
                 $new_assigned_user_id,
                 $user_that_made_the_change,
                 $id
@@ -83,12 +83,12 @@ function UpdateOrInsertLesson(
                 $identifier,
                 $date_type,
                 $new_date,
-                EncodeToJson($new_name),
-                EncodeToJson($new_description),
+                CodeToJson($new_name),
+                CodeToJson($new_description),
                 $new_location,
                 $new_time,
                 $new_box_color,
-                EncodeToJson($new_notes),
+                CodeToJson($new_notes),
                 $new_assigned_user_id,
                 $user_that_made_the_change
             ]);
@@ -306,8 +306,8 @@ function UpdateUser($id, $vorname, $nachname, $email, $permission_level, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname, email = :email, permission_level = :permission_level WHERE id = :id");
     $statement->execute(array(
         'id' => $id,
-        'vorname' => EncodeToJson($vorname),
-        'nachname' => EncodeToJson($nachname),
+        'vorname' => CodeToJson($vorname),
+        'nachname' => CodeToJson($nachname),
         'email' => $email,
         'permission_level' => $permission_level
     ));
@@ -326,8 +326,8 @@ function UpdateUsername($id, $vorname, $nachname, $pdo) {
     $statement = $pdo->prepare("UPDATE users SET vorname = :vorname, nachname = :nachname WHERE id = :id");
     $statement->execute(array(
         'id' => $id,
-        'vorname' => EncodeToJson($vorname),
-        'nachname' => EncodeToJson($nachname)
+        'vorname' => CodeToJson($vorname),
+        'nachname' => CodeToJson($nachname)
     ));
     return $statement->rowCount();
 }
@@ -336,8 +336,8 @@ function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_lev
     $statement->execute(array(
         'email' => $email,
         'passwort' => $passwort_hash,
-        'vorname' => EncodeToJson($vorname),
-        'nachname' => EncodeToJson($nachname),
+        'vorname' => CodeToJson($vorname),
+        'nachname' => CodeToJson($nachname),
         'permission_level' => $permission_level
     ));
 }
@@ -635,7 +635,7 @@ function GetAllUsersAndPrintForSelect($pdo, $OwnId, $IdToSelect): void {
         } else {
             echo "<option value='";
         }
-        echo $other_users['id'] . "'>" . $other_users['vorname'] . " " . $other_users['nachname'];
+        echo $other_users['id'] . "'>" . DecodeFromJson($other_users['vorname']) . " " . DecodeFromJson($other_users['nachname']);
         if ($other_users['id'] == $OwnId) {
             echo " (Du selbst)";
         }
@@ -718,7 +718,7 @@ function SetSettingWithSuffix($setting, $suffix, $value, $pdo): bool|string {
         ));
         return true;
     } catch (PDOException $e) {
-        return "Fehler beim Löschen: " . $e->getMessage();
+        return "Fehler beim Erstellen: " . $e->getMessage();
 
 
     }
@@ -732,7 +732,7 @@ function SetSetting($setting, $value, $pdo): bool|string {
         ));
         return true;
     } catch (PDOException $e) {
-        return "Fehler beim Löschen: " . $e->getMessage();
+        return "Fehler beim Erstellen: " . $e->getMessage();
 
 
     }

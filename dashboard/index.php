@@ -1,5 +1,7 @@
-    <?php
-		$include_path = __DIR__ . "/..";
+<?php
+        global $relative_path, $version, $webroot;
+        $include_path = __DIR__ . "/..";
+        $mte_needed = true;
         require $include_path . "/dependencies/config.php";
         require $include_path . "/dependencies/mysql.php";
         require $include_path . "/dependencies/framework.php";
@@ -14,7 +16,6 @@
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 	
     <title>Übersicht</title>
-
 
       <!-- Simple bar CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css?version=<?php echo $version; ?>">
@@ -34,7 +35,8 @@
   <body class="vertical  light  ">
     <div class="wrapper">
       
-	  <?php 
+	  <?php
+
 		$keep_pdo = true;
       $permission_needed = 0;
 		include $include_path . "/include/nav.php";

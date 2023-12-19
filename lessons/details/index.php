@@ -1,5 +1,4 @@
 <?php
-global $create_lessons_for_others;
 $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
@@ -109,8 +108,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              if($new_assigned_user_id == "" OR $permission_level < $create_lessons_for_others) {
                  $new_assigned_user_id = $id;
              }
-             if (!EncodeToJson($new_name . $new_description)) {
-                 if (!EncodetoJson($new_name)) {
+             if (!CodeToJson($new_name . $new_description)) {
+                 if (!CodeToJson($new_name)) {
                      $error = "Der Name des Angebotes enthält ein Zeichen das nicht abgespeichert werden konnte.";
                  } else {
                      $error = "Die Beschreibung des Angebotes enthält ein Zeichen das nicht abgespeichert werden konnte.";
@@ -124,60 +123,60 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      //    Redirect("./?id=$dub_id&error=1");
                      //}
 
-             } elseif (!isset($_GET['error'])) {
-                 if (isset($dub_id)) {
-
-                     UpdateOrInsertLesson("create", $pdo, "",
-                         $dub_id,
-                         "2",
-                         $plan_date,
-                         $new_name,
-                         $new_description,
-                         $new_location,
-                         $new_time,
-                         $new_box_color,
-                         $new_notes,
-                         $new_assigned_user_id,
-                         $_SESSION['asl_userid']
-                     );
-                     Redirect($return_to);
-                 }
-                 // Update Lesson
-                 if (isset($_POST["update_lesson_with_id"])) {
-
-                     UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], null,
-                         $date_type,
-                         $new_date,
-                         $new_name,
-                         $new_description,
-                         $new_location,
-                         $new_time,
-                         $new_box_color,
-                         $new_notes,
-                         $new_assigned_user_id,
-                         $_SESSION['asl_userid']
-                     );
-
-                     Redirect($return_to);
-
-                     // Create Lesson
-                 } elseif (($_POST['save'] ?? 0) == "1") {
-
-                     UpdateOrInsertLesson("create", $pdo, "", null,
-                         $date_type,
-                         $new_date,
-                         $new_name,
-                         $new_description,
-                         $new_location,
-                         $new_time,
-                         $new_box_color,
-                         $new_notes,
-                         $new_assigned_user_id,
-                         $_SESSION['asl_userid']
-                     );
-                     Redirect($return_to);
-                 }
              }
+             if (isset($dub_id)) {
+
+                 UpdateOrInsertLesson("create", $pdo, "",
+                     $dub_id,
+                     "2",
+                     $plan_date,
+                     $new_name,
+                     $new_description,
+                     $new_location,
+                     $new_time,
+                     $new_box_color,
+                     $new_notes,
+                     $new_assigned_user_id,
+                     $_SESSION['asl_userid']
+                 );
+                 Redirect($return_to);
+             }
+             // Update Lesson
+             if (isset($_POST["update_lesson_with_id"])) {
+
+                 UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], null,
+                     $date_type,
+                     $new_date,
+                     $new_name,
+                     $new_description,
+                     $new_location,
+                     $new_time,
+                     $new_box_color,
+                     $new_notes,
+                     $new_assigned_user_id,
+                     $_SESSION['asl_userid']
+                 );
+
+                 Redirect($return_to);
+
+                 // Create Lesson
+             } elseif (($_POST['save'] ?? 0) == "1") {
+
+                 UpdateOrInsertLesson("create", $pdo, "", null,
+                     $date_type,
+                     $new_date,
+                     $new_name,
+                     $new_description,
+                     $new_location,
+                     $new_time,
+                     $new_box_color,
+                     $new_notes,
+                     $new_assigned_user_id,
+                     $_SESSION['asl_userid']
+                 );
+                 Redirect($return_to);
+             }
+
          }
 
          if (isset($_GET['disable_enable_lesson'])) {
@@ -282,7 +281,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="name">Name des Angebotes</label>
-                                       <input name="name" type="text" id="name" class="form-control" placeholder="Name des Angebotes" value="<?php echo ($lesson_details['name'] ?? '');?>" required>
+                                       <input pattern='[^"]*' title="Anführungszeichen sind nicht erlaubt!" name="name" type="text" id="name" class="form-control" placeholder="Name des Angebotes" value="<?php echo ($lesson_details['name'] ?? '');?>" required>
                                        </input>
                                     </div>
                                  </div>
@@ -290,7 +289,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="col-md-6">
                                     <div class="form-group mb-3">
                                        <label for="helping">Weitere Beschreibung</label>
-                                       <input name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." value="<?php echo ($lesson_details['description'] ?? '');?>">
+                                       <input pattern='[^"]*' title="Anführungszeichen sind nicht erlaubt!" name="description" type="text" id="helping" class="form-control" placeholder="Wenn du dein Angebot genauer beschreiben möchtest, kannst du das einfach hier machen." value="<?php echo ($lesson_details['description'] ?? '');?>">
                                     </div>
                                  </div>
                               </div>

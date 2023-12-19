@@ -1,10 +1,12 @@
 <?php
+
 $include_path = __DIR__ . "/..";
+$current_day = $_POST['date'];
 require_once $include_path . "/dependencies/config.php";
 require_once  $include_path . "/dependencies/mysql.php";
 require_once  $include_path . "/dependencies/framework.php";
 
-$current_day = $_POST['date'];
+
 ?>
 <div class="alert-message col-12 mb-4">
 
