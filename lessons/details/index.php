@@ -371,8 +371,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-1 db_text rooms"><b class="bold">Extern</b></td>
                                                  <td class="color-1 db_text rooms"><b class="bold">Ext.</b></td>
                                              </tr>
-
-
                                              <tr class="">
 
                                                  <td class="color-6 no_border">
@@ -406,12 +404,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="6" room="3" rowspan="2"></td>
                                                  <td class="color-2 preview-hover" time="6" room="4" rowspan="2"></td>
                                                  <td class="color-2 preview-hover" time="6" room="5" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="13" room="6" rowspan="6"></td>
-                                                 <td class="color-2 preview-hover" time="13" room="7" rowspan="6"></td>
-                                                 <td class="color-2 preview-hover" time="13" room="14" rowspan="6"></td>
+                                                 <td class="color-2 preview-hover" time="6" room="6" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="6" room="8" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="6" room="14" rowspan="2"></td>
                                              </tr>
-
-
                                              <tr class="">
 
                                                  <td class="color-6 no_border" rowspan="2">
@@ -421,8 +417,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="3" room="1" rowspan="2"></td>
                                                  <td class="color-1 preview-hover" time="3" room="9" rowspan="2"></td>
                                              </tr>
-
-
                                              <tr class="">
 
                                                  <td class="color-6 no_border">
@@ -434,9 +428,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="7" room="3"></td>
                                                  <td class="color-2 preview-hover" time="7" room="4"></td>
                                                  <td class="color-2 preview-hover" time="7" room="5" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="7" room="6" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="7" room="8" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="7" room="14" rowspan="2"></td>
                                              </tr>
-
-
                                              <tr class="">
 
                                                  <td class="color-6 no_border">
@@ -455,8 +450,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="8" room="3" rowspan="3"></td>
                                                  <td class="color-2 preview-hover" time="8" room="4" rowspan="3"></td>
                                              </tr>
-
-
                                              <tr class="">
 
                                                  <td class="color-6 no_border">
@@ -467,6 +460,9 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="4" room="1"></td>
                                                  <td class="color-1 preview-hover" time="4" room="9"></td>
                                                  <td class="color-2 preview-hover" time="8" room="5" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="6" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="8" rowspan="2"></td>
+                                                 <td class="color-2 preview-hover" time="8" room="14" rowspan="2"></td>
                                              </tr>
 
                                              <tr class="">
@@ -512,7 +508,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="9" room="4"></td>
                                                  <td class="color-2 preview-hover" time="9" room="5"></td>
                                                  <td class="color-2 preview-hover" time="9" room="6"></td>
-                                                 <td class="color-2 preview-hover" time="9" room="7"></td>
+                                                 <td class="color-2 preview-hover" time="9" room="8"></td>
                                                  <td class="color-2 preview-hover" time="5" room="14"></td>
                                              </tr>
 
@@ -565,7 +561,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                                  <td class="color-2 preview-hover" time="10" room="4"></td>
                                                  <td class="color-2 preview-hover" time="10" room="5"></td>
                                                  <td class="color-2 preview-hover" time="10" room="6"></td>
-                                                 <td class="color-2 preview-hover" time="10" room="7"></td>
+                                                 <td class="color-2 preview-hover" time="10" room="8"></td>
                                                  <td class="color-2 preview-hover" time="10" room="14"></td>
                                              </tr>
                                              </tbody>

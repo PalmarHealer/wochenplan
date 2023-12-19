@@ -114,14 +114,10 @@ require_once  $include_path . "/dependencies/framework.php";
         <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 3, $pdo, $webroot); ?></td>
         <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 4, $pdo, $webroot); ?></td>
         <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 5, $pdo, $webroot); ?></td>
-        <td class="color-2 db_text" rowspan="6"><?php PrintLessonToPlan($current_day, 13, 6, $pdo, $webroot); ?></td>
-        <td class="color-2 db_text" rowspan="6"><?php PrintLessonToPlan($current_day, 13, 7, $pdo, $webroot); ?></td>
-        <td class="color-2 db_text" rowspan="6"><?php PrintLessonToPlan($current_day, 13, 14, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 6, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 8, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 6, 14, $pdo, $webroot); ?></td>
     </tr>
-
-
-
-
     <tr class="small_piece">
 
         <td class="color-6 no_border" rowspan="2">
@@ -131,8 +127,6 @@ require_once  $include_path . "/dependencies/framework.php";
         <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 3, 1, $pdo, $webroot); ?></td>
         <td class="color-1 db_text" rowspan="2"><?php PrintInfo($current_day, 3, 9, $pdo, $webroot); ?></td>
     </tr>
-
-
     <tr class="macro_piece">
 
         <td class="color-6 no_border">
@@ -144,12 +138,10 @@ require_once  $include_path . "/dependencies/framework.php";
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 3, $pdo, $webroot); ?></td>
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 7, 4, $pdo, $webroot); ?></td>
         <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 7, 5, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 7, 6, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 7, 8, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 7, 14, $pdo, $webroot); ?></td>
     </tr>
-
-
-
-
-
     <tr class="macro_piece">
 
         <td class="color-6 no_border">
@@ -168,9 +160,6 @@ require_once  $include_path . "/dependencies/framework.php";
         <td class="color-2 db_text" rowspan="3"><?php PrintLessonToPlan($current_day, 8, 3, $pdo, $webroot); ?></td>
         <td class="color-2 db_text" rowspan="3"><?php PrintLessonToPlan($current_day, 8, 4, $pdo, $webroot); ?></td>
     </tr>
-
-
-
     <tr class="small_piece">
 
         <td class="color-6 no_border">
@@ -183,6 +172,9 @@ require_once  $include_path . "/dependencies/framework.php";
 
 
         <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 5, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 6, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 8, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text" rowspan="2"><?php PrintLessonToPlan($current_day, 8, 14, $pdo, $webroot); ?></td>
     </tr>
 
 
@@ -229,10 +221,9 @@ require_once  $include_path . "/dependencies/framework.php";
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 4, $pdo, $webroot); ?></td>
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 5, $pdo, $webroot); ?></td>
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 6, $pdo, $webroot); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 7, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 9, 8, $pdo, $webroot); ?></td>
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 5, 14, $pdo, $webroot); ?></td>
     </tr>
-
     <tr class="macro_piece">
 
         <td class="color-6 no_border">
@@ -251,8 +242,6 @@ require_once  $include_path . "/dependencies/framework.php";
         <td class="color-2 db_text" colspan="1"><?php PrintLessonToPlan($current_day, 15, 6, $pdo, $webroot); ?></td>
         <td class="color-2 db_text" colspan="2"><?php PrintLessonToPlan($current_day, 15, 8, $pdo, $webroot); ?></td>
     </tr>
-
-
     <tr class="small_piece">
         <td class="white-col align-bottom" rowspan="3" colspan="3">
             <span onclick="openFullscreen()"    class="plan_btn open_fullscreen fe fe-32 fe-maximize-2 pointer"></span>
@@ -294,7 +283,7 @@ require_once  $include_path . "/dependencies/framework.php";
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 4, $pdo, $webroot); ?></td>
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 5, $pdo, $webroot); ?></td>
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 6, $pdo, $webroot); ?></td>
-        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 7, $pdo, $webroot); ?></td>
+        <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 8, $pdo, $webroot); ?></td>
         <td class="color-2 db_text"><?php PrintLessonToPlan($current_day, 10, 14, $pdo, $webroot); ?></td>
     </tr>
     </tbody>
