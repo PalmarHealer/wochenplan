@@ -173,9 +173,7 @@ if (!isset($_GET["date"])) {
   </body>
 
 
-
-
-  <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
+  <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
   <script>
       <?php
       if (isset($_GET['debug'])) {

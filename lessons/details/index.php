@@ -730,35 +730,35 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
          <!-- main -->
       </div>
       <!-- .wrapper -->
-      <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/popper.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/moment.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/simplebar.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/daterangepicker.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/config.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/d3.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/topojson.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/datamaps.all.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/datamaps-zoomto.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/datamaps.custom.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/Chart.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/gauge.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/jquery.sparkline.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/apexcharts.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/apexcharts.custom.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/jquery.mask.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/select2.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/jquery.steps.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/jquery.validate.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/jquery.timepicker.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/dropzone.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/uppy.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/quill.min.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
-      <script src="<?php echo $relative_path; ?>/js/coloris.min.js"></script>
+      <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/popper.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/moment.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/simplebar.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/daterangepicker.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/d3.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/topojson.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/datamaps.all.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/datamaps-zoomto.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/datamaps.custom.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/Chart.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/gauge.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/jquery.sparkline.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/apexcharts.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/apexcharts.custom.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/jquery.mask.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/select2.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/jquery.steps.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/jquery.validate.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/jquery.timepicker.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/dropzone.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/uppy.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/quill.min.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/coloris.min.js?version=<?php echo $version; ?>"></script>
       <!-- Custom JS code -->
       <script>
           function updateAvailability() {

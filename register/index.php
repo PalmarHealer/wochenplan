@@ -259,16 +259,16 @@ if($showRegisterFormular) {
         </form>
       </div>
     </div>
-    <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/popper.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/moment.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js"></script>
-    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js'></script>
-    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js'></script>
-    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/config.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/popper.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/moment.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js?version=<?php echo $version; ?>"></script>
+    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js?version=<?php echo $version; ?>'></script>
+    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js?version=<?php echo $version; ?>'></script>
+    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
   </body>
 </html>
 
@@ -337,16 +337,16 @@ if ($showEmailValidate) {
             </form>
         </div>
     </div>
-    <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/popper.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/moment.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js"></script>
-    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js'></script>
-    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js'></script>
-    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/config.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/popper.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/moment.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js?version=<?php echo $version; ?>"></script>
+    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js?version=<?php echo $version; ?>'></script>
+    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js?version=<?php echo $version; ?>'></script>
+    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
     </body>
     </html>
 
@@ -406,16 +406,16 @@ if ($showEmailSend) {
             </form>
         </div>
     </div>
-    <script src="<?php echo $relative_path; ?>/js/jquery.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/popper.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/moment.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js"></script>
-    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js'></script>
-    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js'></script>
-    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/config.js"></script>
-    <script src="<?php echo $relative_path; ?>/js/apps.js"></script>
+    <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/popper.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/moment.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/bootstrap.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/simplebar.min.js?version=<?php echo $version; ?>"></script>
+    <script src='<?php echo $relative_path; ?>/js/daterangepicker.js?version=<?php echo $version; ?>'></script>
+    <script src='<?php echo $relative_path; ?>/js/jquery.stickOnScroll.js?version=<?php echo $version; ?>'></script>
+    <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
 
     </body>
     </html>
