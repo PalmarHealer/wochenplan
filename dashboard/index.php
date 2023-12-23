@@ -70,9 +70,31 @@
                   </div>
               </div>
                 <div class="row my-2">
-                    <?php
-                    PrintDay(date("Y-m-d",time()), "Heute (" . $weekday_names[(new DateTime(date("Y-m-d",time())))->format('N')] . ")");
-                    ?>
+
+                    <div onclick="window.location='../plan/week'" class="pointer align-items-center col-md-4 center2">
+                        <div class="card mb-4 shadow">
+                            <div class="card-body my-n3">
+                                <div class="row align-items-center">
+                                    <div class="col-3 text-center">
+                          <span class="circle circle-lg bg-light">
+                            <i class="fe fe-calendar fe-24 text-primary"></i>
+                          </span>
+                                    </div>
+                                    <div class="col">
+                                        <a href="#">
+                                            <h1 class="h5 mt-4 mb-1">Wochenübersicht</h1>
+                                        </a>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="../plan/week" class="d-flex justify-content-between text-muted"><span>Angebote ansehen</span><i
+                                            class="fe fe-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="row my-4">

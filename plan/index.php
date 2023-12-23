@@ -183,9 +183,9 @@ if (!isset($_GET["date"])) {
         echo "reloadData();";
       }
       elseif (!isset($_GET['show_loading'])) {
-        echo "setTimeout(hide_btn, 6000);";
-        echo "reloadData();";
-        echo "setInterval(reloadData, 6000);";
+          echo "setTimeout(hide_btn, 6000);";
+          echo "reloadData();";
+          echo "setInterval(reloadData, 6000);";
       }
       else {
         echo '$(document).ready(function() {
@@ -260,8 +260,8 @@ if (!isset($_GET["date"])) {
           // Konvertieren Sie das Datum in das erforderliche Format "YYYY-MM-DD"
           const formattedDate = date.toISOString().slice(0, 10);
 
-          // Erstellen Sie die neue URL mit dem aktualisierten Datum und dem Parameter "skip"
-          const newUrl = window.location.origin + window.location.pathname + '?date=' + formattedDate + '&skip=1';
+          // Erstellen Sie die neue URL mit dem aktualisierten Datum
+          const newUrl = window.location.origin + window.location.pathname + '?date=' + formattedDate;
 
           // Aktualisieren Sie die URL der aktuellen Seite
           window.history.replaceState({}, document.title, newUrl);
@@ -276,10 +276,14 @@ if (!isset($_GET["date"])) {
       function reloadData(dateParam) {
         const urlParams = new URLSearchParams(window.location.search);
         const dateValue = dateParam || urlParams.get('date');
-        $.ajax({
+          let modeData = urlParams.get('mode') || 'normal';
+          $.ajax({
           url: "./reload<?php echo ($_GET['version'] ?? '2') ?>.php",
           type: "POST",
-          data: { date: dateValue },
+              data: {
+                  date: dateValue,
+                  mode: modeData
+              },
           cache: false,
           success: function(data) {
             console.log("Data reloaded");

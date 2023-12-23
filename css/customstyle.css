@@ -270,8 +270,14 @@ body {
 }
 
 .full {
+    position: relative;
     width: 100%;
     height: 100%;
+}
+
+.full-week {
+    position: relative;
+    width: 100%;
 }
 
 .piece {
@@ -353,10 +359,6 @@ body {
 }
 .close_fullscreen {
     display: none;
-}
-
-.full {
-    position: relative;
 }
 
 .days {

@@ -343,7 +343,7 @@ function GetDaysOfWeek($date): array {
     $days_to_add = $week_day == 0 ? 1 : ($week_day == 6 ? 2 : 0);
     $next_monday = date('Y-m-d', strtotime("+$days_to_add day", $input_date));
 
-    $days[] = $next_monday;
+    $days[] = date("Y-m-d", strtotime("monday this week", strtotime($next_monday)));
     $days[] = date("Y-m-d", strtotime("tuesday this week", strtotime($next_monday)));
     $days[] = date("Y-m-d", strtotime("wednesday this week", strtotime($next_monday)));
     $days[] = date("Y-m-d", strtotime("thursday this week", strtotime($next_monday)));
