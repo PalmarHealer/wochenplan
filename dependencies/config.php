@@ -94,7 +94,7 @@ $weekday_names = array(
     6 => 'Sa',
     7 => 'So'
 );
-//Weekdays in German complete
+//Weekday names (Default language is German)
 $weekday_names_long = array(
     1 => 'Montag',
     2 => 'Dienstag',
@@ -157,7 +157,7 @@ $times = array(
 
 //Placeholders
 //you can use them to replace something
-//the placeholder are written in framework.php in line 27
+//the placeholder are written in framework.php in line 136
 
 
 
@@ -170,10 +170,6 @@ $relative_path = $webroot;
 
 $header = "true";
 
-// state.version.feature.patch/fix
-// States:
-// 0: Beta
-// 1: Tested
-// 2: Stable
-// 3: Release
-$version = "1.4.0.1";
+
+//databaseVersion.codeVersion.patch/fix
+$version = "1.4.1";
