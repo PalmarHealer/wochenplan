@@ -153,7 +153,7 @@ if ($permission_level >= $create_lessons) {
         <div class="bottom-navbar-elements btn-box w-100 mt-4 mb-1">
             <div onclick="window.location='https://nauren.de'"                          class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/nauren.svg"  alt="Nauren" class="logo-footer"></div>
             <div                                                                        class="logo-footer-div"><img src="<?php echo $relative_path; ?>/img/manu.svg" alt="Manu-Logo" class="logo-footer-manu"></div>
-            <div                                                                        class="logo-footer-div"><img src="<?php echo $relative_path; ?>/img/phpstorm.svg"  alt="PayPal" class="logo-footer"></div>
+            <div onclick="window.location='https://www.jetbrains.com/phpstorm/'"        class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/phpstorm.svg"  alt="PayPal" class="logo-footer"></div>
             <div onclick="window.location='https://github.com/PalmarHealer/wochenplan'" class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/github.svg"  alt="GitHub" class="logo-footer"></div>
         </div>
     </nav>
