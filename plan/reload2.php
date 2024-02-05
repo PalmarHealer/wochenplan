@@ -250,8 +250,8 @@ require_once  $include_path . "/dependencies/framework.php";
             <?php
             if (!($_POST['mode'] == "week")) {
                 echo '
-            <span onclick="updateDateInUrl(-1)" class="plan_btn fe fe-24 fe-arrow-left pointer"></span>
-            <span onclick="updateDateInUrl(1)"  class="plan_btn fe fe-24 fe-arrow-right pointer"></span>
+            <span onclick="updateDateInUrl(-1, this)" class="plan_btn fe fe-24 fe-arrow-left pointer"></span>
+            <span onclick="updateDateInUrl(1, this)"  class="plan_btn fe fe-24 fe-arrow-right pointer"></span>
             <span onclick="customPrint()" class="plan_btn fe fe-24 fe-download pointer"></span>';
             }
             if (IsPermitted($create_lessons, $permission_level) and !($_POST['mode'] == "week")) {
