@@ -263,7 +263,7 @@ function PrintInfo($date, $time, $room, $pdo, $webroot): void
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return;
     }
-    $value = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo), $date);
+    $value = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)), $date);
 
     $user_names = ExplodeStringToArray($value);
     $sick_notes = GetAllSickNotesRaw($pdo);
@@ -300,7 +300,7 @@ function surroundString($originalString, $stringToSurround) {
 }
 
 function ExplodeStringToArray($string): array {
-    $string = preg_replace('/[^A-Za-z0-9\-]/', ' ', $string);
+    $string = preg_replace('/[^A-Za-z0-9\-üöä]/', ' ', $string);
 
     $words = explode(' ', $string);
     $return = array();
