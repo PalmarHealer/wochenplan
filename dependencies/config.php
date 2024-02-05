@@ -172,4 +172,4 @@ $header = "true";
 
 
 //databaseVersion.codeVersion.patch/fix
-$version = "1.4.1";
+$version = "1.4.2";

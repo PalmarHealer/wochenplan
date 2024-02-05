@@ -97,7 +97,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
              $new_email = ($_POST['email'] ?? '');
              $new_permission_level = ($_POST['permission_level'] ?? '');
              $passwort = ($_POST['password'] ?? '');
-             UpdateUser($_POST['update'], CodeToJson($new_vorname), CodeToJson($new_nachname), $new_email, $new_permission_level, $pdo);
+             UpdateUser($_POST['update'], $new_vorname, $new_nachname, $new_email, $new_permission_level, $pdo);
              Redirect("../");
          }
 
