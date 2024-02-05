@@ -150,7 +150,7 @@ function replacePlaceholders($string, $date): string {
 }
 
 function GetDataFromDBIfNotExistGetFromAPI($date, $type, $APIUrl, $APISecret, $pdo) {
-    if ($type == "mte2") {
+    if ($type == "mte") {
         $DBString = GetSettingWithSuffix("mte", $date, $pdo);
         if (!isset($DBString) OR $DBString == "") {
             $data = json_decode(RequestAPI($APIUrl, $APISecret, $date), true);
