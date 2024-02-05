@@ -702,6 +702,23 @@ function GetSetting($setting, $pdo) {
 }
 
 
+function GetSettingIDWithSuffix($setting, $suffix, $pdo)
+{
+    $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ? AND suffix = ?");
+    $information->execute(array($setting, $suffix));
+    return $information->fetch()["id"];
+
+}
+
+function GetSettingID($setting, $pdo)
+{
+    $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ?");
+    $information->execute(array($setting));
+    return $information->fetch()["id"];
+
+}
+
+
 function GetSettingWithSuffix($setting, $suffix, $pdo) {
     $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ? AND suffix = ?");
     $information->execute(array($setting, $suffix));
@@ -724,6 +741,22 @@ function SetSettingWithSuffix($setting, $suffix, $value, $pdo): bool|string {
     }
 }
 function SetSetting($setting, $value, $pdo): bool|string {
+    try {
+        $statement = $pdo->prepare("INSERT INTO settings (setting, value) VALUES (:setting, :value)");
+        $statement->execute(array(
+            'setting' => $setting,
+            'value' => $value
+        ));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Erstellen: " . $e->getMessage();
+
+
+    }
+}
+
+function UpdateSetting($id, $value, $pdo): bool|string
+{
     try {
         $statement = $pdo->prepare("INSERT INTO settings (setting, value) VALUES (:setting, :value)");
         $statement->execute(array(
