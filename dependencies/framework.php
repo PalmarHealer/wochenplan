@@ -171,6 +171,7 @@ function CodeToJson($string):string {
     return trim(json_encode($string), '"');
 }
 function DecodeFromJson($string):string {
+    $string ??= "Da ist irgendwo was schiefgelaufen...";
     return json_decode("\"" . $string . "\"");
 }
 
