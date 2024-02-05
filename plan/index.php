@@ -244,7 +244,7 @@ if (!isset($_GET["date"])) {
           $(".close_fullscreen").hide();
       }
 
-      function updateDateInUrl(daysToAddOrSubtract) {
+      function updateDateInUrl(daysToAddOrSubtract, element) {
           // Holen Sie das Datum aus der GET-Variable "date" im Format "YYYY-MM-DD"
           const urlParams = new URLSearchParams(window.location.search);
           const dateString = urlParams.get('date');
@@ -264,8 +264,14 @@ if (!isset($_GET["date"])) {
           // Aktualisieren Sie die URL der aktuellen Seite
           window.history.replaceState({}, document.title, newUrl);
 
+          //TODO: Animate/Rotate loader icon
+          // Entfernen Sie alle Klassen und fügen Sie die gewünschten Klassen hinzu
+          $(element).removeClass().addClass('plan_btn fe fe-24 fe-loader disabled_cursor');
+
+
           reloadData(formattedDate);
       }
+
 
       function hide_btn() {
           $(".close_fullscreen").hide();
