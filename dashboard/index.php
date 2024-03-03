@@ -1,5 +1,4 @@
 <?php
-        global $relative_path, $version, $webroot;
         $include_path = __DIR__ . "/..";
         $mte_needed = true;
         require $include_path . "/dependencies/config.php";
