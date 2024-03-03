@@ -115,10 +115,6 @@ function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_dat
         return false;
     }
 }
-
-
-
-
 function GetLessonInfo($day, $time, $room, $info, $pdo) {
     $identifier = GetSetting("identifier", $pdo);
     $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? ORDER BY id DESC");
@@ -169,12 +165,6 @@ function GetLessonInfoByID($id, $info, $pdo) {
         return "Error loading data";
     }
 }
-
-
-
-
-
-
 function ProcessInformation($sl, $info) {
     if ($info == "id") {
         return $sl['id'];
@@ -386,7 +376,7 @@ function GetAllUsersAndPrintThem($pdo, $permission_level_names): void {
                         <span class="text-muted sr-only">Aktion</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="./?login-to-id='. $id . '">Anmelden als dieser</a>
+                        <a class="dropdown-item" href="./?login-to-id='. $id . '">Mit diesem Account Anmelden</a>
                         <a class="dropdown-item" href="./edit/?id='. $id . '">Bearbeiten</a>
                         <a class="dropdown-item" href="./edit/?delete='. $id . '">Löschen</a>
                     </div>
@@ -448,7 +438,6 @@ function DeleteSickNote($sickID, $pdo): bool|string {
         return "Fehler beim Löschen: " . $e->getMessage();
     }
 }
-
 function GetAllLessonsFromUserAndPrintThem($userid, $limit, $room_names, $times, $pdo, $webroot): void {
     $identifier = GetSetting("identifier", $pdo);
     $lessons = $pdo->prepare("SELECT * FROM angebot WHERE assigned_user_id = ? AND identifier = ? ORDER BY date ASC");
@@ -545,7 +534,6 @@ function GetAllLessons($room_names, $times, $pdo): void {
 
 
 }
-
 function NumberOfWeekToText($date_day): string {
     if ($date_day == "1") {
         return "Jeden Montag";
@@ -561,7 +549,6 @@ function NumberOfWeekToText($date_day): string {
         return "Fehler beim Laden des Datums";
     }
 }
-
 function GetAllSickNotes($pdo): void {
     $lessons = $pdo->prepare("SELECT * FROM sick");
     $lessons->execute();
@@ -692,7 +679,26 @@ function CreateTokenForPasswordResetAndSaveThem($userid, $pdo): string {
     ));
     return $token;
 }
+function GetLunchData($date, $pdo) {
+    $information = $pdo->prepare("SELECT * FROM lunchdata WHERE date = ? ORDER BY id DESC");
+    $information->execute(array($date));
+    return $information->fetch()["data"];
 
+}
+function SetLunchData($date, $value, $pdo): bool|string {
+    try {
+        $statement = $pdo->prepare("INSERT INTO lunchdata (date, data) VALUES (:date, :data)");
+        $statement->execute(array(
+            'date' => $date,
+            'data' => $value
+        ));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Erstellen: " . $e->getMessage();
+
+
+    }
+}
 
 function GetSetting($setting, $pdo) {
     $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ?");
@@ -700,8 +706,6 @@ function GetSetting($setting, $pdo) {
     return $information->fetch()["value"];
 
 }
-
-
 function GetSettingIDWithSuffix($setting, $suffix, $pdo)
 {
     $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ? AND suffix = ?");
@@ -709,7 +713,6 @@ function GetSettingIDWithSuffix($setting, $suffix, $pdo)
     return $information->fetch()["id"];
 
 }
-
 function GetSettingID($setting, $pdo)
 {
     $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ?");
@@ -717,8 +720,6 @@ function GetSettingID($setting, $pdo)
     return $information->fetch()["id"];
 
 }
-
-
 function GetSettingWithSuffix($setting, $suffix, $pdo) {
     $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ? AND suffix = ?");
     $information->execute(array($setting, $suffix));
@@ -754,8 +755,7 @@ function SetSetting($setting, $value, $pdo): bool|string {
 
     }
 }
-
-function UpdateSetting($id, $value, $pdo): bool|string
+function UpdateSetting($setting, $value, $pdo): bool|string
 {
     try {
         $statement = $pdo->prepare("INSERT INTO settings (setting, value) VALUES (:setting, :value)");
