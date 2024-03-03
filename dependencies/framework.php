@@ -3,7 +3,6 @@ require __DIR__ . "/config.php";
 
 use JetBrains\PhpStorm\NoReturn;
 
-
 global $mte_lunch_data;
 if (isset($current_day)) {
     $mte_lunch_data = GetDataFromDBIfNotExistGetFromAPI($current_day, "mte", $mte_url, $mte_secret, $pdo);
@@ -11,20 +10,13 @@ if (isset($current_day)) {
     $mte_lunch_data = "%mte%";
 }
 
-
-
 $old_url_array = explode("?", GetCurrentUrl());
 $old_url = $old_url_array[0];
 $new_url = "";
-if (isset($_SERVER['HTTP_REFERER'])) {
+if (isset($_SERVER['HTTP_REFERER']) OR $_SERVER['HTTP_REFERER'] != "") {
     $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
     $new_url = $new_url_array[0];
 }
-
-
-
-
-
 
 if (!isset($page)) {
     $page = "";
@@ -36,17 +28,9 @@ if(isset($_GET["logout"])) {
     }
 }
 
-
-
-
-
-
-
 if (!$page == "external") {
-
     session_start();
-
-//Überprüfe auf den 'Angemeldet bleiben'-Cookie
+    //Überprüfe auf den 'Angemeldet bleiben'-Cookie
     if (!isset($_SESSION['asl_userid']) && isset($_COOKIE['asl_identifier']) && isset($_COOKIE['asl_securitytoken'])) {
         $identifier = $_COOKIE['asl_identifier'];
         $securitytoken = $_COOKIE['asl_securitytoken'];
@@ -71,7 +55,6 @@ if (!$page == "external") {
         }
     }
 
-
     if (isset($_SESSION['asl_userid'])) {
         if (!GetUserByID($_SESSION['asl_userid'],"available", $pdo)) {
             Logout($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
@@ -84,7 +67,6 @@ if (!$page == "external") {
         Redirect($webroot . "/dashboard/?message=unauthorized");
     }
 
-
     $id = $_SESSION['asl_userid'];
     $permission_level = GetUserByID($id, "permission_level", $pdo);
     settype($permission_level, "int"); //Convert perm level in INT
@@ -93,32 +75,31 @@ if (!$page == "external") {
     $vorname = GetUserByID($id, "vorname", $pdo);
     $nachname = GetUserByID($id, "nachname", $pdo);
 
-
     //GetSetting("maintenance", $pdo);
-
 }
-
 
 //Framework functions
 function GetCurrentUrl(): string {
+    $current_url = "https://";
 
-    //Thanks to https://www.javatpoint.com/how-to-get-current-page-url-in-php
-    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-        $current_url = "https://";
-    else {
-        $current_url = "http://";
+    //$domain = $_SERVER['HTTP_HOST'];
+
+    //$domain = "wochenplan.aktive-schule-leipzig.de";
+
+    if (str_contains($domain, ':')) {
+        // Split the string by ":"
+        $parts = explode(':', $domain);
+        // Use the first part
+        $current_url.= $parts[0];
+    } else {
+        // If ":" is not present, use the original string
+        $current_url.= $domain;
     }
-    // Append the host(domain name, ip) to the URL.
-    //$current_url.= $_SERVER['HTTP_HOST'];
-    $current_url = "http://localhost:63342";
 
-    // Append the requested resource location to the URL
     $current_url.= $_SERVER['REQUEST_URI'];
-
 
     return $current_url;
 }
-
 
 function validateDate($date, $format = 'Y-m-d H:i:s'): bool {
 //Thanks to php.net for the code snippet https://www.php.net/manual/en/function.checkdate.php
@@ -150,13 +131,13 @@ function replacePlaceholders($string, $date): string {
 }
 
 function GetDataFromDBIfNotExistGetFromAPI($date, $type, $APIUrl, $APISecret, $pdo) {
-    if ($type == "mte") {
-        $DBString = GetSettingWithSuffix("mte", $date, $pdo);
+    if ($type == "mte2") {
+        $DBString = GetLunchData($date, $pdo);
         if (!isset($DBString) OR $DBString == "") {
             $data = json_decode(RequestAPI($APIUrl, $APISecret, $date), true);
 
             if ($data['available']) {
-                SetSettingWithSuffix("mte", $date, $data['lunch'], $pdo);
+                SetLunchData($date, $data['lunch'], $pdo);
             }
             //FIXME: Try to Remove the str replace entirely
             return DecodeFromJson(str_replace('"', '', $data['lunch']));
@@ -492,14 +473,14 @@ function RequestAPI($url, $secret, $date): string {
 }
 
 #[NoReturn] function Redirect($redirectURL): void {
-    header("Location: $redirectURL");
+    //header("Location: $redirectURL");
     echo "<script>window.location.href='$redirectURL';</script>";
     $pdo = null;
     exit();
 }
 
 #[NoReturn] function GoPageBack($Parameter): void {
-    header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
+    //header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
     echo "<script>history.back()</script>";
     $pdo = null;
     exit();
@@ -516,8 +497,4 @@ function RequestAPI($url, $secret, $date): string {
     Redirect($webroot);
 }
 
-
-
-
 //Functions framework end
-

@@ -63,7 +63,7 @@ $pdo = new PDO('mysql:host=localhost:3306;dbname=wochenplan', $db_user, $db_pass
 
 $keep_dpo = false;
 
-$domain = "http://localhost:63342/wochenplan"; //please also change that in framework.php line 15
+$domain = "http://localhost:63342/wochenplan";
 
 //here you can list all allowed domains that emails allowed to register
 $allowed_domains = array(
@@ -84,7 +84,7 @@ $sender = array(
     'name' => 'sender name'
 );
 
-//Weekdays in German
+//Weekdays in short (Default language is German)
 $weekday_names = array(
     1 => 'Mo',
     2 => 'Di',
@@ -172,4 +172,4 @@ $header = "true";
 
 
 //databaseVersion.codeVersion.patch/fix
-$version = "1.6.0";
+$version = "1.6.2";
