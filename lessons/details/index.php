@@ -61,7 +61,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              if ($user_permission_level >= $create_lessons_for_others) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  if ($return_to == null) {
-                     GoPageBack("");
+                     GoPageBack();
                  } else {
                      Redirect($return_to);
                  }
@@ -71,7 +71,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
 
              } else {
-                 GoPageBack("");
+                 GoPageBack();
              }
          }
          if(isset($old_url) AND isset($new_url) AND $new_url == $old_url) {
