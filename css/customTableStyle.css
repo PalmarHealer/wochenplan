@@ -1,0 +1,69 @@
+#tableContainer {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex; /* Flexbox für einfache Ausrichtung */
+    flex-direction: column; /* Anordnung der Buttons über der Tabelle */
+    align-items: center; /* Zentrierung der Buttons */
+}
+#editableTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+#editableTable td,
+#editableTable th {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    user-select: none;
+    width: 8%;
+    height: 4vh;
+}
+.selected {
+    filter: grayscale(60%) brightness(75%);
+    background-color: lightblue;
+}
+/* Stil für Zeilen- und Spaltenbeschriftungen */
+.Header {
+    border: none;
+    background-color: #f0f0f0;
+    padding: 5px;
+    font-weight: bold;
+    user-select: none;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.hideCell {
+    display: none;
+}
+#editableTable input[type="text"] {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: inherit;
+}
+#editableTable td.show-info {
+    position: relative;
+}
+
+#editableTable td.show-info::after {
+    content: " " attr(time) "  " attr(room);
+    font-family: "feather" !important;
+    font-weight: 900;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: small;
+    padding: 2px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
