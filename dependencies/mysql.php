@@ -261,17 +261,29 @@ function GetUserByEmail($Email, $InformationType, $pdo) {
 }
 function Identify($InformationType, $information) {
 
+
     if ($InformationType == "id") {
         return $information->fetch()["id"];
     }
     if ($InformationType == "vorname") {
-        return DecodeFromJson($information->fetch()["vorname"]);
+        $tmp = $information->fetch();
+        if (!is_array($tmp)) {
+            return("something went wrong");
+        }
+        return DecodeFromJson($tmp["vorname"]);
     }
     if ($InformationType == "nachname") {
-        return DecodeFromJson($information->fetch()["nachname"]);
+        $tmp = $information->fetch();
+        if (!is_array($tmp)) {
+            return("something went wrong");
+        }
+        return DecodeFromJson($tmp["nachname"]);
     }
     if ($InformationType == "name") {
         $tmp = $information->fetch();
+        if (!is_array($tmp)) {
+            return("something went wrong");
+        }
         return DecodeFromJson($tmp["vorname"] . " " . $tmp["nachname"]);
     }
     if ($InformationType == "email") {
@@ -703,27 +715,35 @@ function SetLunchData($date, $value, $pdo): bool|string {
 function GetSetting($setting, $pdo) {
     $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ?");
     $information->execute(array($setting));
-    return $information->fetch()["value"];
+    $settings = $information->fetchAll(PDO::FETCH_ASSOC);
 
+    if (count($settings) == 1) {
+        return $settings[0]["value"];
+    } else {
+        $result = array();
+        foreach ($settings as $row) {
+            $result[$row["suffix"]] = $row["value"];
+        }
+        return $result;
+    }
 }
-function GetSettingIDWithSuffix($setting, $suffix, $pdo)
-{
-    $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ? AND suffix = ?");
-    $information->execute(array($setting, $suffix));
-    return $information->fetch()["id"];
 
-}
-function GetSettingID($setting, $pdo)
-{
-    $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ?");
-    $information->execute(array($setting));
-    return $information->fetch()["id"];
 
-}
 function GetSettingWithSuffix($setting, $suffix, $pdo) {
     $information = $pdo->prepare("SELECT * FROM settings WHERE setting = ? AND suffix = ?");
     $information->execute(array($setting, $suffix));
-    return $information->fetch()["value"];
+    $settings = $information->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($settings) == 1) {
+        return $settings[0]["value"];
+    } else {
+        $result = array();
+        foreach ($settings as $row) {
+            $result[$row["suffix"]] = $row["value"];
+        }
+        return $result;
+    }
+
 
 }
 function SetSettingWithSuffix($setting, $suffix, $value, $pdo): bool|string {
@@ -755,14 +775,15 @@ function SetSetting($setting, $value, $pdo): bool|string {
 
     }
 }
-function UpdateSetting($setting, $value, $pdo): bool|string
-{
+function UpdateSettingWithSuffix($setting, $suffix, $value, $pdo): bool|string {
     try {
-        $statement = $pdo->prepare("INSERT INTO settings (setting, value) VALUES (:setting, :value)");
+        $statement = $pdo->prepare("UPDATE settings SET value = :value WHERE setting = :setting AND suffix = :suffix");
         $statement->execute(array(
             'setting' => $setting,
+            'suffix' => $suffix,
             'value' => $value
         ));
+        //return $statement->rowCount();
         return true;
     } catch (PDOException $e) {
         return "Fehler beim Erstellen: " . $e->getMessage();
