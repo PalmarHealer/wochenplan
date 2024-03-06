@@ -35,11 +35,25 @@ body {
 .display-inherit {
     display: inherit;
 }
+.display-flex {
+    display: flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -webkit-flex;
+}
+.display-contents {
+    display: contents;
+}
 
-.btn-margin-10 {
+.margin-10 {
     margin: 10px 10px 10px 10px;
 }
 
+.colordot {
+    width: 32px;
+    height: 32px;
+    border: thin solid #ced4da;
+}
 .logo {
     width: 50%;
     height: 50%;
@@ -330,6 +344,10 @@ body {
     text-align: center;
 }
 
+.right-self {
+    align: right;
+    float: right;
+}
 .right * {
     align: right;
     float: right;
