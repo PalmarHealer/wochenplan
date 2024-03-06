@@ -51,12 +51,12 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
 
              if ($user_permission_level >= $create_lessons_for_others) {
                  DeleteSickNote($sick_note_to_delete, $pdo);
-                 GoPageBack("");
+                 GoPageBack();
              } elseif ($_SESSION['asl_userid'] == GetSickNoteByID($sick_note_to_delete, "userid", $pdo) AND $user_permission_level >= $create_lessons) {
                  DeleteSickNote($sick_note_to_delete, $pdo);
-                 GoPageBack("");
+                 GoPageBack();
              } else {
-                 GoPageBack("");
+                 GoPageBack();
              }
          }
 
