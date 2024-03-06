@@ -73,7 +73,6 @@ if (!$page == "external") {
     $permission_level = GetUserByID($id, "permission_level", $pdo);
     settype($permission_level, "int"); //Convert perm level in INT
 
-    $email = GetUserByID($id, "email", $pdo);
     $vorname = GetUserByID($id, "vorname", $pdo);
     $nachname = GetUserByID($id, "nachname", $pdo);
 
@@ -84,7 +83,9 @@ if (!$page == "external") {
 function GetCurrentUrl(): string {
     $current_url = "https://";
 
-    //$domain = $_SERVER['HTTP_HOST'];
+    if (isset($_SERVER['HTTP_HOST'])) {
+        $domain = $_SERVER['HTTP_HOST'];
+    }
 
     //$domain = "wochenplan.aktive-schule-leipzig.de";
 
@@ -474,6 +475,26 @@ function RequestAPI($url, $secret, $date): string {
     return $response;
 }
 
+function SaveDataInAdminPanel($type, $data) {
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    $headers = array(
+        "Content-Type: application/json",
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+    $data = '{"secret": "' . $secret . '", "date": "' . $date . '"}';
+
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    return $response;
+}
+
 #[NoReturn] function Redirect($redirectURL): void {
     //header("Location: $redirectURL");
     echo "<script>window.location.href='$redirectURL';</script>";
@@ -481,7 +502,7 @@ function RequestAPI($url, $secret, $date): string {
     exit();
 }
 
-#[NoReturn] function GoPageBack($Parameter): void {
+#[NoReturn] function GoPageBack(): void {
     //header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
     echo "<script>history.back()</script>";
     $pdo = null;
@@ -498,5 +519,3 @@ function RequestAPI($url, $secret, $date): string {
 
     Redirect($webroot);
 }
-
-//Functions framework end
