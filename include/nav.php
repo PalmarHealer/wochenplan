@@ -119,7 +119,9 @@ if ($permission_level >= $create_lessons) {
 						<ul class="collapse list-unstyled pl-4 w-100" id="admin">
 							<a class="nav-link pl-3" href="' . $relative_path . '/admin/accounts"><span class="ml-1">Benutzer</span></a>
 							
-                            <a class="nav-link pl-3" href="' . $relative_path . '/admin/settings"><span class="ml-1">Settings</span></a>
+                            <a class="nav-link pl-3" href="' . $relative_path . '/admin/values"><span class="ml-1">Variablen/Placeholder</span></a>
+							
+                            <a class="nav-link pl-3" href="' . $relative_path . '/admin/settings"><span class="ml-1">Einstellungen</span></a>
                             
 						</ul>
 					</li>
