@@ -13,9 +13,11 @@ if (isset($current_day)) {
 $old_url_array = explode("?", GetCurrentUrl());
 $old_url = $old_url_array[0];
 $new_url = "";
-if (isset($_SERVER['HTTP_REFERER']) OR $_SERVER['HTTP_REFERER'] != "") {
-    $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
-    $new_url = $new_url_array[0];
+if (isset($_SERVER['HTTP_REFERER'])) {
+    if ($_SERVER['HTTP_REFERER'] != "") {
+        $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
+        $new_url = $new_url_array[0];
+    }
 }
 
 if (!isset($page)) {
