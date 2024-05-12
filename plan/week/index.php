@@ -1,4 +1,5 @@
 <?php
+global $relative_path, $version;
 $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
@@ -11,7 +12,6 @@ if (!isset($_GET["date"])) {
 }
 
 ?>
-
 <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
 <!DOCTYPE html>
 <html lang="de">

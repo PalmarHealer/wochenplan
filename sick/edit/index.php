@@ -61,7 +61,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
          }
 
 
-         if(isset($old_url) AND $new_url = $old_url) {
+         if(UserStayedOnSite()) {
 
              $new_assigned_user_id = ($_POST['userid'] ?? '');
              $date_range = ($_POST['date'] ?? '');

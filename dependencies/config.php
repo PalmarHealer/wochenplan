@@ -23,8 +23,6 @@ $theme = "light"; //default light
 //0 no permission, 1 default permission, 10 and above for admins
 $permission_needed = 1; //default 1
 
-
-
 //Default permission level to create lessons
 $create_lessons = 5; //default 5
 
@@ -52,18 +50,17 @@ $mte_secret = "your secret goes here";
 //This is where the credentials for the code come in.
 //So that it then connects to the database.
 //DO NOT USE ROOT OR ADMIN ACCOUNTS FOR THIS
+$db_host = 'localhost';
+$db_port = '3306';
+$db_name = 'wochenplan';
 $db_user = "test";
 $db_password = "password";
-
 
 //If you don't want to use the default port you have to write it in the db_ip variable. For ex.: "my-host.com:3306"
 //and if the database is on the same server as the website then you can use "localhost"
 //specify the database to save everything like lessons and users.
-$pdo = new PDO('mysql:host=localhost:3306;dbname=wochenplan', $db_user, $db_password);
 
-$keep_dpo = false;
-
-$domain = "http://localhost:63342/wochenplan";
+$domain = "http://localhost:63342" . $webroot;
 
 //here you can list all allowed domains that emails allowed to register
 $allowed_domains = array(
@@ -114,62 +111,28 @@ $permission_level_names = array(
     $manage_other_users => 'Administrator',
     99 => 'Guru'
 );
-
-
-//Available rooms
-$room_names = array(
-    10 => "Raumlos",
-    1 => "Raum 1",
-    2 => "Raum 2",
-    3 => "Raum 3 (HS)",
-    4 => "Raum 4 (RS)",
-    5 => "Gesprächsraum",
-    6 => "Sonnenzimmer",
-    7 => "Sport",
-    8 => "Extern",
-    14 => "Ext.",
-    9 => "Freiarbeit",
-    11 => "Putzen EG",
-    12 => "Putzen Garten",
-    13 => "Putzen UG/OG",
-);
-
-//Available times
-$times = array(
-    13 => "Den ganzen Tag gültig",
-    1 => "l-lV Morgenband - 8:00 – 9:00",
-    2 => "l/ll Morgenkreise - 9:00 – 9:30",
-    3 => "l/ll Angebot 1 - 9:30 – 10:30",
-    4 => "l/ll Angebot 2 - 10:45 – 11:45",
-    16 => "l/ll Logbuchzeit - 11:45 – 13:00",
-    5 => "l/ll Nachmittagsband - 13:00 – 14:15",
-    15 => "l-lV Logbuchzeit - 14:15 – 14:30",
-
-    14 => "Mittagspause - 12:00 – 13:00",
-
-    6 => "ll-lV Offene Räume - 9:00 - 10:00",
-    7 => "ll-lV Morgenkreise - 10:00 – 10:30",
-    8 => "ll-lV Großes Band - 10:30 – 12:00",
-    9 => "ll-lV Nachmittagsband - 13:00 – 14:30",
-    12 => "Putzen - 14:30 – 15:00",
-    10 => "ll-lV Spätes Band - 15:00 – 16:00",
-);
-
-//Placeholders
-//you can use them to replace something
-//the placeholder are written in framework.php in line 136
-
-
-
 //---------- DO NOT TOUCH (general software information) ----------
-//If you do some changes here, some or hole parts of the
-//website are not able to work properly
+$dsn = "mysql:host=$db_host;port=$db_port;dbname=$db_name";
+$pdo = new PDO($dsn, $db_user, $db_password);
+$db = array(
+    'host' => $db_host,
+    'port' => $db_port,
+    'name' => $db_name,
+    'user' => $db_user,
+    'password' => $db_password
+);
+$db_host = null;
+$db_port = null;
+$db_name = null;
+$db_user = null;
+$db_password = null;
+
+
+$keep_dpo = false;
 
 $relative_path = $webroot;
 
-
 $header = "true";
 
-
 //databaseVersion.codeVersion.patch/fix
-$version = "1.9.1";
+$version = "2.0.0";

@@ -26,9 +26,10 @@ if (!$error) {
         $plan = CodeToJson($_POST['plan']);
         $plan = str_replace('\"', '"', $plan);
         $plan = str_replace('\n', '', $plan);
-        $plan = str_replace('<\/td>', '', $plan);
-        $plan = str_replace('<\/tr>', '', $plan);
-        $plan = str_replace('<\/tbody>', '', $plan);
+        $plan = str_replace('                                ', '', $plan);
+        $plan = str_replace('<\/td>', '</td>', $plan);
+        $plan = str_replace('<\/tr>', '</tr>', $plan);
+        $plan = str_replace('<\/tbody>', '</tbody>', $plan);
         $tmp = SetSettingWithSuffix("plan", $_POST['name'], $plan, $pdo);
         if ($tmp) {
             $response = array(

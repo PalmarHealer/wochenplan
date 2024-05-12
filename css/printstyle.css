@@ -72,7 +72,7 @@ body {
     height: 100%;
     filter: grayscale(100%);
     transition: filter 0.3s;
- }
+}
 
 .logo-footer:hover {
     filter: none;
@@ -113,7 +113,7 @@ body {
 .pointer {
     cursor: pointer;
 }
-.tg td,
+td,
 .tg {
     border-color: #ffffff;
     border-style: solid;
@@ -126,7 +126,7 @@ body {
 .tg td:not(:has(div:not(.no_padding))) {
     padding: 10px 5px;
 }
-.tg * {
+.td * {
     color: black;
     font-family: Abel, serif;
     border-collapse: collapse;
@@ -222,7 +222,6 @@ body {
     padding: 8px 10px 5px 5px; !important;
     display: inline-block;
     width: 100%;
-    height: 100%;
 }
 
 .strikethrough {

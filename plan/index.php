@@ -1,4 +1,5 @@
 <?php
+global $relative_path, $version;
 $include_path = __DIR__ . "/..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
@@ -17,7 +18,6 @@ if (!isset($_GET["date"])) {
 
 ?>
 
-<link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
 <!doctype html>
 <html lang="de">
   <head>
@@ -207,7 +207,7 @@ if (!isset($_GET["date"])) {
           // Browser ist Firefox
           const html = `
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Nicht Unterstützt</strong> das Drucken in Firefox wird leider noch nicht unterstützt. Aber es wird dran gearbeitet :)<button onclick="closePrintAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <strong>Nicht Unterstützt</strong> das Drucken in Firefox wird leider nicht unterstützt.<button onclick="closePrintAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>`;
@@ -282,7 +282,7 @@ if (!isset($_GET["date"])) {
         const dateValue = dateParam || urlParams.get('date');
           let modeData = urlParams.get('mode') || 'normal';
           $.ajax({
-          url: "./reload<?php echo ($_GET['version'] ?? '2') ?>.php",
+          url: "./reload<?php echo ($_GET['version'] ?? '3') ?>.php",
           type: "POST",
               data: {
                   date: dateValue,

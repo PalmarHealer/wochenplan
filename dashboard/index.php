@@ -1,9 +1,10 @@
 <?php
-        $include_path = __DIR__ . "/..";
+$include_path = __DIR__ . "/..";
         $mte_needed = true;
         require $include_path . "/dependencies/config.php";
         require $include_path . "/dependencies/mysql.php";
         require $include_path . "/dependencies/framework.php";
+        global $relative_path, $version, $weekday_names_long, $id, $room_names, $times, $pdo, $webroot, $vorname, $nachname;
 	?>
 <!doctype html>
 <html lang="de">
@@ -47,7 +48,7 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="h3 mb-4 page-title">Übersicht</h2>
-			  
+                <div class="unsupported-browser"></div>
 			  
 			  
 			  
@@ -75,9 +76,9 @@
                             <div class="card-body my-n3">
                                 <div class="row align-items-center">
                                     <div class="col-3 text-center">
-                          <span class="circle circle-lg bg-light">
-                            <i class="fe fe-calendar fe-24 text-primary"></i>
-                          </span>
+                                        <span class="circle circle-lg bg-light">
+                                          <i class="fe fe-calendar fe-24 text-primary"></i>
+                                        </span>
                                     </div>
                                     <div class="col">
                                         <a href="#">
@@ -101,7 +102,7 @@
                     PrintDays(date("Y-m-d",time()), $weekday_names_long);
                     ?>
                 </div>
-			  <div class="full">
+			  <div class="full-percentage">
               <h6 class="mb-3">Deine Angebote</h6>
               <table class="table table-borderless table-striped table-hover">
                 <thead>
@@ -140,5 +141,18 @@
     <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
+    <script>
+        $(document).ready(function() {
+            detectBrowser();
+        });
+        function detectBrowser() {
+            if (navigator.userAgent.indexOf("Firefox") !== -1) {
+                // Browser is Firefox
+                const html = `<div class="alert alert-warning alert-dismissible fade show" role="alert">Der Wochenplan ist leider nicht für Firefox optimiert worden. Bitte überlege einen anderen Browser zu verwenden oder auf eventuelle Probleme zu stoßen. Danke!</div>`;
+                $(".unsupported-browser").html(html);
+            }
+
+        }
+    </script>
   </body>
 </html>

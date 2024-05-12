@@ -60,7 +60,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
          $lesson_details['email'] = GetUserByID($userid, "email", $pdo);
          $lesson_details['permission_level'] = GetUserByID($userid, "permission_level", $pdo);
      }
-         if(isset($old_url) AND $new_url = $old_url AND ($_POST['save'] ?? 0) == "1") {
+         if(UserStayedOnSite() AND ($_POST['save'] ?? 0) == "1") {
              $error = false;
              $new_vorname = ($_POST['vorname'] ?? '');
              $new_nachname = ($_POST['nachname'] ?? '');
@@ -90,7 +90,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
 
 
 
-         } elseif (isset($old_url) AND $new_url = $old_url AND isset($_POST['update'])) {
+         } elseif (UserStayedOnSite() AND isset($_POST['update'])) {
 
              $new_vorname = ($_POST['vorname'] ?? '');
              $new_nachname = ($_POST['nachname'] ?? '');

@@ -60,6 +60,16 @@ if (isset($_GET['load']) and !($_GET['load'] == '')) {
                         <div class="card-header display-contents">
                             <form class="display-flex">
                                 <div class="form-group margin-10">
+                                    <label class="col-form-label" for="label">Text:</label>
+                                    <div class="input-group mb-3">
+
+                                        <input placeholder="N/A" type="text" id="label" class="form-control">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text fe fe-24 fe-file-text"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group margin-10">
                                     <label class="col-form-label" for="time">Zeit ID:</label>
                                     <div class="input-group mb-3">
 
@@ -119,6 +129,7 @@ if (isset($_GET['load']) and !($_GET['load'] == '')) {
                                 <button class="btn mb-2 btn-primary" onclick="deleteCells()">Zellen löschen</button>
                                 <button class="btn mb-2 btn-primary" onclick="mergeCells()">Zellen zusammenführen</button>
                                 <button class="btn mb-2 btn-primary" onclick="splitCells()">Zellen teilen</button>
+                                <button class="btn mb-2 btn-primary" onclick="toggleCenterText()">Toggle Text Center</button>
                                 <button class="btn mb-2 btn-primary send" onclick="sendData()">Speichern</button>
                             </div>
                         </div>

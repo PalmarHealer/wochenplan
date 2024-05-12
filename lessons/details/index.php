@@ -3,6 +3,9 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $permission_level, $create_lessons, $relative_path, $version, $create_lessons_for_others, $id, $pdo;
+$room_names = GetSetting("rooms", $pdo);
+$times = GetSetting("times", $pdo);
 
 CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 ?>
@@ -36,15 +39,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
       <!-- Site Css -->
        <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/select2.css?version=<?php echo $version; ?>">
-       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/coloris.min.css?version=<?php echo $version; ?>">
    </head>
    <body class="vertical light">
       <div class="wrapper">
          <?php
-
-
-
-
          $keep_pdo = true;
          $lesson_disabled = false;
          $disable_enable_text = "deaktivieren";
@@ -56,8 +54,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
          if (isset($_GET["remove_lesson_with_id"])) {
              $lesson_to_delete = $_GET["remove_lesson_with_id"];
              $user_permission_level = GetUserByID($_SESSION['asl_userid'], "permission_level", $pdo);
-
-
              if ($user_permission_level >= $create_lessons_for_others) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  if ($return_to == null) {
@@ -68,14 +64,11 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              } elseif ($_SESSION['asl_userid'] == GetLessonInfoByID($lesson_to_delete, "userid", $pdo) AND $user_permission_level >= $create_lessons) {
                  DeleteLesson($lesson_to_delete, $pdo);
                  Redirect($return_to);
-
-
              } else {
                  GoPageBack();
              }
          }
-         if(isset($old_url) AND isset($new_url) AND $new_url == $old_url) {
-
+         if(GetCurrentUrl()) {
 
              //Get form data
              if (isset($_POST['date-repeat'])) {
@@ -95,7 +88,7 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              $new_description = ($_POST['description'] ?? '');
              $new_location = ($_POST['location'] ?? '');
              $new_time = ($_POST['time'] ?? '');
-             $new_box_color = ($_POST['box-color'] ?? '#f6e9e6');
+             $new_box_color = ($_POST['box-color'] ?? '');
              $new_notes = ($_POST['notes'] ?? '');
              $new_assigned_user_id = ($_POST['creator'] ?? '');
 
@@ -115,14 +108,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                      $error = "Die Beschreibung des Angebotes enthält ein Zeichen das nicht abgespeichert werden konnte.";
                  }
                  die();
-                     //if ($_POST['save']) {
-                     //    Redirect("./?error=1");
-                     //} elseif (isset($lesson_id)) {
-                     //    Redirect("./?id=$lesson_id&error=1");
-                     //} else {
-                     //    Redirect("./?id=$dub_id&error=1");
-                     //}
-
              }
              if (isset($dub_id)) {
 
@@ -200,30 +185,20 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
              if($permission_level < $create_lessons_for_others AND ($_SESSION['asl_userid'] ?? '') != GetLessonInfoByID($lesson_id, "userid", $pdo)) {
                  Redirect("../?message=unauthorized");
              }
-
              if (GetLessonInfoByID($lesson_id, "available", $pdo)) {
-
-                 $lesson_details['name'] = GetLessonInfoByID($lesson_id, "name", $pdo);
+                 $lesson_details['name']        = GetLessonInfoByID($lesson_id, "name", $pdo);
                  $lesson_details['description'] = GetLessonInfoByID($lesson_id, "description", $pdo);
-                 $lesson_details['location'] = GetLessonInfoByID($lesson_id, "location", $pdo);
-                 $lesson_details['time'] = GetLessonInfoByID($lesson_id, "time", $pdo);
-
-                 $lesson_details['notes'] = GetLessonInfoByID($lesson_id, "notes", $pdo);
-
-                 $lesson_details['box-color'] = GetLessonInfoByID($lesson_id, "box-color", $pdo);
-
-
-                 $lesson_details['userid'] = GetLessonInfoByID($lesson_id, "userid", $pdo);
-                 $lesson_details['creator'] = GetUserByID($lesson_details['userid'], "name", $pdo);
-
-
-                 $lesson_details['date-raw'] = GetLessonInfoByID($lesson_id, "date", $pdo);
-
+                 $lesson_details['location']    = GetLessonInfoByID($lesson_id, "location", $pdo);
+                 $lesson_details['time']        = GetLessonInfoByID($lesson_id, "time", $pdo);
+                 $lesson_details['notes']       = GetLessonInfoByID($lesson_id, "notes", $pdo);
+                 $lesson_details['box-color']   = GetLessonInfoByID($lesson_id, "box-color", $pdo);
+                 $lesson_details['userid']      = GetLessonInfoByID($lesson_id, "userid", $pdo);
+                 $lesson_details['date-raw']    = GetLessonInfoByID($lesson_id, "date", $pdo);
+                 $lesson_details['creator']     = GetUserByID($lesson_details['userid'], "name", $pdo);
                  if (GetLessonInfoByID($lesson_id, "disabled", $pdo)) {
                      $disable_enable_text = "aktivieren";
                      $lesson_disabled = true;
                  }
-
                  if (str_contains($lesson_details['date-raw'], "-")) {
                      $lesson_details['date-type'] = 2;
                      $lesson_details['lesson-type-text'] = "Einmaliges Angebot";
@@ -333,240 +308,10 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                  <div class="card shadow">
                                      <div class="card-header">
                                          <table class="full tg-small-preview">
-                                             <colgroup>
-                                                 <col class="piece"/>
-                                                 <col/>
-                                                 <col/>
-                                                 <col/>
-                                                 <col/>
-                                                 <col/>
-                                                 <col/>
-                                                 <col/>
-                                                 <col/>
-                                                 <col/>
-                                             </colgroup>
-                                             <thead>
-                                             <tr class="center">
-                                                 <th class="color-3 no_border">
-                                                     <br>
-                                                     <br>
-                                                 </th>
-                                                 <th class="color-1 preview-hover" colspan="5" time="13" room="10"></th>
-                                                 <th class="color-3 white_text modt text-left" colspan="5">
-
-                                                 </th>
-                                             </tr>
-                                             </thead>
-                                             <tbody>
-                                             <tr class="name-badge center">
-                                                 <td class="color-6 db_text rooms"><b class="bold">Zeiten l/ll</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 1</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Freiarbeit</b></td>
-                                                 <td class="color-6 db_text rooms"><b class="bold">Zeiten ll-lV</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 2</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 3 (HS)</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Raum 4 (RS)</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Gesprächsraum</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Sonnenzimmer</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Extern</b></td>
-                                                 <td class="color-1 db_text rooms"><b class="bold">Ext.</b></td>
-                                             </tr>
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     8:00 – 9:00<br/>
-                                                     <b class="bold">Morgenband</b>
-                                                 </td>
-                                                 <td class="color-2 preview-hover" time="1" room="1" colspan="2"></td>
-
-                                                 <td class="color-6 no_border">
-                                                     8:00 – 9:00<br/>
-                                                     <b class="bold">Morgenband</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover center" time="1" room="10" colspan="7"></td>
-                                             </tr>
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     9:00 – 9:30<br/>
-                                                     <b class="bold">Morgenkreise</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="2" room="1"></td>
-                                                 <td class="color-1 preview-hover" time="2" room="9"></td>
-
-                                                 <td class="color-6 no_border" rowspan="2">
-                                                     9:00 - 10:00<br/>
-                                                     <b class="bold">Offene Räume</b>
-                                                 </td>
-                                                 <td class="color-2 preview-hover" time="6" room="2" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="6" room="3" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="6" room="4" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="6" room="5" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="6" room="6" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="6" room="8" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="6" room="14" rowspan="2"></td>
-                                             </tr>
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border" rowspan="2">
-                                                     9:30 – 10:30<br/>
-                                                     <b class="bold">Angebot 1</b>
-                                                 </td>
-                                                 <td class="color-2 preview-hover" time="3" room="1" rowspan="2"></td>
-                                                 <td class="color-1 preview-hover" time="3" room="9" rowspan="2"></td>
-                                             </tr>
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     10:00 – 10:30<br/>
-                                                     <b class="bold">Morgenkreise</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="7" room="2"></td>
-                                                 <td class="color-2 preview-hover" time="7" room="3"></td>
-                                                 <td class="color-2 preview-hover" time="7" room="4"></td>
-                                                 <td class="color-2 preview-hover" time="7" room="5" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="7" room="6" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="7" room="8" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="7" room="14" rowspan="2"></td>
-                                             </tr>
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     <b class="bold">Räum-Pause </b>
-                                                 </td>
-
-                                                 <td class="color-2"></td>
-                                                 <td class="color-1"></td>
-
-                                                 <td class="color-6 no_border" rowspan="3">
-                                                     10:30 – 12:00<br/>
-                                                     <b class="bold">Großes Band</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="8" room="2" rowspan="3"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="3" rowspan="3"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="4" rowspan="3"></td>
-                                             </tr>
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     10:45 – 11:45<br/>
-                                                     <b class="bold">Angebot 2</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="4" room="1"></td>
-                                                 <td class="color-1 preview-hover" time="4" room="9"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="5" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="6" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="8" rowspan="2"></td>
-                                                 <td class="color-2 preview-hover" time="8" room="14" rowspan="2"></td>
-                                             </tr>
-
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     11:45 – 12:00<br>
-                                                     <b class="bold">Logbuchzeit</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="16" room="1"></td>
-                                                 <td class="color-1 preview-hover" time="16" room="9"></td>
-                                             </tr>
-
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     12:00 – 13:00<br/>
-                                                     <b class="bold">Mittagspause</b>
-                                                 </td>
-
-                                                 <td class="color-4 preview-hover no_border center2" colspan="10" time="14" room="10"><b class="bold"></b>
-                                                 </td>
-                                             </tr>
-
-
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     13:00 – 14:30<br/>
-                                                     <b class="bold">Nachmittagsband</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="5" room="1"></td>
-                                                 <td class="color-1 preview-hover" time="5" room="9"></td>
-
-                                                 <td class="color-6 no_border">
-                                                     13:00 – 14:30<br/>
-                                                     <b class="bold">Nachmittagsband</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="9" room="2"></td>
-                                                 <td class="color-2 preview-hover" time="9" room="3"></td>
-                                                 <td class="color-2 preview-hover" time="9" room="4"></td>
-                                                 <td class="color-2 preview-hover" time="9" room="5"></td>
-                                                 <td class="color-2 preview-hover" time="9" room="6"></td>
-                                                 <td class="color-2 preview-hover" time="9" room="8"></td>
-                                                 <td class="color-2 preview-hover" time="5" room="14"></td>
-                                             </tr>
-
-                                             <tr class="">
-
-                                                 <td class="color-6 no_border">
-                                                     14:15 – 14:30<br>
-                                                     <b class="bold">Logbuchzeit</b>
-                                                 </td>
-
-                                                 <td class="color-2 preview-hover" time="15" room="1" colspan="1"></td>
-                                                 <td class="color-1 preview-hover" time="15" room="9" colspan="1"></td>
-
-                                                 <td class="color-6 no_border">
-                                                     14:15 – 14:30<br>
-                                                     <b class="bold">Logbuchzeit</b>
-                                                 </td>
-                                                 <td class="color-2 preview-hover" time="15" room="2" colspan="3"></td>
-                                                 <td class="color-2 preview-hover" time="15" room="5"></td>
-                                                 <td class="color-2 preview-hover" time="15" room="6"></td>
-                                                 <td class="color-2 preview-hover" time="15" room="8" colspan="2"></td>
-                                             </tr>
-
-                                             <tr class="">
-                                                 <td class="white-col" rowspan="3"></td>
-                                                 <td class="white-col" rowspan="3"></td>
-                                                 <td class="white-col" rowspan="3"></td>
-
-                                                 <td class="color-6 no_border" rowspan="2">
-                                                     14:30 – 15:00<br/>
-                                                     <b class="bold">Putzen</b>
-                                                 </td>
-                                                 <td class="color-5 preview-lighthover" time="12" room="10" colspan="7"></td>
-                                             </tr>
-
-                                             <tr class="">
-                                                 <td class="color-5 preview-lighthover" time="12" room="11" colspan="2"></td>
-                                                 <td class="color-5 preview-lighthover" time="12" room="12" colspan="2"></td>
-                                                 <td class="color-5 preview-lighthover" time="12" room="13" colspan="3"></td>
-                                             </tr>
-
-
-                                             <tr class="">
-                                                 <td class="color-6 no_border">
-                                                     15:00 – 16:00<br/>
-                                                     <b class="bold">Spätes Band</b>
-                                                 </td>
-                                                 <td class="color-2 preview-hover" time="10" room="2"></td>
-                                                 <td class="color-2 preview-hover" time="10" room="3"></td>
-                                                 <td class="color-2 preview-hover" time="10" room="4"></td>
-                                                 <td class="color-2 preview-hover" time="10" room="5"></td>
-                                                 <td class="color-2 preview-hover" time="10" room="6"></td>
-                                                 <td class="color-2 preview-hover" time="10" room="8"></td>
-                                                 <td class="color-2 preview-hover" time="10" room="14"></td>
-                                             </tr>
-                                             </tbody>
+                                             <?php
+                                             echo prepareHtml(GetSettingWithSuffix("plan", GetSettingWithSuffix("plan-template", "active", $pdo), $pdo));
+                                             ?>
                                          </table>
-
                                      </div>
                                  </div>
                              </div>
@@ -578,7 +323,29 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                                      <div class="card-body">
                                          <div class="form-group mb-3">
                                              <label for="color-picker">Farbe</label>
-                                             <input id="color-picker" class="color_picker form-control" type="text" name="box-color" value="<?php echo ($lesson_details['box-color']?? '#f6e9e6'); ?>" data-coloris>
+                                             <select id="color-picker" class="color_picker form-control" type="text" name="box-color">
+                                                 <option disabled selected value="1">Farbe auswählen</option>
+                                                 <?php
+                                                 $array = GetSetting("colors", $pdo);
+                                                 if (is_array($array)) {
+                                                     ksort($array);
+                                                     $box_color = ($lesson_details['box-color'] ?? 'null');
+                                                     foreach ($array as $key => $value) {
+                                                         if ($box_color == $value) {
+                                                             echo "<option selected value='" . $value . "'>" . $key . "</option>";
+                                                         } else {
+                                                             echo "<option value='" . $value . "'>" . $key . "</option>";
+                                                         }
+                                                     }
+                                                 } else {
+                                                     if ($lesson_details['box-color'] == $array) {
+                                                         echo "<option selected value='" . $array . "'>" . $array . "</option>";
+                                                     } else {
+                                                         echo "<option value='" . $array . "'>" . $array . "</option>";
+                                                     }
+                                                 }
+                                                 ?>
+                                             </select>
                                          </div>
                                      </div> <!-- /.card-body -->
                                  </div> <!-- /.card -->
@@ -604,58 +371,54 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 										<a onclick="updateAvailability()" title="Regelmäßiges Angebot" class="date_selector1 nav-link py-3 <?php echo ($date_type[1] ?? '');?>" data-toggle="pill" aria-selected="true"><span class="fe fe-16 fe-repeat"></span></a>
 										<a onclick="updateAvailability()" title="Einmaliges Angebot" class="date_selector2 nav-link py-3 <?php echo ($date_type[2] ?? '');?>" data-toggle="pill" aria-selected="false"><span class="fe fe-16 fe-calendar"></span></a>
                                     </div>
-									
-                                          <div class="form-group mb-3 full">
-                                             <div class="card-body">
+                                     <div class="form-group mb-3 full-percentage">
+                                         <div class="card-body">
 
-                                                <label for="day">Tag des Angebotes</label>
-												
-												<div class="repeating" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") echo "style='display: none;'"; ?>>
-                                                <div class="input-group">
-                                                   <div class="input-group-append">
-                                                      <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
-                                                   </div>
-                                                   <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
-                                                      <?php
-                                                          $selected_date = array();
-                                                          $selected_date[$lesson_details['date'] ?? date("N")] = "selected";
-                                                      ?>
-                                                      <option value="1" <?php if(isset($selected_date[1])) { echo $selected_date[1]; }?>>Montag</option>
-                                                      <option value="2" <?php if(isset($selected_date[2])) { echo $selected_date[2]; }?>>Dienstag</option>
-                                                      <option value="3" <?php if(isset($selected_date[3])) { echo $selected_date[3]; }?>>Mittwoch</option>
-                                                      <option value="4" <?php if(isset($selected_date[4])) { echo $selected_date[4]; }?>>Donnerstag</option>
-                                                      <option value="5" <?php if(isset($selected_date[5])) { echo $selected_date[5]; }?>>Freitag</option>
-                                                   </select>
-                                                </div>
-												</div>
-												<div class="once" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "style='display: none;'"; } ?>>
-                                                <div class="input-group">
-                                                   <div class="input-group-append">
-                                                      <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
-                                                   </div>
-                                                   <input id="day2" onchange="updateAvailability()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
-                                                      <?php
-                                                         if(isset($get_date) OR isset($_POST['date'])) {
-                                                             $date_tmp = ($get_date ?? $_POST['date']);
-                                                             echo date("d/m/Y", strtotime($date_tmp));
-                                                         } elseif (isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
-                                                         	echo $lesson_details['date'];
-                                                         } else {
-                                                             echo date("d/m/Y");
+                                             <label for="day">Tag des Angebotes</label>
 
-                                                         }
+                                             <div class="repeating" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") echo "style='display: none;'"; ?>>
+                                                 <div class="input-group">
+                                                     <div class="input-group-append">
+                                                         <div class="input-group-text" id="button-addon-date"><span class="fe fe-repeat fe-16"></span></div>
+                                                     </div>
+                                                     <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
+                                                         <?php
+                                                         $selected_date = array();
+                                                         $selected_date[$lesson_details['date'] ?? date("N")] = "selected";
                                                          ?>
+                                                         <option value="1" <?php if(isset($selected_date[1])) { echo $selected_date[1]; }?>>Montag</option>
+                                                         <option value="2" <?php if(isset($selected_date[2])) { echo $selected_date[2]; }?>>Dienstag</option>
+                                                         <option value="3" <?php if(isset($selected_date[3])) { echo $selected_date[3]; }?>>Mittwoch</option>
+                                                         <option value="4" <?php if(isset($selected_date[4])) { echo $selected_date[4]; }?>>Donnerstag</option>
+                                                         <option value="5" <?php if(isset($selected_date[5])) { echo $selected_date[5]; }?>>Freitag</option>
+                                                     </select>
+                                                 </div>
+                                             </div>
+                                             <div class="once" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "style='display: none;'"; } ?>>
+                                                 <div class="input-group">
+                                                     <div class="input-group-append">
+                                                         <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
+                                                     </div>
+                                                     <input id="day2" onchange="updateAvailability()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
+                                                      <?php
+                                                     if(isset($get_date) OR isset($_POST['date'])) {
+                                                         $date_tmp = ($get_date ?? $_POST['date']);
+                                                         echo date("d/m/Y", strtotime($date_tmp));
+                                                     } elseif (isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") {
+                                                         echo $lesson_details['date'];
+                                                     } else {
+                                                         echo date("d/m/Y");
+
+                                                     }
+                                                     ?>
                                                       " aria-describedby="button-addon2">
-                                                   </input>
-                                                </div>
+                                                 </div>
                                              </div>
-                                             </div>
-                                          </div>
+                                         </div>
+                                     </div>
                                  </div>
                               </div>
-							  <!-- /.card -->
                            </div>
-						   <!-- /.col -->
 
 						   
                            <div class="col-md-6 mb-4">
@@ -758,7 +521,6 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
       <script src="<?php echo $relative_path; ?>/js/uppy.min.js?version=<?php echo $version; ?>"></script>
       <script src="<?php echo $relative_path; ?>/js/quill.min.js?version=<?php echo $version; ?>"></script>
       <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
-      <script src="<?php echo $relative_path; ?>/js/coloris.min.js?version=<?php echo $version; ?>"></script>
       <!-- Custom JS code -->
       <script>
           function updateAvailability() {
@@ -811,9 +573,8 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
               } else if (room === "10" && time === "14") {
                   color_picker.attr("disabled", true);
               } else if (room === "9") {
-                  if (time === "2" || time === "3" || time === "4" || time === "5") {
-                      description.attr("disabled", true);
-                  }
+                  description.attr("disabled", true);
+                  color_picker.attr("disabled", true);
               } else if (time === "12") {
                   color_picker.attr("disabled", true);
                   if (room === "11" || room === "12" || room === "13") {
@@ -846,42 +607,15 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
                   $("#date_type").attr("date_type", "2");
               });
 
-              $('.preview-hover, .preview-lighthover').click(function() {
+              $('.preview-hover').click(function() {
                   const room = $(this).attr('room');
                   const time = $(this).attr('time');
-                  $('.preview-hover, .preview-lighthover').removeClass("preview-selected");
+                  $('.preview-hover').removeClass("preview-selected");
                   $(this).addClass("preview-selected");
                   $('#location').val(room).change();
                   $('#time').val(time).change();
 
                   enableAndDisableInputs(room, time);
-              });
-
-
-              Coloris.setInstance('.color_picker', {
-                  //default, large, polaroid, pill
-                  theme: 'pill',
-
-                  themeMode: 'light',
-
-                  margin: 5,
-
-                  format: 'hex',
-                  alpha: false,
-                  swatches: [
-                      '#f6e9e6',
-                      '#ecd3cd',
-                      '#e3bdb4',
-                      '#d09182',
-                      '#dee5e6',
-                      '#e5f4d4',
-                      '#cdcdff',
-                      '#f8e9be',
-                      '#ffca39',
-                      '#ff3939',
-                  ]
-
-
               });
           });
 

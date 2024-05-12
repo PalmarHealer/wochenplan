@@ -518,6 +518,8 @@ function GetAllLessons($room_names, $times, $pdo): void {
         }
 
         $creator_formatted = GetUserByID($sl['assigned_user_id'], "name", $pdo);
+        $room_names = GetSetting("rooms", $pdo);
+        $times = GetSetting("times", $pdo);
 
         echo '
             <tr>

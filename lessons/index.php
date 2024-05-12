@@ -3,6 +3,7 @@ $include_path = __DIR__ . "/..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $pdo, $create_lessons, $permission_level, $webroot, $relative_path, $version;
 
 CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
@@ -72,7 +73,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                         </thead>
                         <tbody>
 							<?php
-                                GetAllLessons($room_names, $times, $pdo);
+                                GetAllLessons(GetSetting("rooms", $pdo), GetSetting("times", $pdo), $pdo);
 								$pdo = null;
 							?>
                         </tbody>

@@ -1,23 +1,13 @@
 <?php
-require __DIR__ . "/config.php";
+require_once __DIR__ . "/config.php";
+global $webroot, $permission_needed, $mte_url, $mte_secret, $pdo, $domain, $mte_lunch_data;
 
 use JetBrains\PhpStorm\NoReturn;
 
-global $mte_lunch_data;
 if (isset($current_day)) {
     $mte_lunch_data = GetDataFromDBIfNotExistGetFromAPI($current_day, "mte", $mte_url, $mte_secret, $pdo);
 } else {
     $mte_lunch_data = "%mte%";
-}
-
-$old_url_array = explode("?", GetCurrentUrl());
-$old_url = $old_url_array[0];
-$new_url = "";
-if (isset($_SERVER['HTTP_REFERER'])) {
-    if ($_SERVER['HTTP_REFERER'] != "") {
-        $new_url_array = explode("?", $_SERVER['HTTP_REFERER']);
-        $new_url = $new_url_array[0];
-    }
 }
 
 if (!isset($page)) {
@@ -26,7 +16,6 @@ if (!isset($page)) {
 if(isset($_GET["logout"])) {
     if ($_GET["logout"] == "true") { //Logout script
         Logout($domain);
-        die();
     }
 }
 
@@ -43,10 +32,15 @@ if (!$page == "external") {
 
         if (sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
             Redirect($domain . '/error/cookie/');
-            die('Ein vermutlich gestohlener Security Token wurde identifiziert');
         } else { //Token war korrekt
             //Setze neuen Token
-            $neuer_securitytoken = random_string();
+            try {
+                $neuer_securitytoken = random_string();
+            } catch (Exception $e) {
+                ConsoleLog("Securitytoken konnte nicht erstellt werden");
+                Alert("Bitte wende dich an einen Administrator");
+                die("Securitytoken konnte nicht erstellt werden");
+            }
             $insert = $pdo->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
             $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
             setcookie("asl_identifier", $identifier, time() + (3600 * 24 * 365)); //1 Jahr Gültigkeit
@@ -81,27 +75,19 @@ if (!$page == "external") {
 
 //Framework functions
 function GetCurrentUrl(): string {
-    $current_url = "https://";
-
-    if (isset($_SERVER['HTTP_HOST'])) {
-        $domain = $_SERVER['HTTP_HOST'];
-    }
-
-    //$domain = "wochenplan.aktive-schule-leipzig.de";
-
-    if (str_contains($domain, ':')) {
-        // Split the string by ":"
-        $parts = explode(':', $domain);
-        // Use the first part
-        $current_url.= $parts[0];
-    } else {
-        // If ":" is not present, use the original string
-        $current_url.= $domain;
-    }
-
-    $current_url.= $_SERVER['REQUEST_URI'];
-
-    return $current_url;
+    return (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+}
+function GetOldUrl(): string|null {
+    if (isset($_SERVER['HTTP_REFERER']) AND $_SERVER['HTTP_REFERER'] != "") {
+        $url_array = explode("?", $_SERVER['HTTP_REFERER']);
+        return $url_array[0];
+    } else return null;
+}
+function UserStayedOnSite(): bool {
+    $old_url = explode("?", GetOldUrl());
+    $new_url = explode("?", GetCurrentUrl());
+    if ($new_url[0] == $old_url[0]) return true;
+    else return false;
 }
 
 function validateDate($date, $format = 'Y-m-d H:i:s'): bool {
@@ -171,14 +157,16 @@ function random_string(): string {
         $bytes = openssl_random_pseudo_bytes(16);
         $str = bin2hex($bytes);
     } else {
-        $str = md5(uniqid('kA5Ql0s2M2hveb7uEoTrj7vOFwrLsWDe', true));
+        $str = md5(uniqid('kA5Ql0s2M2hv' . 'eb7uEoTrj7vOFwrLsWDe', true));
     }
     return $str;
 }
 
-function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void {
+function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $echo = true): string {
+    $pdo = restorePDOifNeeded($pdo);
+
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
-        return;
+        return("");
     }
     $sick = false;
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
@@ -204,16 +192,30 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot): void {
     $lesson_username    = replacePlaceholders(DecodeFromJson(GetUserByID($userid, "vorname", $pdo)), $date);
     $lesson_description = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "description", $pdo)), $date);
 
-    echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
-    echo "<br>";
-    echo "<p class='author'>"; if ($sick) { echo "<s>"; } echo "(" . $lesson_username . ")"; if ($sick) { echo "</s>"; } echo "</p>";
-
-    echo "<p class='description'>"; if ($sick) { echo "<s>"; } echo $lesson_description; if ($sick) { echo "</s>"; } echo "</p></div>";
+    $return = "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>";
+    if ($sick) $return .= "<s>";
+    $return .= $lesson_name;
+    if ($sick) $return .= "</s>";
+    $return .= "</b><br><p class='author'>";
+    if ($sick) $return .= "<s>";
+    $return .= "(" . $lesson_username . ")";
+    if ($sick) $return .= "</s>";
+    $return .= "</p><p class='description'>";
+    if ($sick) $return .= "<s>";
+    $return .= $lesson_description;
+    if ($sick) $return .= "</s>";
+    $return .= "</p></div>";
+    if ($echo) {
+        echo $return;
+    }
+    return $return;
 }
 
-function PrintInfoWithDesc($date, $time, $room, $pdo, $webroot): void {
+function PrintInfoWithDesc($date, $time, $room, $db, $webroot, $echo = true): string {
+    $pdo = restorePDOifNeeded($db);
+
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
-        return;
+        return("");
     }
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
     $sick = false;
@@ -234,19 +236,30 @@ function PrintInfoWithDesc($date, $time, $room, $pdo, $webroot): void {
     $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo), $date);
     $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo), $date);
 
-    echo "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='no_padding bold lessons pointer'><b class='no_padding lesson'>"; if ($sick) { echo "<s>"; } echo $lesson_name; if ($sick) { echo "</s>"; } echo "</b>";
-
-    echo "<p class='no_padding font-weight-normal description'>"; if ($sick) { echo "<s>"; } echo $lesson_description; if ($sick) { echo "</s>"; } echo "</p></div>";
+    $return = "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='no_padding bold lessons pointer'><b class='no_padding lesson'>";
+    if ($sick) $return .= "<s>";
+    $return .= $lesson_name;
+    if ($sick) $return .= "</s>";
+    $return .= "</b>";
+    $return .= "<p class='no_padding font-weight-normal description'>";
+    if ($sick) $return .= "<s>";
+    $return .= $lesson_description;
+    if ($sick) $return .= "</s>";
+    $return .= "</p></div>";
+    if ($echo) {
+        echo $return;
+    }
+    return $return;
 }
 function modNumber($number, $mod): int {
     return $number % $mod +1;
 }
 
-function PrintInfo($date, $time, $room, $pdo, $webroot): void
-{
+function PrintInfo($date, $time, $room, $db, $webroot, $echo = true): string {
+    $pdo = restorePDOifNeeded($db);
 
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
-        return;
+        return("");
     }
     $value = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)), $date);
 
@@ -263,16 +276,13 @@ function PrintInfo($date, $time, $room, $pdo, $webroot): void
 
                 $value = surroundString($value, $username);
             }
-
         }
-
     }
-
-
-    echo "<div class='lessons pointer' onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, 'id', $pdo) . "&date=" . $date . "\"'>";
-    echo $value;
-    echo "</div>";
-
+    $return = "<div class='lessons pointer' onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, 'id', $pdo) . "&date=" . $date . "\"'>" . $value .  "</div>";
+    if ($echo) {
+        echo $return;
+    }
+    return $return;
 }
 
 function surroundString($originalString, $stringToSurround) {
@@ -296,6 +306,57 @@ function ExplodeStringToArray($string): array {
         }
     }
     return $return;
+}
+
+/**
+ * @throws DOMException
+ */
+function prepareTableToDisplay($html, $current_day, $webroot, $pdo, $date, $sick): bool|string {
+    if (is_array($html)) {
+        $html2 = str_replace('"', '(quotes)', reset($html));
+    } else {
+        $html2 = str_replace('"', '(quotes)', $html);
+    }
+    $html2 = DecodeFromJson($html2);
+    $html2 = str_replace('(quotes)', '"', $html2);
+
+    $dom = new DOMDocument();
+    $dom->loadHTML('<?xml encoding="UTF-8">' . $html2, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $xpath = new DOMXPath($dom);
+
+    $elements = $xpath->query('//*[@room and @time]');
+
+    // Remove elements with class hideCell or Header, including their child elements
+    $hideCellElements = $xpath->query('//*[contains(@class, "hideCell")] | //*[@class="Header"]');
+    foreach ($hideCellElements as $element) {
+        $element->parentNode->removeChild($element);
+    }
+
+    $dbString = serialize($pdo);
+    foreach ($elements as $element) {
+        $fragment = $element->ownerDocument->createDocumentFragment();
+        $room = $element->getAttribute('room');
+        $time = $element->getAttribute('time');
+
+        if ($room == '9' OR $time == '1' OR ($time == '12' AND $room != '10') OR ($time == '13' AND $room == '10')) {
+            $lesson = PrintInfo($current_day, $time, $room, $dbString, $webroot, false);
+        } elseif ($time == '12' OR $time == '14' AND $room == '10') {
+            $lesson = PrintInfoWithDesc($current_day, $time, $room, $dbString, $webroot, false);
+        } else {
+            $lesson = PrintLessonToPlan($current_day, $time, $room, $dbString, $webroot, false);
+        }
+        $script = $dom->createTextNode($lesson);
+        $element->appendChild($script);
+    }
+
+    $modifiedHtml = $dom->saveHTML();
+
+
+    $modifiedHtml = preg_replace('/^<!DOCTYPE.+?>/', '', $modifiedHtml);
+    $modifiedHtml = preg_replace('/^<html><body>/', '', $modifiedHtml);
+    $modifiedHtml = preg_replace('/%date%/i', $date, $modifiedHtml);
+    $modifiedHtml = preg_replace('/%sick%/i', $sick, $modifiedHtml);
+    return          html_entity_decode($modifiedHtml, ENT_NOQUOTES);
 }
 
 function Alert($msg): void
@@ -349,8 +410,10 @@ function PrintDays($date, $weekday_names_long): void {
                         <div class="card mb-4 shadow">
                             <div class="card-body my-n3">
                                 <div class="row align-items-center">
-                                    <div class="col-3">
-                                        <img class="right" src="../img/preview.png" alt="Preview" style="width:150%;height:150%;">
+                                    <div class="col-3 text-center">
+                                        <span class="circle circle-lg bg-light">
+                                          <i class="fe fe-calendar fe-24 text-primary"></i>
+                                        </span>
                                     </div>
                                     <div class="col">
                                         <a href="#">
@@ -366,34 +429,6 @@ function PrintDays($date, $weekday_names_long): void {
                             </div>
                         </div>
                     </div>'; }
-}
-
-function PrintDay($date, $name): void {
-    global $mte_url, $mte_secret, $pdo;
-
-        echo '<div onclick="window.location=\'../plan/?date='. $date . '\'" class="pointer align-items-center col-md-4 center2">
-                        <div class="card mb-4 shadow">
-                            <div class="card-body my-n3">
-                                <div class="row align-items-center">
-                                    <div class="col-3 text-center">
-                          <span class="circle circle-lg bg-light">
-                            <i class="fe fe-calendar fe-24 text-primary"></i>
-                          </span>
-                                    </div>
-                                    <div class="col">
-                                        <a href="#">
-                                            <h1 class="h5 mt-4 mb-1">' . $name . '</h1>
-                                        </a>
-                                        <p>Mittagessen: ' . GetDataFromDBIfNotExistGetFromAPI($date, "mte", $mte_url, $mte_secret, $pdo) . '</p>
-                                        <br>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <a href="../plan" class="d-flex justify-content-between text-muted"><span>Angebote ansehen</span><i class="fe fe-chevron-right"></i></a>
-                            </div>
-                        </div>
-                    </div>';
 }
 
 function CheckPermission($required, $present, $redirect): void {
@@ -474,42 +509,70 @@ function RequestAPI($url, $secret, $date): string {
     curl_close($curl);
     return $response;
 }
+function restorePDOifNeeded($pdo): PDO {
+    if (!is_string($pdo)) return $pdo;
+    $pdo = unserialize($pdo);
+    if (!is_array($pdo)) return $pdo;
+    $db_host = $pdo['host'];
+    $db_port = $pdo['port'];
+    $db_name = $pdo['name'];
+    $db_user = $pdo['user'];
+    $db_password = $pdo['password'];
+    $dsn = "mysql:host=$db_host;port=$db_port;dbname=$db_name";
+    return new PDO($dsn, $db_user, $db_password);
+}
+function prepareHtml($html): array|string|null {
+    if (is_array($html)) {
+        $html2 = str_replace('"', '(quotes)', reset($html));
+    } else {
+        $html2 = str_replace('"', '(quotes)', $html);
+    }
+    $html2 = DecodeFromJson($html2);
+    $html2 = str_replace('(quotes)', '"', $html2);
 
-function SaveDataInAdminPanel($type, $data) {
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    $headers = array(
-        "Content-Type: application/json",
-    );
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $doc = new DOMDocument();
+    $doc->loadHTML('<?xml encoding="UTF-8">' . $html2, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-    $data = '{"secret": "' . $secret . '", "date": "' . $date . '"}';
+    $xpath = new DOMXPath($doc);
 
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    // Remove elements with class hideCell or Header, including their child elements
+    $hideCellElements = $xpath->query('//*[contains(@class, "hideCell")] | //*[@class="Header"]');
+    foreach ($hideCellElements as $element) {
+        $element->parentNode->removeChild($element);
+    }
 
-    $response = curl_exec($curl);
-    curl_close($curl);
-    return $response;
+    // Add the class 'open' to elements with either room or time attribute
+    $elements = $xpath->query('//*[@room or @time]');
+    foreach ($elements as $element) {
+        $class = $element->getAttribute('class');
+        $element->setAttribute('class', trim("$class preview-hover"));
+    }
+
+    // Get the modified HTML content
+    $modifiedHtml = $doc->saveHTML();
+
+    // Remove unnecessary doctype and html/body tags
+    $modifiedHtml = preg_replace('/^<!DOCTYPE.+?>/', '', $modifiedHtml);
+    $modifiedHtml = preg_replace('/^<html><body>/', '', $modifiedHtml);
+    $modifiedHtml = preg_replace('/%date%/i', '', $modifiedHtml);
+    $modifiedHtml = preg_replace('/%sick%/i', '', $modifiedHtml);
+    return          preg_replace('/<\/body><\/html>$/', '', $modifiedHtml);
 }
 
 #[NoReturn] function Redirect($redirectURL): void {
     //header("Location: $redirectURL");
     echo "<script>window.location.href='$redirectURL';</script>";
-    $pdo = null;
     exit();
 }
 
 #[NoReturn] function GoPageBack(): void {
     //header("Location: " . $_SERVER['HTTP_REFERER'] . $Parameter);
     echo "<script>history.back()</script>";
-    $pdo = null;
     exit();
 }
 
-#[NoReturn] function Logout($webroot) {
+#[NoReturn] function Logout($webroot): void {
     session_start();
     session_destroy();
 

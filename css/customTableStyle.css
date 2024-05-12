@@ -16,7 +16,6 @@
 #editableTable th {
     border: 1px solid #ddd;
     padding: 10px;
-    text-align: center;
     font-size: 14px;
     user-select: none;
     width: 8%;
@@ -35,6 +34,7 @@
     user-select: none;
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
+    text-align: center;
 }
 .hideCell {
     display: none;
