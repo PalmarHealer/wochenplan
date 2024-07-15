@@ -40,6 +40,10 @@ A **MySQL** database and **phpMyAdmin** are required for this.
 4. Press Import at the bottom of the page
 <br/><br/><br/>
 
+## Links
+
+ToDo Board: [Link](https://github.com/users/PalmarHealer/projects/4/views/1)
+
 ## Credits
 
 Theme und Layout (exept plan): [Tinydash](https://github.com/themewagon/tinydash/)
@@ -52,11 +56,11 @@ Convert to PDF: [dompdf](https://github.com/dompdf/dompdf) (Not actively used ri
 
 Loading animation on Plan: [Animaion](https://codepen.io/AbubakerSaeed/pen/JjXERWW) (Not visible anymore but still exists in the code)
 
-Idea: [Aktive Schule Leipzig - Freie Oberschule](https://www.aktive-schule-leipzig.de/oberschule/)
+Idea: [Aktive Schule Leipzig e.V.](https://www.aktive-schule-leipzig.de/oberschule/)
 
 
 ## License/Rights
 
-Nauren® Copyright © 2022 - 2024.
+Nauren Copyright © 2022 - 2024.
 
 Code released under the GNU License.
