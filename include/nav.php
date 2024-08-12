@@ -1,4 +1,5 @@
 <?php
+global $keep_pdo, $relative_path, $permission_level, $create_lessons, $manage_other_users;
 if (!$keep_pdo) {
     $pdo = null;
 }
@@ -18,7 +19,9 @@ if (!$keep_pdo) {
             "invalid_token" => "Ungültiger Token",
             "token_expired" => "Token abgelaufen",
             "reset_success" => "Passwort erfolgreich zurückgesetzt",
-            "lesson_created" => "Passwort erfolgreich zurückgesetzt"
+            "update_success" => "Wochenplan erfolgreich aktualisiert",
+            "update_failed" => "Update fehlgeschlagen",
+            "wrong_version" => "Falsche Version",
         );
         $messageTone = array(
             "unauthorized" => "alert-danger",
@@ -26,7 +29,10 @@ if (!$keep_pdo) {
             "invalid_token" => "alert-danger",
             "token_expired" => "alert-warning",
             "reset_success" => "alert-success",
-            "lesson_created" => "alert-success"
+            "lesson_created" => "alert-success",
+            "update_success" => "alert-success",
+            "update_failed" => "alert-danger",
+            "wrong_version" => "alert-warning",
         );
         echo '<div class="userMessage alert ' . $messageTone[$_GET['message']] . ' center" role="alert"> ' . $messages[$_GET['message']] . ' </div>';
     }

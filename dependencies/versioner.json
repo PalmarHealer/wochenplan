@@ -9,7 +9,12 @@
     {
       "version": "3.0.1",
       "release_date": "2024-08-12",
-      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.zip"
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.1.zip"
+    },
+    {
+      "version": "3.0.2",
+      "release_date": "2024-08-12",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.2.zip"
     }
   ]
 }

@@ -3,15 +3,15 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
-global $relative_path, $version, $pdo, $webroot, $id, $manage_other_users;
+global $relative_path, $version, $pdo, $webroot, $id, $manage_other_users, $permission_level;
 
+CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 if (isset($_GET['installVersion'])) {
-    $installVersion = $_GET['install'];
+    $installVersion = $_GET['installVersion'];
     $json_url = 'https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/versioner.json';
     $json_data = file_get_contents($json_url);
     $versions = json_decode($json_data, true);
 
-    // Find the correct version in the JSON data
     $downloadLink = null;
     foreach ($versions['versions'] as $Onlineversion) {
         if ($Onlineversion['version'] === $installVersion) {
@@ -21,7 +21,7 @@ if (isset($_GET['installVersion'])) {
     }
 
     if ($downloadLink) {
-        $installDir = $include_path . "/installed_versions";
+        $installDir = __DIR__ . "/tmp"; // Using $include_path defined at the top of the script
 
         if (!is_dir($installDir)) {
             mkdir($installDir, 0755, true);
@@ -35,19 +35,68 @@ if (isset($_GET['installVersion'])) {
         // Unzip the file
         $zip = new ZipArchive;
         if ($zip->open($zipFile) === TRUE) {
-            $zip->extractTo($installDir);
-            $zip->close();
-            echo "Update installed successfully!";
-        } else {
-            echo "Failed to unzip the update.";
-        }
+            $rootFolder = $zip->getNameIndex(0); // Get the first item, assuming it's the root folder
+            $rootFolder = rtrim($rootFolder, '/'); // Ensure there's no trailing slash
 
-        // Optionally delete the zip file after extraction
-        unlink($zipFile);
+            $createdDirectories = []; // Track directories actually used for storing files
+            $targetPath = $include_path; // Define this to wherever you need the contents to go
+
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $fileinfo = pathinfo($filename);
+
+                // Skip unwanted files
+                if ($filename === $rootFolder . '/dependencies/config.php' || $filename === $rootFolder . '/dependencies/updater/index.php') {
+                    continue;
+                }
+
+                if (!array_key_exists('extension', $fileinfo)) {
+                    // Skip directories
+                    continue;
+                }
+
+                // Build the source and target paths
+                $sourcePath = "zip://" . $zipFile . "#" . $filename;
+                $relativePath = substr($filename, strlen($rootFolder) + 1);
+                $finalPath = $targetPath . '/' . $relativePath;
+
+                $directoryPath = dirname($finalPath);
+                if (!in_array($directoryPath, $createdDirectories)) {
+                    if (!is_dir($directoryPath)) {
+                        mkdir($directoryPath, 0755, true);
+                    }
+                    $createdDirectories[] = $directoryPath;
+                }
+
+                // Copy file from zip to the target location
+                copy($sourcePath, $finalPath);
+            }
+
+            $zip->close();
+            unlink($zipFile); // Optionally delete the zip file after extraction
+
+            // Optionally remove empty directories
+            foreach ($createdDirectories as $dir) {
+                if (is_dir_empty($dir)) {
+                    rmdir($dir);
+                }
+            }
+
+            Redirect("./?message=update_success");
+        } else {
+            Redirect("./?message=update_failed");
+        }
     } else {
-        echo "Invalid version specified.";
+        Redirect("./?message=wrong_version");
     }
 }
+
+// Helper function to check if directory is empty
+function is_dir_empty($dir): ?bool {
+    if (!is_readable($dir)) return NULL;
+    return (count(scandir($dir)) == 2);
+}
+
 ?>
 <!doctype html>
 <html lang="de">
@@ -81,9 +130,9 @@ if (isset($_GET['installVersion'])) {
     <?php
 
     $keep_pdo = true;
-    $permission_needed = $manage_other_users;
-
+    include $include_path . "/include/nav.php";
     ?>
+
 
     <main role="main" class="main-content">
         <div class="container-fluid">
@@ -108,14 +157,15 @@ if (isset($_GET['installVersion'])) {
                             $versions = json_decode($json_data, true);
                             foreach ($versions['versions'] as $Onlineversion) {
                                 $is_installed = ($Onlineversion['version'] === $version) ? 'installiert' : 'verfügbar';
+                                $is_installed_color = ($Onlineversion['version'] === $version) ? 'badge-success' : 'badge-primary';
                                 echo '<tr>
                                                 <td>' . $Onlineversion['version'] . '</td>
                                                 <td>' . $Onlineversion['release_date'] . '</td>
-                                                <td><span class="badge badge-pill badge-success">'  . $is_installed . '</span></td>';
+                                                <td><span class="badge badge-pill ' . $is_installed_color . '">'  . $is_installed . '</span></td>';
                                 if ($Onlineversion['version'] == $version) echo '<td><a type="button" class="btn mb-2 btn-primary disabled">Installed</a></td>';
                                 else echo '<td><a type="button" class="btn mb-2 btn-primary" href="./?installVersion=' . $Onlineversion['version'] .'">Install</a></td>';
 
-                                            echo'</tr>';
+                                echo'</tr>';
                             }
                             echo '</ul>';
                             ?>
@@ -126,7 +176,7 @@ if (isset($_GET['installVersion'])) {
                 </div> <!-- /.col-12 -->
             </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <?php include $include_path. "/include/footer.php"; ?>
+        <?php //include $include_path. "/include/footer.php"; ?>
     </main> <!-- main -->
 </div> <!-- .wrapper -->
 <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
