@@ -1,0 +1,32 @@
+name: Release on Latest Version Update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'dependencies/versioner.json'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Get latest version from JSON
+      id: get_version
+      run: |
+        echo "LATEST_VERSION=$(jq -r '.versions[-1].version' dependencies/versioner.json)" >> $GITHUB_ENV
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ env.LATEST_VERSION }}
+        release_name: Release ${{ env.LATEST_VERSION }}
+        body: "Automated release based on version ${{ env.LATEST_VERSION }} in versioner.json \ **See Changelog:** [`...main`](https://github.com/PalmarHealer/wochenplan/commits/main/)"
+        draft: false
+        prerelease: false
