@@ -99,7 +99,7 @@
 
                         // Iterate through the version arrays to find the latest one
                         foreach ($versions as $entry) {
-                            if (version_compare($entry['version'], $version, '>')) {
+                            if (version_compare($entry['version'], $version, '>=')) {
                                 $latest_version_entry = $entry;
                             }
                         }

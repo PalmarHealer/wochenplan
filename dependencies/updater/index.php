@@ -7,6 +7,7 @@ global $relative_path, $version, $pdo, $webroot, $id, $manage_other_users, $perm
 
 CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 if (isset($_GET['installVersion'])) {
+    UpdateSetting("maintenance", 1, $pdo);
     $installVersion = $_GET['installVersion'];
     $json_url = 'https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/versioner.json';
     $json_data = file_get_contents($json_url);
@@ -69,11 +70,14 @@ if (isset($_GET['installVersion'])) {
             $zip->close();
             unlink($zipFile);
 
-            SetSetting("version", $Onlineversion['version'], $pdo);
-            deleteUpdateFolders(__DIR__);
-            Redirect("./?message=update_success");
+            $newVersion = $Onlineversion['version'];
+            $oldVersion = GetSetting("version", $pdo);
+            if (is_array($oldVersion)) SetSetting("version", $newVersion, $pdo);
+            else UpdateSetting("version", $newVersion, $pdo);
+            deleteUpdateFolders(__DIR__ . "/tmp");
+            Redirect("/admin/settings/?message=update_success");
         } else {
-            Redirect("./?message=update_failed");
+            Redirect("/admin/settings/?message=update_failed");
         }
     } else {
         Redirect("./?message=wrong_version");
@@ -126,31 +130,37 @@ if (isset($_GET['installVersion'])) {
                             <thead>
                             <tr>
                                 <th>Version</th>
-                                <th>Release Date</th>
+                                <th>Name</th>
                                 <th>Status</th>
                                 <th></th>
+                                <th>Release Date</th>
                             </tr>
                             </thead>
                             <tbody>
-
                             <?php
                             $json_url = 'https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/versioner.json';
                             $json_data = file_get_contents($json_url);
                             $versions = json_decode($json_data, true);
-                            foreach ($versions['versions'] as $Onlineversion) {
-                                $is_installed = ($Onlineversion['version'] === $version) ? 'installiert' : 'verfügbar';
-                                $is_installed_color = ($Onlineversion['version'] === $version) ? 'badge-success' : 'badge-primary';
-                                echo '<tr>
-                                                <td>' . $Onlineversion['version'] . '</td>
-                                                <td>' . $Onlineversion['release_date'] . '</td>
-                                                <td><span class="badge badge-pill ' . $is_installed_color . '">'  . $is_installed . '</span></td>';
-                                if ($Onlineversion['version'] == $version) echo '<td><a type="button" class="btn mb-2 btn-primary disabled">Installed</a></td>';
-                                else echo '<td><a type="button" class="btn mb-2 btn-primary" href="./?installVersion=' . $Onlineversion['version'] .'">Install</a></td>';
 
-                                echo'</tr>';
+
+
+                            foreach ($versions['versions'] as $Onlineversion) {
+                                $is_installed = version_compare($Onlineversion['version'], $version, '<=') ? 'installiert' : 'verfügbar';
+                                $is_installed_color = version_compare($Onlineversion['version'], $version, '<=') ? 'badge-success' : 'badge-primary';
+                                echo '<tr>
+                                        <td>' . $Onlineversion['version'] . '</td>
+                                        <td>' . ($Onlineversion['name'] ?? "Keine Weiteren Informationen") . '</td>
+                                        <td><span class="badge badge-pill ' . $is_installed_color . '">'  . $is_installed . '</span></td>';
+                                if (version_compare($Onlineversion['version'], $version, '<=')) {
+                                    echo '<td><a type="button" class="btn mb-2 btn-primary disabled">Installiert</a></td>';
+                                } else {
+                                    echo '<td><a type="button" class="btn mb-2 btn-primary" href="./?installVersion=' . $Onlineversion['version'] .'">Update</a></td>';
+                                }
+                                echo '<td>' . $Onlineversion['release_date'] . '</td></tr>';
                             }
                             echo '</ul>';
                             ?>
+
                             </tbody>
                         </table>
 
@@ -158,7 +168,7 @@ if (isset($_GET['installVersion'])) {
                 </div> <!-- /.col-12 -->
             </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-        <?php //include $include_path. "/include/footer.php"; ?>
+        <?php include $include_path. "/include/footer.php"; ?>
     </main> <!-- main -->
 </div> <!-- .wrapper -->
 <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>

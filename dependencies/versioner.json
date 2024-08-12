@@ -39,6 +39,13 @@
       "name": "Update admin update notify",
       "release_date": "2024-08-12",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.5.zip"
+    },
+    {
+      "id": "7",
+      "version": "3.0.6",
+      "name": "Update admin update notify bugfix #1",
+      "release_date": "2024-08-12",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.6.zip"
     }
   ]
 }
