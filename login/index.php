@@ -1,9 +1,10 @@
 <?php
-$include_path = __DIR__ . "/..";
-$page = "external";
-require $include_path . "/dependencies/config.php";
-require $include_path . "/dependencies/mysql.php";
-require $include_path . "/dependencies/framework.php";
+    $include_path = __DIR__ . "/..";
+    $page = "external";
+    require $include_path . "/dependencies/config.php";
+    require $include_path . "/dependencies/mysql.php";
+    require $include_path . "/dependencies/framework.php";
+    global $webroot, $domain, $pdo, $relative_path, $version;
 
 session_start();
 

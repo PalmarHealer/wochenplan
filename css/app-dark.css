@@ -2280,9 +2280,9 @@ input[type="button"].btn-block {
   color: #ced4da;
   text-align: left;
   list-style: none;
-  background-color: #212529;
+  background-color: #25282b;
   background-clip: padding-box;
-  border: 1px solid #212529;
+  border: 1px solid #25282b;
   border-radius: 0.25rem; }
 
 .dropdown-menu-left {

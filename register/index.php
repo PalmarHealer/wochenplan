@@ -5,6 +5,7 @@ require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
 require $include_path . "/dependencies/email.php";
+global $pdo, $smtp, $domain, $webroot, $relative_path, $version;
 
 session_start();
 

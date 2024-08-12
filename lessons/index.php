@@ -3,7 +3,7 @@ $include_path = __DIR__ . "/..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
-global $pdo, $create_lessons, $permission_level, $webroot, $relative_path, $version;
+global $pdo, $create_lessons, $permission_level, $create_lessons_for_others, $id, $webroot, $relative_path, $version;
 
 CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
@@ -29,8 +29,8 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
     <!-- Date Range Picker CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) == "true") echo "disabled"; ?>>
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) != "true") echo "disabled"; ?>>
 	<!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css">
 </head>

@@ -3,6 +3,8 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $version, $relative_path, $create_lessons, $create_lessons_for_others, $permission_level, $permission_level_names, $webroot, $id, $pdo;
+
 CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
 <!doctype html>
@@ -113,7 +115,42 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
 
          }
 ?>
+<!doctype html>
+<html lang="de">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 
+
+      <title>Krankmeldungen Verwalten</title>
+
+
+      <!-- Simple bar CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css?version=<?php echo $version; ?>">
+      <!-- Fonts CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/overpass.css?version=<?php echo $version; ?>">
+      <!-- Icons CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/feather.css?version=<?php echo $version; ?>">
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/dataTables.bootstrap4.css?version=<?php echo $version; ?>">
+      <!-- Date Range Picker CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
+      <!-- App CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) == "true") echo "disabled"; ?>>
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) != "true") echo "disabled"; ?>>
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
+      <!-- Site Css -->
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/select2.css?version=<?php echo $version; ?>">
+   </head>
+   <body class="vertical light">
+      <div class="wrapper">
+          <?php
+          $keep_pdo = true;
+          require $include_path . "/include/nav.php";
+          ?>
          <main role="main" class="main-content">
              <form action="" method="post">
                  <div class="container-fluid">

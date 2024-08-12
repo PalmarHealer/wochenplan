@@ -6,8 +6,8 @@
     <link rel="icon" href="../favicon.ico">
     <title>Maintenance</title>
     <!-- App CSS -->
-    <link rel="stylesheet" href="../css/app-light.css" id="lightTheme">
-    <link rel="stylesheet" href="../css/app-dark.css" id="darkTheme" disabled>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) == "true") echo "disabled"; ?>>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) != "true") echo "disabled"; ?>>
 </head>
 <body class="light ">
 <div class="wrapper vh-100">
