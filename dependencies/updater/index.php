@@ -43,23 +43,19 @@ if (isset($_GET['installVersion'])) {
 
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
-                $fileinfo = pathinfo($filename);
-
+                $fileInfo = pathinfo($filename);
                 // Skip unwanted files
                 if ($filename === $rootFolder . '/dependencies/config.php' || $filename === $rootFolder . '/dependencies/updater/index.php') {
                     continue;
                 }
-
-                if (!array_key_exists('extension', $fileinfo)) {
+                if (!array_key_exists('extension', $fileInfo)) {
                     // Skip directories
                     continue;
                 }
-
                 // Build the source and target paths
                 $sourcePath = "zip://" . $zipFile . "#" . $filename;
                 $relativePath = substr($filename, strlen($rootFolder) + 1);
                 $finalPath = $targetPath . '/' . $relativePath;
-
                 $directoryPath = dirname($finalPath);
                 if (!in_array($directoryPath, $createdDirectories)) {
                     if (!is_dir($directoryPath)) {
@@ -67,21 +63,14 @@ if (isset($_GET['installVersion'])) {
                     }
                     $createdDirectories[] = $directoryPath;
                 }
-
                 // Copy file from zip to the target location
                 copy($sourcePath, $finalPath);
             }
-
             $zip->close();
-            unlink($zipFile); // Optionally delete the zip file after extraction
+            unlink($zipFile);
 
-            // Optionally remove empty directories
-            foreach ($createdDirectories as $dir) {
-                if (is_dir_empty($dir)) {
-                    rmdir($dir);
-                }
-            }
-
+            SetSetting("version", $Onlineversion['version'], $pdo);
+            deleteUpdateFolders(__DIR__);
             Redirect("./?message=update_success");
         } else {
             Redirect("./?message=update_failed");
@@ -90,13 +79,6 @@ if (isset($_GET['installVersion'])) {
         Redirect("./?message=wrong_version");
     }
 }
-
-// Helper function to check if directory is empty
-function is_dir_empty($dir): ?bool {
-    if (!is_readable($dir)) return NULL;
-    return (count(scandir($dir)) == 2);
-}
-
 ?>
 <!doctype html>
 <html lang="de">

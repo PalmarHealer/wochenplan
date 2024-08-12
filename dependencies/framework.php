@@ -5,6 +5,8 @@ global $webroot, $permission_level ,$permission_needed, $manage_other_users, $mt
 
 use JetBrains\PhpStorm\NoReturn;
 
+$version = GetSetting("version", $pdo);
+
 if (isset($current_day)) {
     if (!validateDate($current_day, 'Y-m-d')) {
         $mte_lunch_data = "%mte%";

@@ -138,5 +138,3 @@ $keep_dpo = false;
 $relative_path = $webroot;
 
 $header = "true";
-
-$version = "3.0.3";

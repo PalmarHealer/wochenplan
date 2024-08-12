@@ -25,6 +25,13 @@
       "name": "Auto Updater finalisation",
       "release_date": "2024-08-12",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.3.zip"
+    },
+    {
+      "id": "5",
+      "version": "3.0.4",
+      "name": "Auto Updater remove update folder",
+      "release_date": "2024-08-12",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.4.zip"
     }
   ]
 }
