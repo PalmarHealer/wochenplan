@@ -1,11 +1,16 @@
-name: Release on Manual Trigger
+name: Create release for lates version
 
 on:
   workflow_dispatch:  # Manual trigger via GitHub UI
-
+    inputs:
+      should_run:
+        description: 'This Release has not been genrated jet?'
+        required: true
+        type: boolean
 jobs:
   create_release:
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.should_run == 'true' }}
 
     steps:
     - name: Checkout code
