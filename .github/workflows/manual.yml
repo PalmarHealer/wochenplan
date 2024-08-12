@@ -1,4 +1,4 @@
-name: Create release for lates version
+name: Create release for latest version
 
 on:
   workflow_dispatch:  # Manual trigger via GitHub UI
