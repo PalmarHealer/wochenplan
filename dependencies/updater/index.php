@@ -6,7 +6,7 @@ require $include_path . "/dependencies/framework.php";
 global $relative_path, $version, $pdo, $webroot, $id, $manage_other_users;
 
 if (isset($_GET['installVersion'])) {
-    $installVersion = $_GET['install'];
+    $installVersion = $_GET['installVersion'];
     $json_url = 'https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/versioner.json';
     $json_data = file_get_contents($json_url);
     $versions = json_decode($json_data, true);
@@ -21,7 +21,7 @@ if (isset($_GET['installVersion'])) {
     }
 
     if ($downloadLink) {
-        $installDir = $include_path . "/installed_versions";
+        $installDir = __DIR__ . "/installed_versions";
 
         if (!is_dir($installDir)) {
             mkdir($installDir, 0755, true);
@@ -36,11 +36,51 @@ if (isset($_GET['installVersion'])) {
         $zip = new ZipArchive;
         if ($zip->open($zipFile) === TRUE) {
             $zip->extractTo($installDir);
-            $zip->close();
+            // Verschiebe diesen Aufruf vor das Schließen des Zip-Archivs
+            $extractedFolder = $installDir . '/' . $zip->getNameIndex(0); // Get the root directory of the extracted files
+            $extractedFolder = rtrim($extractedFolder, '/');
+            $zip->close(); // Verschiebe den close-Aufruf hierhin, nachdem du getNameIndex() verwendet hast
+
+            $dirIterator = new RecursiveDirectoryIterator($extractedFolder, FilesystemIterator::SKIP_DOTS);
+            $iterator = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::SELF_FIRST);
+
+            foreach ($iterator as $item) {
+                $targetPath = str_replace($extractedFolder, __DIR__, $item->getPathname());
+
+                if ($item->isDir()) {
+                    if (basename($item) !== 'dependencies') {
+                        if (!is_dir($targetPath)) {
+                            mkdir($targetPath, 0755, true);
+                        }
+                    }
+                } else {
+                    if (!str_contains($targetPath, '/dependencies/')) {
+                        rename($item->getPathname(), $targetPath);
+                    }
+                }
+            }
+
+            // Optionally delete the unzipped folder
+            function deleteDir($dirPath): void {
+                if (!is_dir($dirPath)) return;
+                $files = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($dirPath, FilesystemIterator::SKIP_DOTS),
+                    RecursiveIteratorIterator::CHILD_FIRST
+                );
+                foreach ($files as $fileInfo) {
+                    $todo = ($fileInfo->isDir() ? 'rmdir' : 'unlink');
+                    $todo($fileInfo->getRealPath());
+                }
+                rmdir($dirPath);
+            }
+
+            deleteDir($extractedFolder);
+
             echo "Update installed successfully!";
         } else {
             echo "Failed to unzip the update.";
         }
+
 
         // Optionally delete the zip file after extraction
         unlink($zipFile);
@@ -108,10 +148,11 @@ if (isset($_GET['installVersion'])) {
                             $versions = json_decode($json_data, true);
                             foreach ($versions['versions'] as $Onlineversion) {
                                 $is_installed = ($Onlineversion['version'] === $version) ? 'installiert' : 'verfügbar';
+                                $is_installed_color = ($Onlineversion['version'] === $version) ? 'badge-success' : 'badge-primary';
                                 echo '<tr>
                                                 <td>' . $Onlineversion['version'] . '</td>
                                                 <td>' . $Onlineversion['release_date'] . '</td>
-                                                <td><span class="badge badge-pill badge-success">'  . $is_installed . '</span></td>';
+                                                <td><span class="badge badge-pill ' . $is_installed_color . '">'  . $is_installed . '</span></td>';
                                 if ($Onlineversion['version'] == $version) echo '<td><a type="button" class="btn mb-2 btn-primary disabled">Installed</a></td>';
                                 else echo '<td><a type="button" class="btn mb-2 btn-primary" href="./?installVersion=' . $Onlineversion['version'] .'">Install</a></td>';
 
