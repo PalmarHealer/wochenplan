@@ -1,11 +1,16 @@
 <?php
 require_once __DIR__ . "/config.php";
-global $webroot, $permission_needed, $mte_url, $mte_secret, $pdo, $domain, $mte_lunch_data;
+require_once __DIR__ . "/mysql.php";
+global $webroot, $permission_level ,$permission_needed, $manage_other_users, $mte_url, $mte_secret, $pdo, $domain, $mte_lunch_data, $relative_path;
 
 use JetBrains\PhpStorm\NoReturn;
 
 if (isset($current_day)) {
-    $mte_lunch_data = GetDataFromDBIfNotExistGetFromAPI($current_day, "mte", $mte_url, $mte_secret, $pdo);
+    if (!validateDate($current_day, 'Y-m-d')) {
+        $mte_lunch_data = "%mte%";
+    } else {
+        $mte_lunch_data = GetDataFromDBIfNotExistGetFromAPI($current_day, "mte", $mte_url, $mte_secret, $pdo);
+    }
 } else {
     $mte_lunch_data = "%mte%";
 }
@@ -52,7 +57,7 @@ if (!$page == "external") {
     }
 
     if (isset($_SESSION['asl_userid'])) {
-        if (!GetUserByID($_SESSION['asl_userid'],"available", $pdo)) {
+        if (!GetUserByID($_SESSION['asl_userid'], "available", $pdo)) {
             Logout($webroot . "/login/?message=please-login&return_to=" . GetCurrentUrl());
         }
     } else {
@@ -70,7 +75,12 @@ if (!$page == "external") {
     $vorname = GetUserByID($id, "vorname", $pdo);
     $nachname = GetUserByID($id, "nachname", $pdo);
 
-    //GetSetting("maintenance", $pdo);
+    $maintenance = GetSetting("maintenance", $pdo);
+    if ($maintenance and $permission_level < $manage_other_users) {
+        if (!str_contains(GetCurrentUrl(), "maintenance")) {
+            Redirect($relative_path . "/maintenance");
+        }
+    }
 }
 
 //Framework functions
@@ -96,19 +106,11 @@ function validateDate($date, $format = 'Y-m-d H:i:s'): bool {
     return $d && $d->format($format) == $date;
 }
 
-function replacePlaceholders($string, $date): string {
+function replacePlaceholders($string): string {
 
     global $mte_lunch_data;
-    if (!validateDate($date, 'Y-m-d')) {
-        return $string;
-    }
+
     $placeholders = array(
-        '%knr%'   => modNumber(intval(date("W")), 3) + 2,
-        '%knr:1%' => modNumber(intval(date("W")) + 1, 3) + 2,
-        '%knr:2%' => modNumber(intval(date("W")) + 2, 3) + 2,
-        '%knr:3%' => modNumber(intval(date("W")) + 3, 3) + 2,
-        '%knr:4%' => modNumber(intval(date("W")) + 4, 3) + 2,
-        '%knr:5%' => modNumber(intval(date("W")) + 5, 3) + 2,
         '%mte%' => $mte_lunch_data,
         '%<3%' => "manu ist der beste",
     );
@@ -120,7 +122,8 @@ function replacePlaceholders($string, $date): string {
 }
 
 function GetDataFromDBIfNotExistGetFromAPI($date, $type, $APIUrl, $APISecret, $pdo) {
-    if ($type == "mte2") {
+    if ($type == "mte") {
+
         $DBString = GetLunchData($date, $pdo);
         if (!isset($DBString) OR $DBString == "") {
             $data = json_decode(RequestAPI($APIUrl, $APISecret, $date), true);
@@ -144,6 +147,13 @@ function DecodeFromJson($string):string {
     $string ??= "Da ist irgendwo was schiefgelaufen...";
     return json_decode("\"" . $string . "\"");
 }
+function convertSpecialCharsToEntities($inputString): ?string {
+    $patterns = array("/ä/", "/ö/", "/ü/", "/Ä/", "/Ö/", "/Ü/", "/ß/");
+    $replacements = array("&auml;", "&ouml;", "&uuml;", "&Auml;", "&Ouml;", "&Uuml;", "&szlig;");
+    $outputString = preg_replace($patterns, $replacements, $inputString);
+    return $outputString;
+}
+
 
 
 /**
@@ -162,7 +172,7 @@ function random_string(): string {
     return $str;
 }
 
-function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $echo = true): string {
+function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $echo = true): string {
     $pdo = restorePDOifNeeded($pdo);
 
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
@@ -170,37 +180,78 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $echo = true): s
     }
     $sick = false;
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
-    if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
-        $sick = true;
-    } else {
-        foreach (GetAllSickNotesRaw($pdo) as $sickNote) {
 
-            if (intval($sickNote['userid']) == $userid) {
-                $dates = array();
-                $dates[1] = $sickNote['start_date'];
-                $dates[2] = $sickNote['end_date'];
-                if (IsDateBetween($dates, $date)) {
-                    $sick = true;
+    if (isset($userid)) {
+        $userid = processUserId($userid);
+
+        if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
+            $sick = true;
+            $userIdsFound = $userid;
+        } else {
+            $userIdsFound = array();
+            foreach ($sickNoteRaw as $sickNote) {
+                if (in_array(intval($sickNote['userid']), $userid)) {
+                    $userIdsFound[intval($sickNote['userid'])] = true;
+                    if (count($userIdsFound) === count($userid)) {
+                        $sick = true;
+                        break;
+                    }
                 }
-
             }
-
         }
+
+        $lesson_username    = processUserNames($userid, $pdo);
+
+    } else {
+        $lesson_username = false;
+        $userIdsFound = array();
     }
 
-    $lesson_name        = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)), $date);
-    $lesson_username    = replacePlaceholders(DecodeFromJson(GetUserByID($userid, "vorname", $pdo)), $date);
-    $lesson_description = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "description", $pdo)), $date);
+    $lesson_name        = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)));
 
-    $return = "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='lessons pointer' style='background-color: " . GetLessonInfo($date, $time, $room, 'box-color', $pdo) . ";'><b class='lesson'>";
+    $lesson_description = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "description", $pdo)));
+
+    $box_color_value = GetLessonInfo($date, $time, $room, 'box-color', $pdo);
+    if ($box_color_value != "") {
+        $box_color = "style='background-color: " . $box_color_value . ";'";
+    }
+
+    $return = "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='lessons pointer' " . ($box_color ?? "") . ">";
+
+    if (!is_bool($lesson_username)) {
+        $return .= "<p class='author'>";
+        $names = [];
+        $count = 0;
+        foreach ($lesson_username as $key => $username) {
+            $name = "";
+            if (array_key_exists($key, $userIdsFound)) {
+                if ($userIdsFound[$key]) {
+                    $name .= "<s>";
+                }
+            }
+            $name .= $username;
+            if (array_key_exists($key, $userIdsFound)) {
+                if ($userIdsFound[$key]) {
+                    $name .= "</s>";
+                }
+            }
+            $names[] = $name;
+            $count = $count + 1;
+        }
+        if (count($names) > 2) {
+            $return .= implode(", ", array_slice($names, 0, 2)) . ", ...";
+        } else {
+            $return .= implode(", ", $names);
+        }
+
+        $return .= "</p>";
+    }
+
     if ($sick) $return .= "<s>";
-    $return .= $lesson_name;
+    $return .= "<b>" . $lesson_name . "</b>";
     if ($sick) $return .= "</s>";
-    $return .= "</b><br><p class='author'>";
-    if ($sick) $return .= "<s>";
-    $return .= "(" . $lesson_username . ")";
-    if ($sick) $return .= "</s>";
-    $return .= "</p><p class='description'>";
+
+    $return .= "<p class='description'>";
     if ($sick) $return .= "<s>";
     $return .= $lesson_description;
     if ($sick) $return .= "</s>";
@@ -211,7 +262,7 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $echo = true): s
     return $return;
 }
 
-function PrintInfoWithDesc($date, $time, $room, $db, $webroot, $echo = true): string {
+function PrintInfoWithDesc($date, $time, $room, $db, $webroot, $sickNoteRaw, $echo = true): string {
     $pdo = restorePDOifNeeded($db);
 
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
@@ -219,7 +270,7 @@ function PrintInfoWithDesc($date, $time, $room, $db, $webroot, $echo = true): st
     }
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
     $sick = false;
-    foreach (GetAllSickNotesRaw($pdo) as $sickNote) {
+    foreach ($sickNoteRaw as $sickNote) {
 
         if (intval($sickNote['userid']) == $userid) {
             $dates = array();
@@ -233,8 +284,8 @@ function PrintInfoWithDesc($date, $time, $room, $db, $webroot, $echo = true): st
 
     }
 
-    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo), $date);
-    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo), $date);
+    $lesson_description = replacePlaceholders(GetLessonInfo($date, $time, $room, "description", $pdo));
+    $lesson_name        = replacePlaceholders(GetLessonInfo($date, $time, $room, "name", $pdo));
 
     $return = "<div onclick='window.location=\"" . $webroot  . "/lessons/details/?id=" . GetLessonInfo($date, $time, $room, "id", $pdo) . "&date=" . $date . "\"' class='no_padding bold lessons pointer'><b class='no_padding lesson'>";
     if ($sick) $return .= "<s>";
@@ -255,16 +306,15 @@ function modNumber($number, $mod): int {
     return $number % $mod +1;
 }
 
-function PrintInfo($date, $time, $room, $db, $webroot, $echo = true): string {
+function PrintInfo($date, $time, $room, $db, $webroot, $sick_notes, $echo = true): string {
     $pdo = restorePDOifNeeded($db);
 
     if (!GetLessonInfo($date, $time, $room, "available", $pdo)) {
         return("");
     }
-    $value = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)), $date);
+    $value = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)));
 
     $user_names = ExplodeStringToArray($value);
-    $sick_notes = GetAllSickNotesRaw($pdo);
     foreach ($sick_notes as $sickNote) {
 
         $username = GetUserByID($sickNote["userid"], "vorname", $pdo);
@@ -293,7 +343,25 @@ function surroundString($originalString, $stringToSurround) {
     }
     return $originalString;
 }
+function processUserId($userid): array {
+    if (str_contains($userid, ':')) {
+        $userid = explode(':', $userid);
+    } else {
+        $userid = array($userid);
+    }
 
+    return $userid;
+}
+function processUserNames(array $userIds, $pdo): array {
+    $results = [];
+    foreach ($userIds as $userId) {
+        $userDataJson = GetUserByID($userId, "vorname", $pdo);
+        $decodedData = DecodeFromJson($userDataJson);
+        $processedData = replacePlaceholders($decodedData);
+        $results[$userId] = $processedData;
+    }
+    return $results;
+}
 function ExplodeStringToArray($string): array {
     $string = preg_replace('/[^A-Za-z0-9\-üöä]/', ' ', $string);
 
@@ -311,7 +379,7 @@ function ExplodeStringToArray($string): array {
 /**
  * @throws DOMException
  */
-function prepareTableToDisplay($html, $current_day, $webroot, $pdo, $date, $sick): bool|string {
+function prepareTableToDisplay($html, $current_day, $webroot, $pdo, $date, $sick, $sickNoteRaw): bool|string {
     if (is_array($html)) {
         $html2 = str_replace('"', '(quotes)', reset($html));
     } else {
@@ -334,17 +402,10 @@ function prepareTableToDisplay($html, $current_day, $webroot, $pdo, $date, $sick
 
     $dbString = serialize($pdo);
     foreach ($elements as $element) {
-        $fragment = $element->ownerDocument->createDocumentFragment();
         $room = $element->getAttribute('room');
         $time = $element->getAttribute('time');
 
-        if ($room == '9' OR $time == '1' OR ($time == '12' AND $room != '10') OR ($time == '13' AND $room == '10')) {
-            $lesson = PrintInfo($current_day, $time, $room, $dbString, $webroot, false);
-        } elseif ($time == '12' OR $time == '14' AND $room == '10') {
-            $lesson = PrintInfoWithDesc($current_day, $time, $room, $dbString, $webroot, false);
-        } else {
-            $lesson = PrintLessonToPlan($current_day, $time, $room, $dbString, $webroot, false);
-        }
+        $lesson = PrintLessonToPlan($current_day, $time, $room, $dbString, $webroot, $sickNoteRaw, false);
         $script = $dom->createTextNode($lesson);
         $element->appendChild($script);
     }
@@ -355,6 +416,7 @@ function prepareTableToDisplay($html, $current_day, $webroot, $pdo, $date, $sick
     $modifiedHtml = preg_replace('/^<!DOCTYPE.+?>/', '', $modifiedHtml);
     $modifiedHtml = preg_replace('/^<html><body>/', '', $modifiedHtml);
     $modifiedHtml = preg_replace('/%date%/i', $date, $modifiedHtml);
+    $modifiedHtml = replacePlaceholders($modifiedHtml);
     $modifiedHtml = preg_replace('/%sick%/i', $sick, $modifiedHtml);
     return          html_entity_decode($modifiedHtml, ENT_NOQUOTES);
 }
@@ -431,10 +493,52 @@ function PrintDays($date, $weekday_names_long): void {
                     </div>'; }
 }
 
-function CheckPermission($required, $present, $redirect): void {
+function displayChildLessons($parentId, $pdo) {
+    $output = '
+                            
+                            <div class="col-md-12 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <strong class="card-title">Tages bearbeitungen</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- table -->
+                                        <table class="table table-hover pointer">
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Angebot</th>
+                                                <th>Beschreibung</th>
+                                                <th>Ort</th>
+                                                <th>Zeitpunkt</th>
+                                                <th>Tag</th>
+                                                <th>Farbe</th>
+                                                <th>Person</th>
+                                                <th>Notizen</th>
+                                                <th>Aktionen</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            ';
+    $tmp = GetAllChildLessons($parentId, $pdo);
+    if ($tmp === "") return "";
+    $output .= $tmp;
+    $output .= '
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> <!-- simple table -->';
+    return $output;
+}
+
+
+function CheckPermission($required, $present, $redirect): bool {
     if($present < $required) {
+        if ($redirect == null) return false;
         Redirect($redirect);
     }
+    return true;
 }
 
 function IsPermitted($required, $present): bool {
@@ -446,7 +550,7 @@ function IsPermitted($required, $present): bool {
 
 function IsDateBetween($dates, $date_to_check): bool {
     $start_timestamp = strtotime($dates[1]);
-    $end_timestamp = strtotime($dates[2]);
+    $end_timestamp = strtotime($dates[2] ?? $dates[1]);
     $date_to_check_timestamp = strtotime($date_to_check);
 
     if ($date_to_check_timestamp >= $start_timestamp && $date_to_check_timestamp < $end_timestamp) {
@@ -562,6 +666,7 @@ function prepareHtml($html): array|string|null {
 
 #[NoReturn] function Redirect($redirectURL): void {
     //header("Location: $redirectURL");
+    if ($redirectURL == "") GoPageBack();
     echo "<script>window.location.href='$redirectURL';</script>";
     exit();
 }

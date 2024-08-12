@@ -83,7 +83,7 @@ function endSelection(event) {
         var selectedCells = $('td.selected');
 
         if (selectedCells.length === 1) {
-            $(".form-control[type='text']:not(.name)").prop('disabled', false);
+            $(".form-control").not("#color, #name").prop('disabled', false);
 
             var time = selectedCells.attr('time');
             var room = selectedCells.attr('room');
@@ -94,7 +94,7 @@ function endSelection(event) {
             $('.form-control#label').val(label);
         } else {
 
-            $(".form-control[type='text']:not(.name)").prop('disabled', true);
+            $(".form-control").not("#color, #name").prop('disabled', true);
             $('.form-control#time').val(null);
             $('.form-control#room').val(null);
             $('.form-control#label').val(null);

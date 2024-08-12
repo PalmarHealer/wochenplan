@@ -1,10 +1,9 @@
 <?php
-$include_path = __DIR__ . "/..";
-        $mte_needed = true;
+        $include_path = __DIR__ . "/..";
         require $include_path . "/dependencies/config.php";
         require $include_path . "/dependencies/mysql.php";
         require $include_path . "/dependencies/framework.php";
-        global $relative_path, $version, $weekday_names_long, $id, $room_names, $times, $pdo, $webroot, $vorname, $nachname;
+        global $relative_path, $version, $weekday_names_long, $id, $create_lessons, $room_names, $times, $pdo, $webroot, $vorname, $nachname;
 	?>
 <!doctype html>
 <html lang="de">
@@ -64,67 +63,45 @@ $include_path = __DIR__ . "/..";
                 <div class="col">
                   <div class="row align-items-center">
                     <div class="col-md-7">
-                        <h4 class="name-badge mb-1"><?php echo $vorname . " " . $nachname ?></h4>
+                        <h4 class="name-badge mb-1">Hallo, <?php echo $vorname . " " . $nachname ?></h4>
                     </div>
                   </div>
                   </div>
               </div>
-                <div class="row my-2">
-
-                    <div onclick="window.location='../plan/week'" class="pointer align-items-center col-md-4 center2">
-                        <div class="card mb-4 shadow">
-                            <div class="card-body my-n3">
-                                <div class="row align-items-center">
-                                    <div class="col-3 text-center">
-                                        <span class="circle circle-lg bg-light">
-                                          <i class="fe fe-calendar fe-24 text-primary"></i>
-                                        </span>
-                                    </div>
-                                    <div class="col">
-                                        <a href="#">
-                                            <h1 class="h5 mt-4 mb-1">Wochenübersicht</h1>
-                                        </a>
-                                        <br>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <a href="../plan/week" class="d-flex justify-content-between text-muted"><span>Angebote ansehen</span><i
-                                            class="fe fe-chevron-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
                 <div class="row my-4">
                     <?php
                     PrintDays(date("Y-m-d",time()), $weekday_names_long);
                     ?>
                 </div>
-			  <div class="full-percentage">
-              <h6 class="mb-3">Deine Angebote</h6>
-              <table class="table table-borderless table-striped table-hover">
-                <thead>
-                          <tr>
-                            <th></th>
-                            <th>Angebot</th>
-                            <th>Beschreibung</th>
-                            <th>Ort</th>
-                            <th>Zeitpunkt</th>
-                            <th>Tag</th>
-                            <th>Farbe</th>
-                            <th>Notizen</th>
-                            <th>Aktionen</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-							<?php
-								GetAllLessonsFromUserAndPrintThem($id, "4", $room_names, $times, $pdo, $webroot);
-							?>
-                        </tbody>
-              </table>
-			  </div>
+                <?php
+                $tmp = '<div class="full-percentage">
+                  <h6 class="mb-3">Deine Angebote</h6>
+                  <table class="table table-borderless table-striped table-hover">
+                      <thead>
+                      <tr>
+                          <th></th>
+                          <th>Angebot</th>
+                          <th>Beschreibung</th>
+                          <th>Ort</th>
+                          <th>Zeitpunkt</th>
+                          <th>Tag</th>
+                          <th>Farbe</th>
+                          <th>Notizen</th>
+                          <th>Aktionen</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      ';
+                      $output = GetAllLessonsFromUserAndPrintThem($id, "4", $room_names, $times, $pdo, $webroot);
+                      if ($output == "") {
+                          $tmp = "";
+                      }
+                      else {
+                          $tmp .= $output;
+                          $tmp .= '</tbody></table></div>';
+                      }
+                      echo $tmp;
+                ?>
             </div> <!-- /.col-12 -->
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
@@ -141,6 +118,7 @@ $include_path = __DIR__ . "/..";
     <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
     <script>
         $(document).ready(function() {
             detectBrowser();
@@ -148,7 +126,7 @@ $include_path = __DIR__ . "/..";
         function detectBrowser() {
             if (navigator.userAgent.indexOf("Firefox") !== -1) {
                 // Browser is Firefox
-                const html = `<div class="alert alert-warning alert-dismissible fade show" role="alert">Der Wochenplan ist leider nicht für Firefox optimiert worden. Bitte überlege einen anderen Browser zu verwenden oder auf eventuelle Probleme zu stoßen. Danke!</div>`;
+                const html = `<div class="alert alert-warning" role="alert">Der Wochenplan ist leider nicht für Firefox optimiert worden. Bitte überlege einen anderen Browser zu verwenden oder auf eventuelle Probleme zu stoßen. Danke!</div>`;
                 $(".unsupported-browser").html(html);
             }
 

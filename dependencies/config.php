@@ -62,7 +62,7 @@ $db_password = "password";
 
 //---------- General information: ----------
 
-$domain = "http://localhost:63342" . $webroot;
+$domain = "http://localhost" . $webroot;
 
 $analyticsId = "your google analytics key";
 

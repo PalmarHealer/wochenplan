@@ -47,164 +47,41 @@ if (!isset($_GET["date"])) {
   </head>
 
   <body class="full">
-
-  <h1>
-      Loading
-      <div class="dots">
-          <span class="dot z"></span><span class="dot f"></span><span class="dot s"></span><span class="dot t"><span class="dot l"></span></span>
-      </div>
-  </h1>
-  <style>
-      @import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap);
-      body,
-      h1 {
-          box-sizing: border-box;
-      }
-      .dot .l,
-      .dot.z {
-          position: absolute;
-      }
-      body {
-          display: grid;
-          place-content: center;
-          min-height: 100vh;
-          margin: 0;
-          padding: 2px;
-          overflow: hidden;
-      }
-      h1 {
-          font-family: "Open Sans", -apple-system, "Segoe UI", sans-serif;
-          font-size: 50px;
-          font-weight: 700;
-          color: #212121;
-      }
-      .dots {
-          display: inline-flex;
-      }
-      .dots--animate .dot.z {
-          -webkit-animation: 0.8s 0.2s forwards scale;
-          animation: 0.8s 0.2s forwards scale;
-      }
-      .dots--animate .dot.f,
-      .dots--animate .dot.s {
-          -webkit-animation: 0.5s forwards right;
-          animation: 0.5s forwards right;
-      }
-      .dots--animate .dot.l {
-          -webkit-animation: 0.4s linear 0.1s forwards rightDown, 2s linear 0.4s forwards drop;
-          animation: 0.4s linear 0.1s forwards rightDown, 2s linear 0.4s forwards drop;
-      }
-      .dot {
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          background: #212121;
-          border-radius: 10px;
-          position: relative;
-          margin-left: 6px;
-      }
-      .dot.z {
-          transform: scale(0);
-      }
-      @-webkit-keyframes scale {
-          100% {
-              transform: scale(1);
-          }
-      }
-      @keyframes scale {
-          100% {
-              transform: scale(1);
-          }
-      }
-      .dot.f,
-      .dot.s {
-          transform: translateX(0);
-      }
-      @-webkit-keyframes right {
-          100% {
-              transform: translateX(16px);
-          }
-      }
-      @keyframes right {
-          100% {
-              transform: translateX(16px);
-          }
-      }
-      .dot.t {
-          background: 0 0;
-      }
-      .dot .l {
-          margin-left: 0;
-          top: 0;
-          left: 0;
-      }
-      @-webkit-keyframes rightDown {
-          50% {
-              top: 4px;
-              left: 16px;
-          }
-          100% {
-              top: 12px;
-              left: 24px;
-          }
-      }
-      @keyframes rightDown {
-          50% {
-              top: 4px;
-              left: 16px;
-          }
-          100% {
-              top: 12px;
-              left: 24px;
-          }
-      }
-      @-webkit-keyframes drop {
-          100% {
-              transform: translate(70px, calc(35px + (100vh / 2)));
-          }
-      }
-      @keyframes drop {
-          100% {
-              transform: translate(70px, calc(35px + (100vh / 2)));
-          }
-      }
-  </style>
-
+  <div class="progress mb-3" style="height: 30px; width: 50vw; top: 50%; position: relative; left: 25%;">
+      <div class="progress-bar bg-primary" role="progressbar" style="width: 0;"></div>
+  </div>
   </body>
 
 
   <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
+  <script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
   <script>
+      let isUpdating = false;
       <?php
-      if (isset($_GET['debug'])) {
-        echo "setTimeout(hide_btn, 6000);";
-        echo "reloadData();";
-      }
-      elseif (!isset($_GET['show_loading'])) {
-          echo "setTimeout(hide_btn, 6000);";
-          echo "reloadData();";
-          echo "setInterval(reloadData, 6000);";
-      }
-      else {
-        echo '$(document).ready(function() {
-                        setTimeout(reloadData, 2500);
-                        setTimeout(hide_btn, 6000);
-                        let $ = (t) => document.querySelector(t),
-                        dots = $(".dots");
-                        animate(dots, "dots--animate");
-                         setInterval(reloadData, 6000);
-                    });';
-      }
+      if (!isset($_GET['debug'])) echo "setInterval(fetchData, 6000);";
+      if (!isset($_GET['load'])) echo "fetchData(true);";
       ?>
 
-      const elem = document.documentElement;
+      $(document).ready(function() {
+          updateProgressBar();
+      });
+
+      let updateBar = true;
+      function updateProgressBar() {
+          const progressBar = $('.progress-bar');
+          const currentValue = progressBar.width() / progressBar.parent().width() * 100;
+          if (currentValue < 100 && updateBar) {
+              progressBar.css('width', currentValue + 5 + '%');
+              setTimeout(updateProgressBar, 100);
+          }
+      }
 
       function customPrint() {
         if (navigator.userAgent.indexOf("Firefox") === -1) {
-          // Browser ist nicht Firefox
+          // Browser is not Firefox
           window.print();
         } else {
-          // Browser ist Firefox
+          // Browser is Firefox
           const html = `
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Nicht Unterstützt</strong> das Drucken in Firefox wird leider nicht unterstützt.<button onclick="closePrintAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -215,11 +92,11 @@ if (!isset($_GET["date"])) {
             }
 
       }
-
       function closePrintAlert() {
         $(".alert-dismissible").fadeOut();
       }
 
+      const elem = document.documentElement;
       function openFullscreen() {
         if (elem.requestFullscreen) {
           elem.requestFullscreen();
@@ -244,68 +121,95 @@ if (!isset($_GET["date"])) {
           $(".close_fullscreen").hide();
       }
 
-      function updateDateInUrl(daysToAddOrSubtract, element) {
-          // Holen Sie das Datum aus der GET-Variable "date" im Format "YYYY-MM-DD"
+      function fetchData(fullReload = false, dateParam) {
           const urlParams = new URLSearchParams(window.location.search);
-          const dateString = urlParams.get('date');
-
-          // Wenn die Variable nicht existiert, verwenden Sie das aktuelle Datum
-          const date = dateString ? new Date(dateString) : new Date();
-
-          // Fügen Sie die angegebene Anzahl von Tagen zum Datum hinzu oder ziehen Sie sie ab
-          date.setDate(date.getDate() + daysToAddOrSubtract);
-
-          // Konvertieren Sie das Datum in das erforderliche Format "YYYY-MM-DD"
-          const formattedDate = date.toISOString().slice(0, 10);
-
-          // Erstellen Sie die neue URL mit dem aktualisierten Datum
-          const newUrl = window.location.origin + window.location.pathname + '?date=' + formattedDate;
-
-          // Aktualisieren Sie die URL der aktuellen Seite
-          window.history.replaceState({}, document.title, newUrl);
-
-          //TODO: Animate/Rotate loader icon
-          // Entfernen Sie alle Klassen und fügen Sie die gewünschten Klassen hinzu
-          $(element).removeClass().addClass('plan_btn fe fe-24 fe-loader disabled_cursor');
-
-
-          reloadData(formattedDate);
-      }
-
-
-      function hide_btn() {
-          $(".close_fullscreen").hide();
-      }
-
-      function reloadData(dateParam) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const dateValue = dateParam || urlParams.get('date');
+          const dateValue = dateParam || urlParams.get('date');
           let modeData = urlParams.get('mode') || 'normal';
+          let deferred = $.Deferred();  // Create a Deferred object
+
           $.ajax({
-          url: "./reload<?php echo ($_GET['version'] ?? '3') ?>.php",
-          type: "POST",
+              url: `./reload<?php echo ($_GET['version'] ?? '3') ?>.php`,
+              type: "POST",
               data: {
                   date: dateValue,
                   mode: modeData
               },
-          cache: false,
-          success: function(data) {
-            console.log("Data reloaded");
-            $(".full").html(data);
-          }
-        });
+              cache: false,
+              success: function(data) {
+                  if (fullReload) {
+                      console.log("Data loaded");
+                      updateBar = false;
+                      $('.progress-bar').css('width', '100%');
+                      setTimeout(function() {
+                          $(".full").fadeOut(250, function() {
+                              $(this).html(data).fadeIn(250);
+                              deferred.resolve(true);
+                          });
+                      }, 250);
+                  } else {
+                      console.log("Data reloaded");
+                      $('.content').html(data);
+                      deferred.resolve(true);
+                  }
+              },
+              error: function() {
+                  console.error("Failed to load data");
+                  deferred.reject(false);
+              }
+          });
+
+          return deferred.promise();
       }
 
-      function animate(t, a) {
-          t.classList.add(a),
-              setTimeout(() => {
-                  t.classList.remove(a),
-                      setTimeout(() => {
-                          animate(t, a);
-                      }, 500);
-              }, 2500);
+
+      function updateDateInUrl(daysToAddOrSubtract, element) {
+          if (isUpdating) {
+              console.log("Update is already in progress.");
+              return $.Deferred().reject().promise();
+          }
+          isUpdating = true;
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const dateString = urlParams.get('date');
+          const date = dateString ? new Date(dateString) : new Date();
+
+          // Initially add or subtract days
+          date.setDate(date.getDate() + daysToAddOrSubtract);
+
+          // Skip weekends: Adjust date depending on whether moving forwards or backwards
+          if (daysToAddOrSubtract > 0) {
+              // Moving forward
+              while (date.getDay() === 0 || date.getDay() === 6) {
+                  if (date.getDay() === 6) {
+                      date.setDate(date.getDate() + 2); // If Saturday, jump to Monday
+                  } else {
+                      date.setDate(date.getDate() + 1); // If Sunday, just move to Monday
+                  }
+              }
+          } else {
+              // Moving backward
+              while (date.getDay() === 0 || date.getDay() === 6) {
+                  if (date.getDay() === 0) {
+                      date.setDate(date.getDate() - 2); // If Sunday, jump to Friday
+                  } else {
+                      date.setDate(date.getDate() - 1); // If Saturday, move to Friday
+                  }
+              }
+          }
+
+          const year = date.getFullYear();
+          const month = date.getMonth() + 1;
+          const day = date.getDate();
+          const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+          const newUrl = window.location.origin + window.location.pathname + '?date=' + formattedDate;
+          window.history.replaceState({}, document.title, newUrl);
+
+          document.title = "Plan - " + formattedDate.split('-').reverse().join('.');
+
+          $(element).removeClass().addClass('spinner-border spinner-border-sm btn-spinner disabled_cursor');
+
+          return fetchData(true, formattedDate);
       }
 
   </script>
-
 </html>

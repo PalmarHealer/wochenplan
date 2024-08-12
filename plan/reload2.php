@@ -42,7 +42,7 @@ require_once  $include_path . "/dependencies/framework.php";
             <?php
 
             $names = array();
-            foreach (GetAllSickNotesRaw($pdo) as &$sickNote) {
+            foreach (GetAllSickNotesRaw($pdo, $current_day) as &$sickNote) {
                     $dates = array();
                     $dates[1] = $sickNote['start_date'];
                     $dates[2] = $sickNote['end_date'];

@@ -12,12 +12,13 @@ global $pdo, $db, $webroot, $relative_path, $permission_level, $create_lessons, 
 <div class="alert-message col-12 mb-4">
     <?php
     $weekday = (new DateTime($current_day))->format('N');
-    $date = '<b class="white_text modt">';
+    $date = '<p class="white_text modt bold">';
     $date .= $weekday_names[$weekday] . " " . date('d.m.Y', strtotime($current_day));
     $date .= '</b>';
     $names = array();
     $sick_return = '<p class="white_text modt">';
-    foreach (GetAllSickNotesRaw($pdo) as &$sickNote) {
+    $sickNoteRaw = GetAllSickNotesRaw($pdo, $current_day);
+    foreach ($sickNoteRaw as &$sickNote) {
         $dates = array();
         $dates[1] = $sickNote['start_date'];
         $dates[2] = $sickNote['end_date'];
@@ -39,31 +40,34 @@ global $pdo, $db, $webroot, $relative_path, $permission_level, $create_lessons, 
     ?>
 
 </div>
-<table class="full tg">
-    <?php
-    try {
-        echo prepareTableToDisplay(
-            GetSettingWithSuffix("plan", GetSettingWithSuffix("plan-template", "active", $pdo), $pdo),
-            $current_day,
-            $webroot,
-            $db,
-            $date,
-            $sick_return
-        );
-    } catch (DOMException $e) {
-        ConsoleLog("Error while loading plan. Please contact an administrator");
-        Alert("Error while loading plan. Please contact an administrator");
-    }
-    ?>
-</table>
+<div style="overflow-y: auto">
+    <table class="full tg">
+        <?php
+        try {
+            echo prepareTableToDisplay(
+                GetSettingWithSuffix("plan", GetSettingWithSuffix("plan-template", "active", $pdo), $pdo),
+                $current_day,
+                $webroot,
+                $db,
+                $date,
+                $sick_return,
+                $sickNoteRaw
+            );
+        } catch (DOMException $e) {
+            ConsoleLog("Error while loading plan. Please contact an administrator");
+            Alert("Error while loading plan. Please contact an administrator");
+        }
+        ?>
+    </table>
+</div>
 <div class="btnPanel">
     <span onclick="openFullscreen()"    class="plan_btn open_fullscreen fe fe-24 fe-maximize-2 pointer"></span>
     <span onclick="closeFullscreen()"   class="plan_btn close_fullscreen fe fe-24 fe-minimize-2 pointer"></span>
     <?php
     if (!($_POST['mode'] == "week")) {
         echo '
-            <span onclick="updateDateInUrl(-1, this)" class="plan_btn fe fe-24 fe-arrow-left pointer"></span>
-            <span onclick="updateDateInUrl(1, this)"  class="plan_btn fe fe-24 fe-arrow-right pointer"></span>
+            <span onclick="updateDateInUrl(-1, this).done(function() {isUpdating = false;})" class="plan_btn fe fe-24 fe-arrow-left pointer"></span>
+            <span onclick="updateDateInUrl(1, this).done(function() {isUpdating = false;})"  class="plan_btn fe fe-24 fe-arrow-right pointer"></span>
             <span onclick="customPrint()" class="plan_btn fe fe-24 fe-download pointer"></span>';
     }
     if (IsPermitted($create_lessons, $permission_level) and !($_POST['mode'] == "week")) {

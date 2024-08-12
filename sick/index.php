@@ -49,7 +49,6 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
           <div class="row justify-content-center">
             <div class="col-12">
               <h2 class="mb-2 page-title">Krankmeldungen</h2>
-                <!--<p class="card-text">Kleine Seiten Beschreibung</p> -->
               <div class="row my-4">
                 <!-- Small table -->
                 <div class="col-md-12">
@@ -59,7 +58,6 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                       <table class="table datatables table-hover pointer" id="dataTable-1">
                         <thead>
                           <tr>
-                              <th></th>
                               <th>Person</th>
                               <th>Von</th>
                               <th>Bis</th>
@@ -68,8 +66,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                         </thead>
                         <tbody>
 							<?php
-                                GetAllSickNotes($pdo);
-								$pdo = null;
+                                GetAllSickNotes($permission_level, $create_lessons_for_others, $id, $pdo);
 							?>
                         </tbody>
                       </table>
@@ -80,7 +77,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
             </div> <!-- .col-12 -->
           </div> <!-- .row -->
 		<div class="btn-box w-100 mt-4 mb-1 right">
-			<a href="<?php echo $relative_path; ?>/sick/edit" type="button" class="btn mb-2 btn-primary">Krankmeldung erstellen</a>
+			<a href="<?php echo $relative_path; ?>/sick/details" type="button" class="btn mb-2 btn-primary right">Krankmeldung erstellen</a>
         </div>
         </div> <!-- .container-fluid -->
 		
@@ -100,6 +97,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
     <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/jquery.dataTables.min.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/dataTables.bootstrap4.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
 	<script>
       $('#dataTable-1').DataTable(
       {

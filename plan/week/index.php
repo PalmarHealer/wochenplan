@@ -1,5 +1,4 @@
 <?php
-global $relative_path, $version;
 $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
@@ -65,6 +64,7 @@ foreach ($dates as $date) {
 
 
 <script src="<?php echo $relative_path; ?>/js/jquery.min.js?version=<?php echo $version; ?>"></script>
+<script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
 <script>
     <?php
     if (isset($_GET['debug'])) {

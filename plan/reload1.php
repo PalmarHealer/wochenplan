@@ -3,6 +3,7 @@ $include_path = __DIR__ . "/..";
 require_once $include_path . "/dependencies/config.php";
 require_once  $include_path . "/dependencies/mysql.php";
 require_once  $include_path . "/dependencies/framework.php";
+global $weekday_names, $pdo, $webroot;
 
 $current_day = $_POST['date'];
 ?>
@@ -34,7 +35,7 @@ $current_day = $_POST['date'];
             <?php
 
             $names = array();
-            foreach (GetAllSickNotesRaw($pdo) as &$sickNote) {
+            foreach (GetAllSickNotesRaw($pdo, $current_day) as &$sickNote) {
                     $dates = array();
                     $dates[1] = $sickNote['start_date'];
                     $dates[2] = $sickNote['end_date'];

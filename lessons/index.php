@@ -73,8 +73,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
                         </thead>
                         <tbody>
 							<?php
-                                GetAllLessons(GetSetting("rooms", $pdo), GetSetting("times", $pdo), $pdo);
-								$pdo = null;
+                                GetAllLessons($permission_level, $create_lessons_for_others, $id, $pdo);
 							?>
                         </tbody>
                       </table>
@@ -85,7 +84,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
             </div> <!-- .col-12 -->
           </div> <!-- .row -->
 		<div class="btn-box w-100 mt-4 mb-1 right">
-			<a href="<?php echo $relative_path; ?>/lessons/details" type="button" class="btn mb-2 btn-primary">Angebot erstellen</a>
+			<a href="<?php echo $relative_path; ?>/lessons/details" type="button" class="btn mb-2 btn-primary right">Angebot erstellen</a>
         </div>
         </div> <!-- .container-fluid -->
 		
@@ -105,6 +104,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
     <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/jquery.dataTables.min.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/dataTables.bootstrap4.min.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
 	<script>
       $('#dataTable-1').DataTable(
       {
@@ -114,6 +114,7 @@ CheckPermission($create_lessons, $permission_level, $webroot . "/dashboard/?mess
               [ 8, 16, 32, 64, "Alle"]
           ]
       });
+
     </script>
   </body>
 </html>

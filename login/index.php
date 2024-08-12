@@ -6,84 +6,90 @@
     require $include_path . "/dependencies/framework.php";
     global $webroot, $domain, $pdo, $relative_path, $version;
 
-session_start();
+    session_start();
 
-$redirect = $_GET['return_to'] ?? $webroot . '/dashboard/';
+    $redirect = $_GET['return_to'] ?? $webroot . '/dashboard/';
 
 
-//Überprüfe ob Nutzer vielleicht schon eingeloggt ist. 
-//Überprüfe auf den 'Angemeldet bleiben'-Cookie
-if(!isset($_SESSION['asl_userid']) && isset($_COOKIE['asl_identifier']) && isset($_COOKIE['asl_securitytoken'])) {
-   $identifier = $_COOKIE['asl_identifier'];
-   $securitytoken = $_COOKIE['asl_securitytoken'];
-   
-   $statement = $pdo->prepare("SELECT * FROM securitytokens WHERE identifier = ?");
-   $result = $statement->execute(array($identifier));
-   $securitytoken_row = $statement->fetch();
-   
-   if(sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
-       Redirect($domain . '/error/cookie/');
-       die('Ein vermutlich gestohlener Security Token wurde identifiziert');
-   } else { //Token war korrekt         
-      //Setze neuen Token
-      $neuer_securitytoken = random_string();            
-      $insert = $pdo->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
-      $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
-      setcookie("asl_identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
-      setcookie("asl_securitytoken",$neuer_securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
-      
-      //Logge den Benutzer ein
-      $_SESSION['asl_userid'] = $securitytoken_row['user_id'];
-   }
-}
- 
-if(!isset($_SESSION['asl_userid'])) {
-	
-	if(isset($_GET['login'])) {
-		$email = $_POST['email'];
-        $password = $_POST['password'];
 
-   
-		$statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-		$result = $statement->execute(array('email' => $email));
-		$user = $statement->fetch();
-      
-		//Überprüfung des Passworts
-		if ($user !== false && password_verify($password, $user['passwort'])) {
-			$_SESSION['asl_userid'] = $user['id'];
-      
-			//Möchte der Nutzer angemeldet beleiben?
-			if(isset($_POST['angemeldet_bleiben'])) {
-				$identifier = random_string();
-				$securitytoken = random_string();
-         
-				$insert = $pdo->prepare("INSERT INTO securitytokens (user_id, identifier, securitytoken) VALUES (:user_id, :identifier, :securitytoken)");
-				$insert->execute(array('user_id' => $user['id'], 'identifier' => $identifier, 'securitytoken' => sha1($securitytoken)));
-				setcookie("asl_identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
-				setcookie("asl_securitytoken",$securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
-			}
-            Redirect($redirect);
-			die();
-		} else {
-			$errorMessage = "E-Mail oder Passwort war(en) ungültig<br>";
-            $tip = '<h2 class="h6 mb-3">Hast du dein Passwort vergessen? Dann <a href="' . $relative_path . '/reset-password">setzte es zurück</a>.</h2>';
-		}
-	}
-} else {
-	header('Location: ' . $webroot . '/dashboard');
-	exit;
-}
-if (isset($_GET["message"])) {
-    $message = $_GET["message"];
+    //Überprüfe ob Nutzer vielleicht schon eingeloggt ist.
+    //Überprüfe auf den 'Angemeldet bleiben'-Cookie
+    if(!isset($_SESSION['asl_userid']) && isset($_COOKIE['asl_identifier']) && isset($_COOKIE['asl_securitytoken'])) {
+       $identifier = $_COOKIE['asl_identifier'];
+       $securitytoken = $_COOKIE['asl_securitytoken'];
 
-    if ($_GET["message"] == "register-success") {
-        $getMessage = "Du wurdest erfolgreich Registriert. Bitte melde dich jetzt mit den gerade eingegebenen Zugangsdaten an.";
+       $statement = $pdo->prepare("SELECT * FROM securitytokens WHERE identifier = ?");
+       $result = $statement->execute(array($identifier));
+       $securitytoken_row = $statement->fetch();
+
+       if(sha1($securitytoken) !== $securitytoken_row['securitytoken']) {
+           Redirect($domain . '/error/cookie/');
+           die('Ein vermutlich gestohlener Security Token wurde identifiziert');
+       } else { //Token war korrekt
+          //Setze neuen Token
+          $neuer_securitytoken = random_string();
+          $insert = $pdo->prepare("UPDATE securitytokens SET securitytoken = :securitytoken WHERE identifier = :identifier");
+          $insert->execute(array('securitytoken' => sha1($neuer_securitytoken), 'identifier' => $identifier));
+          setcookie("asl_identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
+          setcookie("asl_securitytoken",$neuer_securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
+
+          //Logge den Benutzer ein
+          $_SESSION['asl_userid'] = $securitytoken_row['user_id'];
+       }
     }
-    if ($_GET["message"] == "please-login") {
-        $getMessage = "Du musst dich anmelden um diese Seite sehen zu können.";
+
+    if(!isset($_SESSION['asl_userid'])) {
+
+    	if(isset($_GET['login'])) {
+    		$email = $_POST['email'];
+            $password = $_POST['password'];
+
+
+    		$statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+    		$result = $statement->execute(array('email' => $email));
+    		$user = $statement->fetch();
+
+    		//Überprüfung des Passworts
+    		if ($user !== false && password_verify($password, $user['passwort'])) {
+    			$_SESSION['asl_userid'] = $user['id'];
+
+    			//Möchte der Nutzer angemeldet beleiben?
+    			if(isset($_POST['angemeldet_bleiben'])) {
+    				$identifier = random_string();
+    				$securitytoken = random_string();
+
+    				$insert = $pdo->prepare("INSERT INTO securitytokens (user_id, identifier, securitytoken) VALUES (:user_id, :identifier, :securitytoken)");
+    				$insert->execute(array('user_id' => $user['id'], 'identifier' => $identifier, 'securitytoken' => sha1($securitytoken)));
+    				setcookie("asl_identifier",$identifier,time()+(3600*24*365)); //1 Jahr Gültigkeit
+    				setcookie("asl_securitytoken",$securitytoken,time()+(3600*24*365)); //1 Jahr Gültigkeit
+    			}
+                Redirect($redirect);
+    			die();
+    		} else {
+    			$errorMessage = "E-Mail oder Passwort war(en) ungültig<br>";
+                $tip = '<a class="btn btn-lg btn-outline-warning btn-block" href="' . $relative_path . '/reset-password">Passwort vergessen</a>';
+    		}
+    	}
+    } else {
+        $maintenance = GetSetting("maintenance", $pdo);
+        if ($maintenance) {
+            Logout("./?message=logout-reason-maintenance");
+        } else {
+            Redirect($webroot . '/dashboard');
+        }
     }
-}
-$pdo = null;
+    if (isset($_GET["message"])) {
+        $message = $_GET["message"];
+
+        if ($_GET["message"] == "register-success") {
+            $getMessage = "Du wurdest erfolgreich Registriert. Bitte melde dich jetzt mit den gerade eingegebenen Zugangsdaten an.";
+        } elseif ($_GET["message"] == "please-login") {
+            $getMessage = "Du musst dich anmelden um diese Seite sehen zu können.";
+        } elseif ($_GET["message"] == "logout-reason-maintenance") {
+            $getMessage = "Der Wochenplan befindet sich gerade in Maintenance und nur Administratoren ist der Zugang gestattet.";
+        }
+    }
+    $pdo = null;
 ?>
 
 <!doctype html>
@@ -144,9 +150,11 @@ $pdo = null;
             <label>
               <input type="checkbox" name="angemeldet_bleiben" value="1"> Angemeldet bleiben (dafür werden Cookies genutzt)</label>
           </div>
-            <h2 class="h6 mb-3">Hast du noch kein Account? Dann <a href="<?php echo $relative_path; ?>/register">frag hier einen an</a>.</h2>
             <?php echo ($tip ?? ''); ?>
           <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+            <hr>
+            <h2 class="h6 mb-3">Hast du noch kein Account? Dann erstelle dir jetzt einen.</h2>
+            <a class="btn btn-lg btn-secondary btn-block" href="<?php echo $relative_path; ?>/register">Erstelle ein Account</a>
           <p class="mt-5 mb-3 text-muted">© 2023</p>
         </form>
       </div>
@@ -162,6 +170,7 @@ $pdo = null;
     <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
 
   </body>
 </html>

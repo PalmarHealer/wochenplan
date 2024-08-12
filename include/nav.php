@@ -9,12 +9,36 @@ if (!$keep_pdo) {
         <i class="fe fe-menu navbar-toggler-icon"></i>
     </button>
 
+
+    <?php
+    if (isset($_GET['message'])) {
+        $messages = array(
+            "unauthorized" => "Dazu hast du keine Berechtigung",
+            "logout-reason-maintenance" => "Der Wochenplan befindet sich gerade in den Serverarbeiten",
+            "invalid_token" => "Ungültiger Token",
+            "token_expired" => "Token abgelaufen",
+            "reset_success" => "Passwort erfolgreich zurückgesetzt",
+            "lesson_created" => "Passwort erfolgreich zurückgesetzt"
+        );
+        $messageTone = array(
+            "unauthorized" => "alert-danger",
+            "logout-reason-maintenance" => "alert-warning",
+            "invalid_token" => "alert-danger",
+            "token_expired" => "alert-warning",
+            "reset_success" => "alert-success",
+            "lesson_created" => "alert-success"
+        );
+        echo '<div class="userMessage alert ' . $messageTone[$_GET['message']] . ' center" role="alert"> ' . $messages[$_GET['message']] . ' </div>';
+    }
+    ?>
+
     <ul class="nav">
+        <!--
         <li class="nav-item">
             <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="light">
                 <i class="fe fe-sun fe-16"></i>
             </a>
-        </li><!--
+        </li>
       <li class="nav-item">
          <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-shortcut">
          <span class="fe fe-grid fe-16"></span>
@@ -96,7 +120,7 @@ if ($permission_level >= $create_lessons) {
                 </a>
 					         <ul class="collapse list-unstyled pl-4 w-100" id="sick">
 					             <a class="nav-link pl-3" href="'. $relative_path . '/sick/"><span class="ml-1">Übersicht</span></a>
-                                 <a class="nav-link pl-3" href="' . $relative_path . '/sick/edit/"><span class="ml-1">Krankmeldung erstellen</span></a>                   
+                                 <a class="nav-link pl-3" href="' . $relative_path . '/sick/details/"><span class="ml-1">Krankmeldung erstellen</span></a>                   
                              </ul>
                           </ul>';
                 }?>
@@ -153,10 +177,16 @@ if ($permission_level >= $create_lessons) {
             </li>
           </ul> -->
         <div class="bottom-navbar-elements btn-box w-100 mt-4 mb-1">
-            <div onclick="window.location='https://nauren.de'"                          class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/nauren.svg"  alt="Nauren" class="logo-footer"></div>
+            <div                                                                        class="logo-footer-div"><img src="<?php echo $relative_path; ?>/img/nauren.svg"  alt="Nauren" class="logo-footer"></div>
             <div                                                                        class="logo-footer-div"><img src="<?php echo $relative_path; ?>/img/manu.svg" alt="Manu-Logo" class="logo-footer-manu"></div>
-            <div onclick="window.location='https://www.jetbrains.com/phpstorm/'"        class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/phpstorm.svg"  alt="PayPal" class="logo-footer"></div>
-            <div onclick="window.location='https://github.com/PalmarHealer/wochenplan'" class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/github.svg"  alt="GitHub" class="logo-footer"></div>
+            <div onclick="openInNewTab('https://www.jetbrains.com/phpstorm/')"        class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/phpstorm.svg"  alt="PayPal" class="logo-footer"></div>
+            <div onclick="openInNewTab('https://github.com/PalmarHealer/wochenplan')" class="pointer logo-footer-div"><img src="<?php echo $relative_path; ?>/img/github.svg"  alt="GitHub" class="logo-footer"></div>
+            <script>
+                function openInNewTab(url) {
+                    const win = window.open(url, '_blank');
+                    win.focus();
+                }
+            </script>
         </div>
     </nav>
 </aside>

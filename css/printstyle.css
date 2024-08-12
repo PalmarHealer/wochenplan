@@ -126,6 +126,11 @@ td,
 .tg td:not(:has(div:not(.no_padding))) {
     padding: 10px 5px;
 }
+.tg td[style="background-color: rgb(227, 189, 180);"] {
+    padding: 10px 5px;
+}
+
+
 .td * {
     color: black;
     font-family: Abel, serif;
