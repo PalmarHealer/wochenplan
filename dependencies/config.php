@@ -139,4 +139,4 @@ $relative_path = $webroot;
 
 $header = "true";
 
-$version = "2.1.0";
+$version = "2.1.2";
