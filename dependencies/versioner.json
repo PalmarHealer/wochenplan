@@ -2,16 +2,19 @@
   "repository": "Wochenplan-Repo",
   "versions": [
     {
+      "id": "1",
       "version": "3.0.0",
       "release_date": "2024-08-12",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.zip"
     },
     {
+      "id": "2",
       "version": "3.0.1",
       "release_date": "2024-08-12",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.1.zip"
     },
     {
+      "id": "3",
       "version": "3.0.2",
       "release_date": "2024-08-12",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.2.zip"
