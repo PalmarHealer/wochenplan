@@ -115,6 +115,7 @@ function replacePlaceholders($string): string {
     $placeholders = array(
         '%mte%' => $mte_lunch_data,
         '%<3%' => "manu ist der beste",
+        '%time%' => time(),
     );
     foreach ($placeholders as $placeholder => $replacement) {
         $string = str_replace($placeholder, $replacement, $string);

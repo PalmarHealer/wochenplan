@@ -53,6 +53,13 @@
       "name": "Name display fix",
       "release_date": "2024-08-12",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.7.zip"
+    },
+    {
+      "id": "8",
+      "version": "3.0.8",
+      "name": "Feature request",
+      "release_date": "2024-08-13",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.8.zip"
     }
   ]
 }
