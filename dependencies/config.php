@@ -29,12 +29,11 @@ $create_lessons = 5; //default 5
 //Default permission level to create lessons for other people
 $create_lessons_for_others = 6; //default 6
 
+//Default permission level to create repeating lessons and edit them as well
+$create_lessons_plus = 8; //default 8
+
 //Default permission level to manage other users (this also include creating and deleting)
 $manage_other_users = 10; //default 10
-
-
-//Donation link. This is where the user will be directed to if they click on the paypal icon
-$donation_link = "https://www.paypal.com/donate/buttons"; //Default is where you can create one for your own
 
 //---------- MittagessenAPI: ----------
 //For simpleness is mte used for Mittagessen
@@ -60,7 +59,12 @@ $db_password = "password";
 //and if the database is on the same server as the website then you can use "localhost"
 //specify the database to save everything like lessons and users.
 
+
+//---------- General information: ----------
+
 $domain = "http://localhost:63342" . $webroot;
+
+$analyticsId = "your google analytics key";
 
 //here you can list all allowed domains that emails allowed to register
 $allowed_domains = array(
@@ -108,6 +112,7 @@ $permission_level_names = array(
     $permission_needed => 'Benutzer',
     $create_lessons => 'Ersteller',
     $create_lessons_for_others => 'Ersteller (auch für andere)',
+    $create_lessons_plus => 'Ersteller +',
     $manage_other_users => 'Administrator',
     99 => 'Guru'
 );
@@ -134,5 +139,4 @@ $relative_path = $webroot;
 
 $header = "true";
 
-//databaseVersion.codeVersion.patch/fix
-$version = "2.0.0";
+$version = "2.1.0";
