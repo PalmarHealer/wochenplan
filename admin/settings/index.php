@@ -3,11 +3,16 @@
         require $include_path . "/dependencies/config.php";
         require $include_path . "/dependencies/mysql.php";
         require $include_path . "/dependencies/framework.php";
+        global $manage_other_users, $permission_level, $webroot, $pdo, $id, $version, $relative_path;
 
         CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 
         if (isset($_GET['delete-color'])) {
             DeleteSettingWithSuffix("colors", $_GET['delete-color'], $pdo);
+            Redirect("./");
+        }
+        if (isset($_GET['maintenance']) AND $_GET['maintenance'] == 0) {
+            UpdateSetting("maintenance", "0", $pdo);
             Redirect("./");
         }
         if (isset($_GET['save']) AND
@@ -41,8 +46,8 @@
     <!-- Date Range Picker CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) == "true") echo "disabled"; ?>>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) != "true") echo "disabled"; ?>>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
     <!-- Site CSS -->
@@ -63,6 +68,20 @@
 
                     <?php
 
+
+                    $maintenance = GetSetting("maintenance", $pdo);
+                    if ($maintenance == 1) {
+                        echo '
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading"><span class="fe fe-24 fe-alert-triangle"></span> Der Maintenance Modus ist aktiviert. <a type="button" href="./?maintenance=0" class="btn mb-2 btn-outline-danger send right-self">Deaktivieren</a></h4>
+                        <p>Der Maintenance Modus wurde Automatisch oder von einem Administrator manuell aktiviert.</p>
+                        <hr>
+                        <p class="mb-0">Jetzt Aktionen ergreifen.</p>
+                    </div>';
+                    }
+
+
+
                     $file_url = "https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/config.php?version=" . $version;
                     $file_content = file_get_contents($file_url);
 
@@ -76,7 +95,7 @@
                         if ($extracted_version == $version) {
                             echo '
                     <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading"><span class="fe fe-24 fe-check-circle"></span> Die neuste Version ist bereits Installiert. </h4>
+                        <h4 class="alert-heading"><span class="fe fe-24 fe-check-circle"></span> Die neueste Version ist bereits Installiert. </h4>
                         <p>Installierte Version:  '. $version . '</p>
                         <hr>
                         <p class="mb-0">Es sind keine weiteren Aktionen notwendig.</p>
@@ -94,13 +113,14 @@
                     } else {
                         echo '
                     <div class="alert alert-warning" role="alert">
-                        <h4 class="alert-heading"><span class="fe fe-24 fe-cloud-off"></span> Der Wochenplan hat kein zugriff auf das Internet</h4>
+                        <h4 class="alert-heading"><span class="fe fe-24 fe-cloud-off"></span> Der Wochenplan hat kein zugriff auf das Internet. </h4>
                         <p>Installierte Version:  '. $version . '</p>
                         <hr>
                         <p class="mb-0">Das ist generell nicht schlimm, aber dadurch können keine Aktualisierungen vorgenommen werden.</p>
                     </div>';
                     }
                     ?>
+
                     <div class="my-4">
 
                         <strong class="mb-0">Plan Templates</strong>
@@ -245,6 +265,7 @@
 <script src="<?php echo $relative_path; ?>/js/jquery.dataTables.min.js?version=<?php echo $version; ?>"></script>
 <script src="<?php echo $relative_path; ?>/js/dataTables.bootstrap4.min.js?version=<?php echo $version; ?>"></script>
 <script src="<?php echo $relative_path; ?>/js/coloris.min.js?version=<?php echo $version; ?>"></script>
+<script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
 <script>
     function sendActivePlanData() {
         var templateName = $("#active-template").val();

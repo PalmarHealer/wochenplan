@@ -3,6 +3,7 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $manage_other_users, $permission_level, $webroot, $pdo;
 
 CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 

@@ -3,6 +3,7 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $manage_other_users, $permission_level, $permission_level_names, $webroot, $domain, $relative_path, $version, $id, $pdo;
 
 CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 
@@ -38,8 +39,8 @@ if (isset($_GET['login-to-id'])) {
     <!-- Date Range Picker CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) == "true") echo "disabled"; ?>>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) != "true") echo "disabled"; ?>>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
 </head>
@@ -79,14 +80,14 @@ if (isset($_GET['login-to-id'])) {
                                         </thead>
                                         <tbody>
                                         <?php
-                                        GetAllUsersAndPrintThem($pdo, $permission_level_names);
+                                        GetAllUsersAndPrintThem($pdo, $permission_level_names, $permission_level, $manage_other_users);
                                         ?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <div class="btn-box w-100 mt-4 mb-1 right">
-                                <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary">Benutzer erstellen</a>
+                                <a href="<?php echo $relative_path; ?>/admin/accounts/edit" type="button" class="btn mb-2 btn-primary right">Benutzer erstellen</a>
                             </div>
 
                         </div>
@@ -110,6 +111,7 @@ if (isset($_GET['login-to-id'])) {
 <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
 <script src="<?php echo $relative_path; ?>/js/jquery.dataTables.min.js?version=<?php echo $version; ?>"></script>
 <script src="<?php echo $relative_path; ?>/js/dataTables.bootstrap4.min.js?version=<?php echo $version; ?>"></script>
+<script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
 <script>
     $('#dataTable').DataTable(
         {

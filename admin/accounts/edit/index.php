@@ -3,6 +3,7 @@ $include_path = __DIR__ . "/../../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $manage_other_users, $permission_level_names, $permission_level, $relative_path, $webroot, $version, $id, $pdo;
 
 CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 ?>
@@ -29,8 +30,8 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
       <!-- Date Range Picker CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
       <!-- App CSS -->
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
-      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) == "true") echo "disabled"; ?>>
+      <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) != "true") echo "disabled"; ?>>
       <!-- Custom CSS -->
       <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
       <!-- Site Css -->
@@ -47,10 +48,8 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
              $user_to_delete = $_GET["delete"];
              if ($permission_level >= $manage_other_users) {
                  DeleteUser($user_to_delete, $pdo);
-                 Redirect("../");
-             } else {
-                 Redirect("../");
              }
+             Redirect("../");
          }
 
      if (isset($_GET['id'])) {
@@ -60,7 +59,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
          $lesson_details['email'] = GetUserByID($userid, "email", $pdo);
          $lesson_details['permission_level'] = GetUserByID($userid, "permission_level", $pdo);
      }
-         if(UserStayedOnSite() AND ($_POST['save'] ?? 0) == "1") {
+         if(UserStayedOnSite() AND ($_POST['save'] ?? 0) == "1" AND $_SERVER["REQUEST_METHOD"] == "POST") {
              $error = false;
              $new_vorname = ($_POST['vorname'] ?? '');
              $new_nachname = ($_POST['nachname'] ?? '');
@@ -70,15 +69,13 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
 
 
              //Überprüfe, dass die E-Mail-Adresse noch nicht registriert wurde
-             if(!$error) {
-                 $statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-                 $result = $statement->execute(array('email' => $new_email));
-                 $user = $statement->fetch();
+             $statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+             $result = $statement->execute(array('email' => $new_email));
+             $user = $statement->fetch();
 
-                 if($user !== false) {
-                     $mailalredyused = "Diese E-Mail-Adresse ist bereits vergeben";
-                     $error = true;
-                 }
+             if($user !== false) {
+                 $mailalredyused = "Diese E-Mail-Adresse ist bereits vergeben";
+                 $error = true;
              }
              //Keine Fehler, wir können den Nutzer registrieren
              if(!$error) {
@@ -90,7 +87,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
 
 
 
-         } elseif (UserStayedOnSite() AND isset($_POST['update'])) {
+         } elseif (UserStayedOnSite() AND isset($_POST['update']) AND $_SERVER["REQUEST_METHOD"] == "POST") {
 
              $new_vorname = ($_POST['vorname'] ?? '');
              $new_nachname = ($_POST['nachname'] ?? '');
@@ -147,7 +144,7 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                                          <div class="form-group mb-3">
                                              <label for="helping">E-Mail</label>
                                              <?php if(isset($mailalredyused)) { echo '<p class="text-muted">'; echo $mailalredyused; echo '</p>'; }?>
-                                             <input type="email" name="email" type="text" id="helping" class="form-control" placeholder="E-Mail" maxlength="50" value="<?php if(isset($lesson_details['email'])) { echo $lesson_details['email']; }?>" required>
+                                             <input type="email" name="email" id="helping" class="form-control" placeholder="E-Mail" maxlength="50" value="<?php if(isset($lesson_details['email'])) { echo $lesson_details['email']; }?>" required>
                                          </div>
                                      </div>
                                  </div>
@@ -168,8 +165,10 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                                                  }
                                                  $count = 0;
                                                  foreach ($permission_level_names as $value => $i) {
-                                                     if ($value >= 99 AND $lesson_details['permission_level'] <= 99) {
-                                                         continue;
+                                                     if ($value >= 99 AND !$permission_level >= 99) {
+                                                         if (isset($lesson_details['permission_level'])) {
+                                                             if ($lesson_details['permission_level'] < 99) continue;
+                                                         } else continue;
                                                      }
                                                      $count++;
                                                      echo '<option value="' . $value . '" ' . ($permission_level_sel[$value] ?? '') . '>' . $i . '</option>';
@@ -200,10 +199,10 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
                                <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                               <?php
                                  if(isset($_GET['id'])) {
-                                     echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" formaction="./?update=' . $_GET['id'] . '" name="update" value="' . $_GET['id'] . '">Aktualisieren</button>';
-                                     echo '<button type="button summit" class="btn mb-2 btn-outline-danger" formaction="./?delete=' . $_GET['id'] . '">Benutzer Löschen</button>';
+                                     echo '<button style="float:right;" type="summit" class="btn mb-2 btn-outline-success" formaction="./?update=' . $_GET['id'] . '" name="update" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                     echo '<button type="summit" class="btn mb-2 btn-outline-danger" formaction="./?delete=' . $_GET['id'] . '">Benutzer Löschen</button>';
                                  } else {
-                                     echo '<button style="float:right;" type="button summit" class="btn mb-2 btn-outline-success" name="save" value="1">Benutzer Erstellen</button>';
+                                     echo '<button style="float:right;" type="summit" class="btn mb-2 btn-outline-success" name="save" value="1">Benutzer Erstellen</button>';
                                      echo '<button type="button" class="btn mb-2 btn-outline-secondary" disabled="">Benutzer Löschen</button>';
                                  }
                                  ?>
@@ -250,5 +249,6 @@ CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?
       <script src="<?php echo $relative_path; ?>/js/uppy.min.js?version=<?php echo $version; ?>"></script>
       <script src="<?php echo $relative_path; ?>/js/quill.min.js?version=<?php echo $version; ?>"></script>
       <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
+      <script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
    </body>
 </html>

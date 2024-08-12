@@ -3,6 +3,7 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $manage_other_users, $permission_level, $webroot, $pdo, $relative_path, $version, $id;
 
 CheckPermission($manage_other_users, $permission_level, $webroot . "/dashboard/?message=unauthorized");
 
@@ -36,8 +37,8 @@ if (isset($_GET['load']) and !($_GET['load'] == '')) {
     <!-- Date Range Picker CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/daterangepicker.css?version=<?php echo $version; ?>">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme">
-    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" disabled>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-light.css?version=<?php echo $version; ?>" id="lightTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) == "true") echo "disabled"; ?>>
+    <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/app-dark.css?version=<?php echo $version; ?>" id="darkTheme" <?php if (GetUserSetting($id, "darkMode", $pdo) != "true") echo "disabled"; ?>>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
     <!-- Custom Site CSS -->
@@ -73,7 +74,20 @@ if (isset($_GET['load']) and !($_GET['load'] == '')) {
                                     <label class="col-form-label" for="time">Zeit ID:</label>
                                     <div class="input-group mb-3">
 
-                                        <input placeholder="N/A" type="text" id="time" class="form-control">
+                                        <select id="time" name="time" class="form-control">
+                                            <option disabled selected value="">Zeit auswählen</option>
+                                            <?php
+                                            $array = GetSetting("times", $pdo);
+                                            if (is_array($array)) {
+                                                ksort($array);
+                                                foreach ($array as $key => $value) {
+                                                    echo "<option value='" . $key . "'>" . $value . "</option>";
+                                                }
+                                            } else {
+                                                echo "<option value='". $array . "'>" . $array . "</option>";
+                                            }
+                                            ?>
+                                        </select>
                                         <div class="input-group-append">
                                             <span class="input-group-text fe fe-24 fe-clock"></span>
                                         </div>
@@ -83,7 +97,21 @@ if (isset($_GET['load']) and !($_GET['load'] == '')) {
                                     <label class="col-form-label" for="room">Raum ID:</label>
                                     <div class="input-group mb-3">
 
-                                        <input placeholder="N/A" type="text" id="room" class="form-control">
+
+                                        <select id="room" name="room" class="form-control">
+                                            <option disabled selected value="">Raum auswählen</option>
+                                            <?php
+                                            $array = GetSetting("rooms", $pdo);
+                                            if (is_array($array)) {
+                                                ksort($array);
+                                                foreach ($array as $key => $value) {
+                                                    echo "<option value='" . $key . "'>" . $value . "</option>";
+                                                }
+                                            } else {
+                                                echo "<option value='". $array . "'>" . $array . "</option>";
+                                            }
+                                            ?>
+                                        </select>
                                         <div class="input-group-append">
                                             <span class="input-group-text fe fe-24 fe-home"></span>
                                         </div>
@@ -163,6 +191,7 @@ if (isset($_GET['load']) and !($_GET['load'] == '')) {
 <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
 <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
 <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
-<script src="<?php echo $relative_path; ?>/js/table.custom.php?version=<?php echo $version; ?>"></script>
+<script src="<?php echo $relative_path; ?>/js/table.custom.js?version=<?php echo $version; ?>"></script>
+<script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
 </body>
 </html>
