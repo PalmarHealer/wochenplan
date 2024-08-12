@@ -72,54 +72,67 @@
                     $maintenance = GetSetting("maintenance", $pdo);
                     if ($maintenance == 1) {
                         echo '
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading"><span class="fe fe-24 fe-alert-triangle"></span> Der Maintenance Modus ist aktiviert. <a type="button" href="./?maintenance=0" class="btn mb-2 btn-outline-danger send right-self">Deaktivieren</a></h4>
-                        <p>Der Maintenance Modus wurde Automatisch oder von einem Administrator manuell aktiviert.</p>
-                        <hr>
-                        <p class="mb-0">Jetzt Aktionen ergreifen.</p>
-                    </div>';
+                            <div class="alert alert-danger" role="alert">
+                                <h4 class="alert-heading"><span class="fe fe-24 fe-alert-triangle"></span> Der Maintenance Modus ist aktiviert. <a type="button" href="./?maintenance=0" class="btn mb-2 btn-outline-danger send right-self">Deaktivieren</a></h4>
+                                <p>Der Maintenance Modus wurde Automatisch oder von einem Administrator manuell aktiviert.</p>
+                                <hr>
+                                <p class="mb-0">Jetzt Aktionen ergreifen.</p>
+                            </div>';
                     }
 
-
-
-                    $file_url = "https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/config.php?version=" . $version;
+                    // URL to the JSON file containing the versions
+                    $file_url = "https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/versioner.json";
                     $file_content = file_get_contents($file_url);
-
-                    // Define the pattern to search for the version
-                    $pattern = '/\$version\s*=\s*"([0-9.]+)";/';
-
-                    // Perform the regular expression match
-                    if (preg_match($pattern, $file_content, $matches)) {
-                        // Extracted version will be in $matches[1]
-                        $extracted_version = $matches[1];
-                        if ($extracted_version == $version) {
-                            echo '
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading"><span class="fe fe-24 fe-check-circle"></span> Die neueste Version ist bereits Installiert. </h4>
-                        <p>Installierte Version:  '. $version . '</p>
-                        <hr>
-                        <p class="mb-0">Es sind keine weiteren Aktionen notwendig.</p>
-                    </div>';
-                        } else {
-                            echo '<div class="alert alert-warning" role="alert">
-                        <a type="button" class="btn mb-2 btn-outline-warning right" href="../../dependencies/updater/">Aktualisieren</a>
-                        <h4 class="alert-heading"><span class="fe fe-24 fe-alert-circle"></span> Es ist eine neue Version verfügbar. </h4>
-                        <p>Installierte Version:  <b>'. $version . '</b></p>
-                        <p>Neuste Version:  <b>'. $extracted_version . '</b></p>
-                        <hr>
-                        <p class="mb-0">Das ist generell nicht schlimm, aber durch Aktualisierungen können fehler behoben und neue Funktionen hinzukommen. </p>
-                        
-                    </div>';
-                        }
-                    } else {
+                    // Check if file content was fetched successfully
+                    if ($file_content === false) {
                         echo '
-                    <div class="alert alert-warning" role="alert">
-                        <h4 class="alert-heading"><span class="fe fe-24 fe-cloud-off"></span> Der Wochenplan hat kein zugriff auf das Internet. </h4>
-                        <p>Installierte Version:  '. $version . '</p>
-                        <hr>
-                        <p class="mb-0">Das ist generell nicht schlimm, aber dadurch können keine Aktualisierungen vorgenommen werden.</p>
-                    </div>';
+                          <div class="alert alert-warning" role="alert">
+                              <h4 class="alert-heading"><span class="fe fe-24 fe-cloud-off"></span> Der Wochenplan hat kein Zugriff auf das Internet. </h4>
+                              <p>Installierte Version: ' . $version . '</p>
+                              <hr>
+                              <p class="mb-0">Das ist generell nicht schlimm, aber dadurch können keine Aktualisierungen vorgenommen werden.</p>
+                          </div>';
+                    } else {
+                        $json_data = json_decode($file_content, true);
+                        $versions = $json_data['versions'];
+                        $latest_version_entry = null;
+
+                        // Iterate through the version arrays to find the latest one
+                        foreach ($versions as $entry) {
+                            if (version_compare($entry['version'], $version, '>')) {
+                                $latest_version_entry = $entry;
+                            }
+                        }
+                        // Check if the latest version entry is found and matches the current version
+                        if ($latest_version_entry && $latest_version_entry['version'] == $version) {
+                            echo '
+                                <div class="alert alert-success" role="alert">
+                                    <h4 class="alert-heading"><span class="fe fe-24 fe-check-circle"></span> Die neueste Version ist bereits installiert. </h4>
+                                    <p>Installierte Version: ' . $version . '</p>
+                                    <hr>
+                                    <p class="mb-0">Es sind keine weiteren Aktionen notwendig.</p>
+                                </div>';
+                        } elseif ($latest_version_entry) {
+                            echo '
+                                <div class="alert alert-warning" role="alert">
+                                    <a type="button" class="btn mb-2 btn-outline-warning right" href="../../dependencies/updater/">Aktualisieren</a>
+                                    <h4 class="alert-heading"><span class="fe fe-24 fe-alert-circle"></span> Es ist eine neue Version verfügbar. </h4>
+                                    <p>Installierte Version: <b>' . $version . '</b></p>
+                                    <p>Neuste Version: <b>' . $latest_version_entry['version'] . '</b></p>
+                                    <hr>
+                                    <p class="mb-0">Das ist generell nicht schlimm, aber durch Aktualisierungen können Fehler behoben und neue Funktionen hinzukommen. </p>
+                                </div>';
+                        } else {
+                            echo '
+                                <div class="alert alert-warning" role="alert">
+                                    <h4 class="alert-heading"><span class="fe fe-24 fe-cloud-off"></span> Der Wochenplan hat kein zugriff auf das Internet. </h4>
+                                    <p>Installierte Version: ' . $version . '</p>
+                                    <hr>
+                                    <p class="mb-0">Das ist generell nicht schlimm, aber dadurch können keine Aktualisierungen vorgenommen werden.</p>
+                                </div>';
+                        }
                     }
+
                     ?>
 
                     <div class="my-4">

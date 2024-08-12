@@ -6,7 +6,7 @@ global $webroot, $permission_level ,$permission_needed, $manage_other_users, $mt
 use JetBrains\PhpStorm\NoReturn;
 
 $version = GetSetting("version", $pdo);
-
+if (is_array($version)) $version = 0;
 if (isset($current_day)) {
     if (!validateDate($current_day, 'Y-m-d')) {
         $mte_lunch_data = "%mte%";
@@ -626,6 +626,23 @@ function restorePDOifNeeded($pdo): PDO {
     $db_password = $pdo['password'];
     $dsn = "mysql:host=$db_host;port=$db_port;dbname=$db_name";
     return new PDO($dsn, $db_user, $db_password);
+}
+function deleteUpdateFolders($dir): void {
+    if (!file_exists($dir)) {
+        return;
+    }
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach ($files as $fileInfo) {
+        if ($fileInfo->isDir()) {
+            rmdir($fileInfo->getRealPath());
+        } else {
+            unlink($fileInfo->getRealPath());
+        }
+    }
+    rmdir($dir);
 }
 function prepareHtml($html): array|string|null {
     if (is_array($html)) {
