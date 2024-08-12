@@ -3,7 +3,51 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
-global $relative_path, $version, $weekday_names_long, $id, $create_lessons, $room_names, $times, $pdo, $webroot, $vorname, $nachname;
+global $relative_path, $version, $pdo, $webroot, $id, $manage_other_users;
+
+if (isset($_GET['installVersion'])) {
+    $installVersion = $_GET['install'];
+    $json_url = 'https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/versioner.json';
+    $json_data = file_get_contents($json_url);
+    $versions = json_decode($json_data, true);
+
+    // Find the correct version in the JSON data
+    $downloadLink = null;
+    foreach ($versions['versions'] as $Onlineversion) {
+        if ($Onlineversion['version'] === $installVersion) {
+            $downloadLink = $Onlineversion['download_link'];
+            break;
+        }
+    }
+
+    if ($downloadLink) {
+        $installDir = $include_path . "/installed_versions";
+
+        if (!is_dir($installDir)) {
+            mkdir($installDir, 0755, true);
+        }
+
+        $zipFile = $installDir . '/update.zip';
+
+        // Download the file
+        file_put_contents($zipFile, file_get_contents($downloadLink));
+
+        // Unzip the file
+        $zip = new ZipArchive;
+        if ($zip->open($zipFile) === TRUE) {
+            $zip->extractTo($installDir);
+            $zip->close();
+            echo "Update installed successfully!";
+        } else {
+            echo "Failed to unzip the update.";
+        }
+
+        // Optionally delete the zip file after extraction
+        unlink($zipFile);
+    } else {
+        echo "Invalid version specified.";
+    }
+}
 ?>
 <!doctype html>
 <html lang="de">
@@ -14,7 +58,7 @@ global $relative_path, $version, $weekday_names_long, $id, $create_lessons, $roo
     <meta name="author" content="">
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 
-    <title>Übersicht</title>
+    <title>Wochenplan Updater</title>
 
     <!-- Simple bar CSS -->
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/simplebar.css?version=<?php echo $version; ?>">
@@ -37,7 +81,7 @@ global $relative_path, $version, $weekday_names_long, $id, $create_lessons, $roo
     <?php
 
     $keep_pdo = true;
-    $permission_needed = 0;
+    $permission_needed = $manage_other_users;
 
     ?>
 
@@ -45,17 +89,39 @@ global $relative_path, $version, $weekday_names_long, $id, $create_lessons, $roo
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <h2 class="h3 mb-4 page-title">Übersicht</h2>
+                    <h2 class="h3 mb-4 page-title">Updater</h2>
+                    <div class="alert card-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Version</th>
+                                <th>Release Date</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                    <div class="profilename row mt-5 align-items-center">
+                            <?php
+                            $json_url = 'https://raw.githubusercontent.com/PalmarHealer/wochenplan/main/dependencies/versioner.json';
+                            $json_data = file_get_contents($json_url);
+                            $versions = json_decode($json_data, true);
+                            foreach ($versions['versions'] as $Onlineversion) {
+                                $is_installed = ($Onlineversion['version'] === $version) ? 'installiert' : 'verfügbar';
+                                echo '<tr>
+                                                <td>' . $Onlineversion['version'] . '</td>
+                                                <td>' . $Onlineversion['release_date'] . '</td>
+                                                <td><span class="badge badge-pill badge-success">'  . $is_installed . '</span></td>';
+                                if ($Onlineversion['version'] == $version) echo '<td><a type="button" class="btn mb-2 btn-primary disabled">Installed</a></td>';
+                                else echo '<td><a type="button" class="btn mb-2 btn-primary" href="./?installVersion=' . $Onlineversion['version'] .'">Install</a></td>';
 
-                        <div class="col">
-                            <div class="row align-items-center">
-                                <div class="col-md-7">
-                                    <h4 class="name-badge mb-1">Hallo, <?php echo $vorname . " " . $nachname ?></h4>
-                                </div>
-                            </div>
-                        </div>
+                                            echo'</tr>';
+                            }
+                            echo '</ul>';
+                            ?>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div> <!-- /.col-12 -->
             </div> <!-- .row -->
