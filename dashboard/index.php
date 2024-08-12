@@ -1,10 +1,11 @@
 <?php
-        $include_path = __DIR__ . "/..";
-        require $include_path . "/dependencies/config.php";
-        require $include_path . "/dependencies/mysql.php";
-        require $include_path . "/dependencies/framework.php";
-        global $relative_path, $version, $weekday_names_long, $id, $create_lessons, $room_names, $times, $pdo, $webroot, $vorname, $nachname;
-	?>
+global $relative_path, $version, $weekday_names_long, $id, $create_lessons, $room_names, $times, $pdo, $webroot, $vorname, $nachname;
+$include_path = __DIR__ . "/..";
+require $include_path . "/dependencies/config.php";
+$permission_needed = 0;
+require $include_path . "/dependencies/mysql.php";
+require $include_path . "/dependencies/framework.php";
+?>
 <!doctype html>
 <html lang="de">
   <head>
@@ -37,7 +38,6 @@
 	  <?php
 
 		$keep_pdo = true;
-      $permission_needed = 0;
 		include $include_path . "/include/nav.php";
 
 	  ?>
