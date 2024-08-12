@@ -1,11 +1,7 @@
-name: Release on Latest Version Update
+name: Release on Manual Trigger
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'dependencies/versioner.json'
+  workflow_dispatch:  # Manual trigger via GitHub UI
 
 jobs:
   create_release:
@@ -13,7 +9,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Updated to use the latest version
+      uses: actions/checkout@v3  # Checkout the latest code from the main branch
 
     - name: Get latest version from JSON
       id: get_version
@@ -22,12 +18,12 @@ jobs:
         echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1  # Updated to a maintained version compatible with the latest changes
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v${{ env.LATEST_VERSION }}
         name: Release ${{ env.LATEST_VERSION }}
-        body: "Automated release based on version ${{ env.LATEST_VERSION }} in versioner.json. **See Changelog:** [here](https://github.com/PalmarHealer/wochenplan/commits/main/)"
+        body: "Manual release based on version ${{ env.LATEST_VERSION }} in versioner.json. **See Changelog:** [here](https://github.com/PalmarHealer/wochenplan/commits/main/)"
         draft: false
         prerelease: false
