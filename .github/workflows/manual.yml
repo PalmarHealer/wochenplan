@@ -1,4 +1,4 @@
-name: Auto Release
+name: Release on Commit
 
 on:
   push:
@@ -13,13 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Get commit SHA
+      id: vars
+      run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
+
     - name: Create GitHub Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
-        body: "Automated release of ${{ github.ref_name }}"
+        tag_name: ${{ steps.vars.outputs.sha }}
+        release_name: Release ${{ steps.vars.outputs.sha }}
+        body: "Automated release based on commit ${{ steps.vars.outputs.sha }} \ **See Changelog:** [`...main`](https://github.com/PalmarHealer/wochenplan/commits/main/)"
         draft: false
         prerelease: false
