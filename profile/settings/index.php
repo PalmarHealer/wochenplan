@@ -3,6 +3,16 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $relative_path, $version, $pdo, $id;
+
+if (isset($_GET['save']) AND $_SERVER["REQUEST_METHOD"] == "POST") {
+    $vorname_neu = $_POST['vorname'];
+    $nachname_neu = $_POST['nachname'];
+    echo UpdateUsername($id, $vorname_neu, $nachname_neu, $pdo);
+    Redirect("./");
+}
+
+
 ?>
 <!doctype html>
 <html lang="de">
@@ -32,21 +42,11 @@ require $include_path . "/dependencies/framework.php";
     <link rel="stylesheet" href="<?php echo $relative_path; ?>/css/customstyle.css?version=<?php echo $version; ?>">
   </head>
   <body class="vertical light">
-    <div class="wrapper">
-      
-	  <?php 
-	    $keep_pdo = true;
-		include $include_path. "/include/nav.php";
-
-      if (isset($_GET['save'])) {
-          $vorname_neu = $_POST['vorname'];
-          $nachname_neu = $_POST['nachname'];
-          echo UpdateUsername($id, $vorname_neu, $nachname_neu, $pdo);
-      }
-
-
-	  ?>
-	  
+  <div class="wrapper">
+      <?php
+      $keep_pdo = true;
+      include $include_path. "/include/nav.php";
+      ?>
       <main role="main" class="main-content">
         <div class="container-fluid">
           <div class="row justify-content-center">
@@ -56,20 +56,8 @@ require $include_path . "/dependencies/framework.php";
               <div class="my-4">
 
                 <form action="?save=1" method="post">
-                  <div class="profilename row mt-5 align-items-center">
-                    <div class="col-md-3 text-center mb-5">
-                      <!-- 	<div class="avatar avatar-xl">
-						<i class="fe fe-user fe-32"></i>
-						<img src="./assets/avatars/face-1.jpg" alt="..." class="avatar-img rounded-circle">
-					</div> -->
-                    </div>
-                    <div class="col">
-                      <div class="row align-items-center">
-                        <div class="col-md-7">
-                          <h4 class="name-badge mb-1"><?php if(isset($_GET['save'])) { echo $vorname_neu; } else { echo $vorname; } echo " "; if(isset($_GET['save'])) { echo $nachname_neu; } else { echo $nachname; } ?></h4>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="row mt-5">
+                      <h4 class="name-badge mb-1 margin-auto"><?php if(isset($_GET['save'])) { echo $vorname_neu; } else { echo $vorname; } echo " "; if(isset($_GET['save'])) { echo $nachname_neu; } else { echo $nachname; } ?></h4>
                   </div>
                   <hr class="my-4">
                   <div class="form-row">
@@ -83,9 +71,87 @@ require $include_path . "/dependencies/framework.php";
                     </div>
                   </div>
                   <div class="right">
-                  <button type="submit" class="btn btn-primary">Einstellungen speichern</button>
+                  <button type="submit" class="btn btn-primary">Name speichern</button>
                   </div>
                 </form>
+
+
+
+
+                  <h5 class="mb-0 mt-5">Account Einstellungen</h5>
+                  <p>Hier kannst du einstellungen treffen wie sich der Wochenplan verhalten soll.</p>
+                  <div class="list-group mb-5 shadow">
+
+                      <div class="list-group-item">
+                          <div class="row align-items-center">
+                              <div class="col">
+                                  <strong class="mb-2">Dark Mode</strong>
+                                  <?php
+                                  $tmp = GetUserSetting($id, "darkMode", $pdo);
+                                  if ($tmp == "" OR $tmp == "false") {
+                                      $value = "true";
+                                      $text = "Aktivieren";
+                                  } else {
+                                      $value = "false";
+                                      $text = "Deaktivieren";
+                                  }
+                                  ?>
+                                  <span for="darkMode" class="badge badge-pill badge-success hidden">Gespeichert</span>
+                                  <p class="text-muted mb-0">Aktiviere den Dark Mode.</p>
+                              </div> <!-- .col -->
+                              <div class="col-auto">
+                                  <button value="<?php echo $value; ?>" id="darkMode" class="settingButton btn btn-primary btn-sm"><?php echo $text; ?></button>
+                              </div> <!-- .col -->
+                          </div> <!-- .row -->
+                      </div> <!-- .list-group-item -->
+
+                      <div class="list-group-item">
+                          <div class="row align-items-center">
+                              <div class="col">
+                                  <strong class="mb-2">Google Analytics</strong>
+                                  <?php
+                                  $tmp = GetUserSetting($id, "analytics", $pdo);
+                                  if ($tmp == "" OR $tmp == "false") {
+                                      $value = "true";
+                                      $text = "Aktivieren";
+                                  } else {
+                                      $value = "false";
+                                      $text = "Deaktivieren";
+                                  }
+                                  ?>
+                                  <span for="analytics" class="badge badge-pill badge-success hidden">Gespeichert</span>
+                                  <p class="text-muted mb-0">Erlaube, dass der Wochenplan anonymisierte Nutzerdaten über dich sammeln darf, um ihn zu verbessern.</p>
+                              </div> <!-- .col -->
+                              <div class="col-auto">
+                                  <button value="<?php echo $value; ?>" id="analytics" class="settingButton btn btn-primary btn-sm"><?php echo $text; ?></button>
+                              </div> <!-- .col -->
+                          </div> <!-- .row -->
+                      </div> <!-- .list-group-item -->
+
+                      <div class="list-group-item">
+                          <div class="row align-items-center">
+                              <div class="col">
+                                  <strong class="mb-2">Experimentelles Seiten laden</strong>
+                                  <?php
+                                  $tmp = GetUserSetting($id, "experimentalSiteLoading", $pdo);
+                                  if ($tmp == "" OR $tmp == "false") {
+                                      $value = "true";
+                                      $text = "Aktivieren";
+                                  } else {
+                                      $value = "false";
+                                      $text = "Deaktivieren";
+                                  }
+                                  ?>
+                                  <span for="experimentalSiteLoading" class="badge badge-pill badge-success hidden">Gespeichert</span>
+                                  <p class="text-muted mb-0">Aktiviere das neue (noch experimentelle) Seitenladen, um die Ladezeiten zu verkürzen.</p>
+                              </div> <!-- .col -->
+                              <div class="col-auto">
+                                  <button value="<?php echo $value; ?>" id="experimentalSiteLoading" class="settingButton btn btn-primary btn-sm"><?php echo $text; ?></button>
+                              </div> <!-- .col -->
+                          </div> <!-- .row -->
+                      </div> <!-- .list-group-item -->
+
+                  </div> <!-- .list-group -->
               </div> <!-- /.card-body -->
             </div> <!-- /.col-12 -->
           </div> <!-- .row -->
@@ -103,6 +169,48 @@ require $include_path . "/dependencies/framework.php";
     <script src="<?php echo $relative_path; ?>/js/tinycolor-min.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/config.js?version=<?php echo $version; ?>"></script>
     <script src="<?php echo $relative_path; ?>/js/apps.js?version=<?php echo $version; ?>"></script>
+    <script src="<?php echo $relative_path; ?>/js/customjavascript.js?version=<?php echo $version; ?>"></script>
+    <script>
+        $(document).ready(function() {
+            $('button.settingButton').click(function() {
+                var button = $(this);
+                var currentValue = button.attr('value');
+                var newValue = (currentValue === 'true') ? 'false' : 'true';
+                $.ajax({
+                    url: 'ajax.php',
+                    type: 'POST',
+                    data: {
+                        type: 'setUserSetting',
+                        setting: $(this).attr("id"),
+                        value: $(this).attr("value")
+                    },
+                    success: function(response) {
+                        if (response.successful) {
+                            button.text(newValue === 'true' ? 'Aktivieren' : 'Deaktivieren');
+                            button.attr('value', newValue);
+                            var analyticsMessage = $('[for="' + button.attr('id') + '"]');
+                            analyticsMessage.show().delay(500).fadeOut();
+                        }
+                        console.log('Response:', response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+            $('#darkMode').on('click', function() {
+                $('body').addClass('transition');
 
+                setTimeout(function() {
+                    $('#lightTheme').prop('disabled', function(_, attr) { return !attr });
+                    $('#darkTheme').prop('disabled', function(_, attr) { return !attr });
+
+                    setTimeout(function() {
+                        $('body').removeClass('transition');
+                    }, 1000);
+                }, 50);
+            });
+        });
+    </script>
   </body>
 </html>
