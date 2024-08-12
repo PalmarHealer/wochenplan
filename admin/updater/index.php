@@ -46,7 +46,7 @@ if (isset($_GET['installVersion'])) {
                 $filename = $zip->getNameIndex($i);
                 $fileInfo = pathinfo($filename);
                 // Skip unwanted files
-                if ($filename === $rootFolder . '/dependencies/config.php' || $filename === $rootFolder . '/dependencies/updater/index.php') {
+                if ($filename === $rootFolder . '/dependencies/config.php' || $filename === $rootFolder . '/admin/updater/index.php') {
                     continue;
                 }
                 if (!array_key_exists('extension', $fileInfo)) {
@@ -75,9 +75,9 @@ if (isset($_GET['installVersion'])) {
             if (is_array($oldVersion)) SetSetting("version", $newVersion, $pdo);
             else UpdateSetting("version", $newVersion, $pdo);
             deleteUpdateFolders(__DIR__ . "/tmp");
-            Redirect("/admin/settings/?message=update_success");
+            Redirect("../settings/?message=update_success");
         } else {
-            Redirect("/admin/settings/?message=update_failed");
+            Redirect("../settings/?message=update_failed");
         }
     } else {
         Redirect("./?message=wrong_version");
@@ -143,7 +143,7 @@ if (isset($_GET['installVersion'])) {
                             $versions = json_decode($json_data, true);
 
 
-
+                            $versions['versions'] = array_reverse($versions['versions']);
                             foreach ($versions['versions'] as $Onlineversion) {
                                 $is_installed = version_compare($Onlineversion['version'], $version, '<=') ? 'installiert' : 'verfügbar';
                                 $is_installed_color = version_compare($Onlineversion['version'], $version, '<=') ? 'badge-success' : 'badge-primary';
@@ -158,7 +158,6 @@ if (isset($_GET['installVersion'])) {
                                 }
                                 echo '<td>' . $Onlineversion['release_date'] . '</td></tr>';
                             }
-                            echo '</ul>';
                             ?>
 
                             </tbody>

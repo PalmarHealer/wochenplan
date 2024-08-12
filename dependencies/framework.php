@@ -240,11 +240,12 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $e
             $names[] = $name;
             $count = $count + 1;
         }
-        if (count($names) > 2) {
-            $return .= implode(", ", array_slice($names, 0, 2)) . ", ...";
-        } else {
-            $return .= implode(", ", $names);
-        }
+        //if (count($names) > 2) {
+        //    $return .= implode(", ", array_slice($names, 0, 2)) . "...";
+        //} else {
+        //    $return .= implode(", ", $names);
+        //}
+        $return .= implode(", ", $names);
 
         $return .= "</p>";
     }

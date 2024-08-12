@@ -115,7 +115,7 @@
                         } elseif ($latest_version_entry) {
                             echo '
                                 <div class="alert alert-warning" role="alert">
-                                    <a type="button" class="btn mb-2 btn-outline-warning right" href="../../dependencies/updater/">Aktualisieren</a>
+                                    <a type="button" class="btn mb-2 btn-outline-warning right" href="../updater/">Aktualisieren</a>
                                     <h4 class="alert-heading"><span class="fe fe-24 fe-alert-circle"></span> Es ist eine neue Version verfügbar. </h4>
                                     <p>Installierte Version: <b>' . $version . '</b></p>
                                     <p>Neuste Version: <b>' . $latest_version_entry['version'] . '</b></p>
