@@ -13,20 +13,21 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Updated to use the latest version
 
     - name: Get latest version from JSON
       id: get_version
       run: |
-        echo "LATEST_VERSION=$(jq -r '.versions[-1].version' dependencies/versioner.json)" >> $GITHUB_ENV
+        LATEST_VERSION=$(jq -r '.versions[-1].version' dependencies/versioner.json)
+        echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
 
     - name: Create GitHub Release
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v1  # Updated to a maintained version compatible with the latest changes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v${{ env.LATEST_VERSION }}
-        release_name: Release ${{ env.LATEST_VERSION }}
-        body: "Automated release based on version ${{ env.LATEST_VERSION }} in versioner.json \ **See Changelog:** [`...main`](https://github.com/PalmarHealer/wochenplan/commits/main/)"
+        name: Release ${{ env.LATEST_VERSION }}
+        body: "Automated release based on version ${{ env.LATEST_VERSION }} in versioner.json. **See Changelog:** [here](https://github.com/PalmarHealer/wochenplan/commits/main/)"
         draft: false
         prerelease: false
