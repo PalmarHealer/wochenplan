@@ -67,6 +67,13 @@
       "name": "Fix decoding error",
       "release_date": "2024-08-16",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.9.zip"
+    },
+    {
+      "id": "10",
+      "version": "3.0.10",
+      "name": "Fix display error when plan was delayed",
+      "release_date": "2024-08-16",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.10.zip"
     }
   ]
 }

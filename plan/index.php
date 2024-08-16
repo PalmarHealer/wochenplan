@@ -1,9 +1,9 @@
 <?php
-global $relative_path, $version;
 $include_path = __DIR__ . "/..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
+global $relative_path, $version, $id, $pdo;
 
 
 
@@ -136,7 +136,7 @@ if (!isset($_GET["date"])) {
               },
               cache: false,
               success: function(data) {
-                  if (fullReload) {
+                  if (fullReload || isUpdating) {
                       console.log("Data loaded");
                       updateBar = false;
                       $('.progress-bar').css('width', '100%');
@@ -147,6 +147,7 @@ if (!isset($_GET["date"])) {
                           });
                       }, 250);
                   } else {
+                      updateBar = false;
                       console.log("Data reloaded");
                       $('.content').html(data);
                       deferred.resolve(true);
@@ -173,26 +174,22 @@ if (!isset($_GET["date"])) {
           const dateString = urlParams.get('date');
           const date = dateString ? new Date(dateString) : new Date();
 
-          // Initially add or subtract days
           date.setDate(date.getDate() + daysToAddOrSubtract);
 
-          // Skip weekends: Adjust date depending on whether moving forwards or backwards
           if (daysToAddOrSubtract > 0) {
-              // Moving forward
               while (date.getDay() === 0 || date.getDay() === 6) {
                   if (date.getDay() === 6) {
-                      date.setDate(date.getDate() + 2); // If Saturday, jump to Monday
+                      date.setDate(date.getDate() + 2);
                   } else {
-                      date.setDate(date.getDate() + 1); // If Sunday, just move to Monday
+                      date.setDate(date.getDate() + 1);
                   }
               }
           } else {
-              // Moving backward
               while (date.getDay() === 0 || date.getDay() === 6) {
                   if (date.getDay() === 0) {
-                      date.setDate(date.getDate() - 2); // If Sunday, jump to Friday
+                      date.setDate(date.getDate() - 2);
                   } else {
-                      date.setDate(date.getDate() - 1); // If Saturday, move to Friday
+                      date.setDate(date.getDate() - 1);
                   }
               }
           }
