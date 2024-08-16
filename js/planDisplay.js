@@ -59,48 +59,6 @@ function closeFullscreen() {
     $(".close_fullscreen").hide();
 }
 
-function fetchData(fullReload = false, dateParam) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const dateValue = dateParam || urlParams.get('date');
-    let modeData = urlParams.get('mode') || 'normal';
-    let deferred = $.Deferred();  // Create a Deferred object
-
-    $.ajax({
-        url: `./reload<?php echo ($_GET['version'] ?? '3') ?>.php`,
-        type: "POST",
-        data: {
-            date: dateValue,
-            mode: modeData
-        },
-        cache: false,
-        success: function(data) {
-            if (fullReload || isUpdating) {
-                console.log("Data loaded");
-                updateBar = false;
-                $('.progress-bar').css('width', '100%');
-                setTimeout(function() {
-                    $(".full").fadeOut(250, function() {
-                        $(this).html(data).fadeIn(250);
-                        deferred.resolve(true);
-                    });
-                }, 250);
-            } else {
-                updateBar = false;
-                console.log("Data reloaded");
-                $('.full').html(data);
-                deferred.resolve(true);
-            }
-        },
-        error: function() {
-            console.error("Failed to load data");
-            deferred.reject(false);
-        }
-    });
-
-    return deferred.promise();
-}
-
-
 function updateDateInUrl(daysToAddOrSubtract, element) {
     if (isUpdating) {
         console.log("Update is already in progress.");
