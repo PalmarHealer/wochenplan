@@ -148,7 +148,11 @@ function CodeToJson($string):string {
 }
 function DecodeFromJson($string):string {
     $string ??= "Da ist irgendwo was schiefgelaufen...";
-    return json_decode("\"" . $string . "\"");
+    $return = json_decode("\"" . $string . "\"");
+    if ($return == null) {
+        return "";
+    }
+    return $return;
 }
 function convertSpecialCharsToEntities($inputString): ?string {
     $patterns = array("/ä/", "/ö/", "/ü/", "/Ä/", "/Ö/", "/Ü/", "/ß/");
