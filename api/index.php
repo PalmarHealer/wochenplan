@@ -15,7 +15,7 @@ $date = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Check API key
-    if (!isset($_POST['secret']) OR $_POST['secret'] != "z5A683723BQ9b6YEPwY85970FatV6WtH") {
+    if (!isset($_POST['secret']) OR $_POST['secret'] != "api secret") {
         $error = true;
         $error_message = "Wrong API key.";
     }
