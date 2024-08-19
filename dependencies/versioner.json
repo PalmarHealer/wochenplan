@@ -88,6 +88,13 @@
       "name": "Revert parts of last update",
       "release_date": "2024-08-16",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.0.12.zip"
+    },
+    {
+      "id": "13",
+      "version": "3.1.0",
+      "name": "Wochenplan - API",
+      "release_date": "2024-08-19",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.1.0.zip"
     }
   ]
 }

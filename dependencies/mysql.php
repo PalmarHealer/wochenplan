@@ -804,7 +804,15 @@ function SetLunchData($date, $value, $pdo): bool|string {
 
     }
 }
-
+function DeleteLunchData($date, $pdo): bool|string {
+    try {
+        $delete_lesson = $pdo->prepare("DELETE FROM lunchdata WHERE date = ?");
+        $delete_lesson->execute(array($date));
+        return true;
+    } catch (PDOException $e) {
+        return "Fehler beim Löschen: " . $e->getMessage();
+    }
+}
 
 function GetUserSettings($userid, $pdo) {
     $information = $pdo->prepare("SELECT * FROM users WHERE id = ?");

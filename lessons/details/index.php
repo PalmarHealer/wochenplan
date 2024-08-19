@@ -712,7 +712,7 @@ else $userArray[] = $id;
 
 
 
-    var toolbarOptions = {
+    const toolbarOptions = {
         container: [
             ['bold', 'italic', 'underline', 'strike'],
             ['clean']
@@ -720,14 +720,14 @@ else $userArray[] = $id;
 
     }
 
-    var quill = new Quill('#nameEditor', {
+    const quill = new Quill('#nameEditor', {
         modules: {
             "toolbar": toolbarOptions
         },
         placeholder: 'Name des Angebotes',
         theme: 'snow',
     });
-    var quill = new Quill('#descriptionEditor', {
+    const quill2 = new Quill('#descriptionEditor', {
         modules: {
             "toolbar": toolbarOptions
         },
