@@ -44,9 +44,11 @@ if (!isset($_GET["date"])) {
 
   </head>
 
-  <body class="full">
-  <div class="progress mb-3" style="height: 30px; width: 50vw; top: 50%; position: relative; left: 25%;">
-      <div class="progress-bar bg-primary" role="progressbar" style="width: 0;"></div>
+  <body>
+  <div class="full">
+      <div class="progress mb-3" style="height: 30px; width: 50vw; top: 50%; position: relative; left: 25%;">
+          <div class="progress-bar bg-primary" role="progressbar" style="width: 0;"></div>
+      </div>
   </div>
   </body>
 
@@ -64,7 +66,7 @@ if (!isset($_GET["date"])) {
           const urlParams = new URLSearchParams(window.location.search);
           const dateValue = dateParam || urlParams.get('date');
           let modeData = urlParams.get('mode') || 'normal';
-          let deferred = $.Deferred();  // Create a Deferred object
+          let deferred = $.Deferred();
 
           $.ajax({
               url: `./reload<?php echo ($_GET['version'] ?? '3') ?>.php`,
