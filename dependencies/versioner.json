@@ -95,6 +95,13 @@
       "name": "Wochenplan - API",
       "release_date": "2024-08-19",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.1.0.zip"
+    },
+    {
+      "id": "14",
+      "version": "3.2.0",
+      "name": "Lesson deletions are not final anymore",
+      "release_date": "2024-09-23",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.1.0.zip"
     }
   ]
 }
