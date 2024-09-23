@@ -4,9 +4,9 @@
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex; /* Flexbox für einfache Ausrichtung */
-    flex-direction: column; /* Anordnung der Buttons über der Tabelle */
-    align-items: center; /* Zentrierung der Buttons */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 #editableTable {
     width: 100%;
@@ -25,7 +25,6 @@
     filter: grayscale(60%) brightness(75%);
     background-color: lightblue;
 }
-/* Stil für Zeilen- und Spaltenbeschriftungen */
 .Header {
     border: none;
     background-color: #f0f0f0;
@@ -56,8 +55,8 @@
 }
 
 #editableTable td.show-info::after {
-    content: " " attr(time) "  " attr(room);
-    font-family: "feather" !important;
+    content: "";
+    font-family: "feather", sans-serif !important;
     font-weight: 900;
     position: absolute;
     top: 0;
