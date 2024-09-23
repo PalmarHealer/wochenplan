@@ -157,8 +157,7 @@ function DecodeFromJson($string):string {
 function convertSpecialCharsToEntities($inputString): ?string {
     $patterns = array("/ä/", "/ö/", "/ü/", "/Ä/", "/Ö/", "/Ü/", "/ß/");
     $replacements = array("&auml;", "&ouml;", "&uuml;", "&Auml;", "&Ouml;", "&Uuml;", "&szlig;");
-    $outputString = preg_replace($patterns, $replacements, $inputString);
-    return $outputString;
+    return preg_replace($patterns, $replacements, $inputString);
 }
 
 
