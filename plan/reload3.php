@@ -1,7 +1,8 @@
 <?php
 
 $include_path = __DIR__ . "/..";
-$current_day = $_POST['date'];
+$current_day = ($_POST['date'] ?? '');
+$mode = ($_POST['mode'] ?? '');
 require_once $include_path . "/dependencies/config.php";
 require_once  $include_path . "/dependencies/mysql.php";
 require_once  $include_path . "/dependencies/framework.php";
@@ -64,16 +65,16 @@ global $pdo, $db, $webroot, $relative_path, $permission_level, $create_lessons, 
     <span onclick="openFullscreen()"    class="plan_btn open_fullscreen fe fe-24 fe-maximize-2 pointer"></span>
     <span onclick="closeFullscreen()"   class="plan_btn close_fullscreen fe fe-24 fe-minimize-2 pointer"></span>
     <?php
-    if (!($_POST['mode'] == "week")) {
+    if (!($mode == "week")) {
         echo '
             <span onclick="updateDateInUrl(-1, this).done(function() {isUpdating = false;})" class="plan_btn fe fe-24 fe-arrow-left pointer"></span>
             <span onclick="updateDateInUrl(1, this).done(function() {isUpdating = false;})"  class="plan_btn fe fe-24 fe-arrow-right pointer"></span>
             <span onclick="customPrint()" class="plan_btn fe fe-24 fe-download pointer"></span>';
     }
-    if (IsPermitted($create_lessons, $permission_level) and !($_POST['mode'] == "week")) {
+    if (IsPermitted($create_lessons, $permission_level) and !($mode == "week")) {
         echo '<span onclick="window.location.href=\'../lessons/details/?date=' . $current_day . '\'" class="plan_btn fe fe-24 fe-plus pointer"></span>';
     }
-    if (!($_POST['mode'] == "week")) {
+    if (!($mode == "week")) {
         echo '
             <span onclick="window.location.href=\'../dashboard\'" class="plan_btn fe fe-24 fe-home pointer"></span>';
     }
