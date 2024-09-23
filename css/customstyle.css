@@ -49,6 +49,9 @@ body {
 .margin-10 {
     margin: 10px 10px 10px 10px;
 }
+.flex-1 {
+    flex: 1;
+}
 .margin-auto {
     margin: auto;
 }
