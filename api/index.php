@@ -48,13 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($response) {
             $response = array(
                 'date' => $newDate,
-                'response' => 'success',
+                'status' => 'success',
                 'reason' => false
             );
         } else {
             $response = array(
                 'date' => $newDate,
-                'response' => 'failed',
+                'status' => 'failed',
                 'reason' => $response
             );
         }
@@ -70,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // return the json
     echo json_encode($response);
+    die();
 }
 ?>
 <!DOCTYPE html>
@@ -90,10 +91,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         h1, h2 {
             color: #333;
         }
-        code {
+        code, pre {
             background-color: #f4f4f4;
             padding: 2px 5px;
             border-radius: 5px;
+        }
+        pre {
+            white-space: pre-wrap;       /* Since CSS 2.1 */
+            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
         }
     </style>
 </head>
@@ -122,9 +130,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </ul>
 </section>
 <section>
+    <h2>Antwort-Schemata</h2>
+    <p>Je nach Anfrage und Verarbeitung kann die API unterschiedliche Antworten zurückgeben:</p>
+    <ul>
+        <li><strong>Erfolgreiche Antwort:</strong>
+            <pre>{
+    "date": "2024-08-20",
+    "status": "success",
+    "reason": false
+}</pre>
+        </li>
+        <li><strong>Fehlerhafte Antwort:</strong>
+            <pre>{
+    "date": "2024-08-20",
+    "status": "failed",
+    "reason": "Datenbankfehler: [Fehlerdetails]"
+}</pre>
+        </li>
+        <li><strong>Fehler bei der Validierung:</strong>
+            <pre>{
+    "error": "Wrong API key."
+}</pre>
+        </li>
+    </ul>
+</section>
+<section>
     <h2>Beispielanforderung</h2>
     <p>Hier ist ein Beispiel, wie man <code>curl</code> verwendet, um eine Anfrage an diesen API-Endpunkt zu stellen:</p>
-    <code>curl -X POST 'https://beispiel.com/api/update-meal' \
+    <code>curl -X POST '<?php echo $domain; ?>/api' \
         -H 'Content-Type: application/x-www-form-urlencoded' \
         -d 'secret=DeinGeheimerSchlüssel&action=update-meal&date=2024-08-20'</code>
 </section>
@@ -134,4 +167,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </section>
 </body>
 </html>
-
