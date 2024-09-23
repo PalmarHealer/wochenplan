@@ -125,8 +125,15 @@ function UpdateOrInsertSickNote($type, $pdo, $id, $userid, $start_date, $end_dat
 }
 function GetLessonInfo($day, $time, $room, $info, $pdo) {
     $identifier = GetSetting("identifier", $pdo);
-    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? ORDER BY id DESC");
-    $lessons->execute(array($identifier));
+
+    if (str_contains($day, "-")) {
+        $db_day = $day . " 23:59:59";
+        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? AND created_at <= ? ORDER BY id DESC");
+        $lessons->execute(array($identifier, $db_day));
+    } else {
+        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? ORDER BY id DESC");
+        $lessons->execute(array($identifier));
+    }
     if (str_contains($day, "-")) {
         $repeating_day = date('N', strtotime($day));
     } else {
