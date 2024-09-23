@@ -158,7 +158,7 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
                 1
             );
         }
-        if (!GetLessonInfoByID($_GET['disable_enable_lesson'], "disabled", $pdo)) {
+        elseif (!GetLessonInfoByID($_GET['disable_enable_lesson'], "disabled", $pdo)) {
 
             DisableLesson($_SESSION['asl_userid'], $_GET['disable_enable_lesson'], $pdo);
 
@@ -652,9 +652,6 @@ else $userArray[] = $id;
             let htmlContent = $(this).html();
             htmlContent = htmlContent.replace(/<span class="ql-cursor">\s*﻿?\s*<\/span>/g, '');
             let tempDiv = $('<div>').html(htmlContent);
-            console.log(htmlContent);
-            console.log("break");
-            console.log(tempDiv);
             tempDiv.find('*').not('br').each(function() {
                 if ($(this).is(':empty')) {
                     $(this).remove();
