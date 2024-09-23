@@ -19,6 +19,9 @@ $webroot = "/wochenplan";  //default /wochenplan
 $theme = "light"; //default light
 
 
+//grace days for deleting repeating lessons
+$grace_days = 3; //default 3 - code will default to 2 if not set
+
 //Standard Permission to access websites
 //0 no permission, 1 default permission, 10 and above for admins
 $permission_needed = 1; //default 1
