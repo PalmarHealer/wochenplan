@@ -9,8 +9,11 @@ $times = GetSetting("times", $pdo);
 
 CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 
+$lesson_deleted = false;
 $lesson_disabled = false;
 $disable_enable_text = "deaktivieren";
+$delete_text = "Angebot";
+$buttons_attr = "";
 
 $return_to = ($_POST['return_to'] ?? "");
 $get_date = ($_GET['date'] ?? null);
@@ -64,6 +67,7 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
     $lesson_id = ($_POST["update_lesson_with_id"] ?? null);
     $tmp_plan_date = ($_POST['plan_date'] ?? '');
     $plan_date = date("Y-m-d", strtotime($tmp_plan_date));
+    $enable_disable_lesson = $_GET['disable_enable_lesson'];
 
     if($permission_level < $create_lessons_for_others) {
         if ($new_assigned_user_id != $id) {
@@ -141,10 +145,14 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
         Redirect($return_to);
     }
 
-    elseif (isset($_GET['disable_enable_lesson'])) {
-        if (GetLessonInfo($plan_date, $new_time, $new_location, "date_type", $pdo) == 1 AND $plan_date != "") {
-            UpdateOrInsertLesson("create", $pdo, "",
-                $dub_id,
+    elseif (isset($enable_disable_lesson)) {
+        if (GetLessonInfo($plan_date, $new_time, $new_location, "date_type", $pdo) == 1 AND
+            $plan_date != "" AND
+            GetLessonInfoByID($enable_disable_lesson, "disabled", $pdo
+            )) {
+                $parent_id = (is_numeric($enable_disable_lesson) ? $enable_disable_lesson : null);
+                UpdateOrInsertLesson("create", $pdo, "",
+                $parent_id,
                 "2",
                 $plan_date,
                 $new_name,
@@ -158,13 +166,13 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
                 1
             );
         }
-        elseif (!GetLessonInfoByID($_GET['disable_enable_lesson'], "disabled", $pdo)) {
+        elseif (!GetLessonInfoByID($enable_disable_lesson, "disabled", $pdo)) {
 
-            DisableLesson($_SESSION['asl_userid'], $_GET['disable_enable_lesson'], $pdo);
+            DisableLesson($_SESSION['asl_userid'], $enable_disable_lesson, $pdo);
 
         } else {
 
-            EnableLesson($_SESSION['asl_userid'], $_GET['disable_enable_lesson'], $pdo);
+            EnableLesson($_SESSION['asl_userid'], $enable_disable_lesson, $pdo);
         }
 
         Redirect($return_to);
@@ -197,6 +205,13 @@ if (isset($_GET['id'])) {
         if (GetLessonInfoByID($lesson_id, "disabled", $pdo)) {
             $disable_enable_text = "aktivieren";
             $lesson_disabled = true;
+        }
+        if (is_numeric($lesson_details['parent_lesson_id'])) {
+            $delete_text = "Bearbeitung";
+        }
+        if (GetLessonInfoByID($lesson_id, "deleted_at", $pdo) !== null) {
+            $lesson_deleted = true;
+            $buttons_attr = "disabled";
         }
         if (str_contains($lesson_details['date-raw'], "-")) {
             $lesson_details['date-type'] = 2;
@@ -282,6 +297,9 @@ else $userArray[] = $id;
                         echo "<div class='vertical-alignment align-items-center'>";
                         echo "<h2 class='page-title'>Angebot bearbeiten</h2>";
                         echo '<div class="alert alert-success lesson-type-indicator display-inherit">  <span class="fe fe-info fe-16 mr-2"></span><p class="no_margin""> ' . $lesson_details['lesson-type-text'] . ' </p></div>';
+                        if ($lesson_deleted) {
+                            echo '<div class="alert alert-danger lesson-type-indicator display-inherit">  <span class="fe fe-alert-triangle fe-16 mr-2"></span><p class="no_margin"">Angebot gelöscht</p></div>';
+                        }
                         if ($lesson_disabled) {
                             echo '<div class="alert alert-warning lesson-type-indicator display-inherit">  <span class="fe fe-alert-triangle fe-16 mr-2"></span><p class="no_margin"">Angebot deaktiviert</p></div>';
                         }
@@ -508,27 +526,27 @@ else $userArray[] = $id;
                         ?>
 
                         <div class="col-md-12 mb-4">
-                            <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
+                            <button <?php echo $buttons_attr; ?> type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                             <?php
                             if(isset($_GET['id'])) {
 
                                 if ($lesson_details['date-type'] == 1 && isset($get_date)) {
-                                    echo '<button style="float:right;" type="sumbit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date" value="' . $get_date . '" formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
+                                    echo '<button ' . $buttons_attr . ' style="float:right;" type="sumbit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date" value="' . $get_date . '" formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
                                     if (CheckPermission($create_lessons_plus, $permission_level, null)) {
-                                        echo '<button style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
+                                        echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
                                     }
                                 } else {
-                                    echo '<button style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                    echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
 
                                 }
 
 
 
-                                echo '<button type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" formaction="./?disable_enable_lesson=' . $_GET['id'] . '">Angebot ' . $disable_enable_text . '</button>';
-                                echo '<button type="submit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">Angebot löschen</button>';
+                                echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" formaction="./?disable_enable_lesson=' . $_GET['id'] . '">Angebot ' . $disable_enable_text . '</button>';
+                                echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">' . $delete_text . ' löschen</button>';
                             } else {
-                                echo '<button style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
-                                echo '<button type="button" class="disabled_cursor lesson-details-btn btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
+                                echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
+                                echo '<button ' . $buttons_attr . ' type="button" class="disabled_cursor lesson-details-btn btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
                             }
                             ?>
                         </div>

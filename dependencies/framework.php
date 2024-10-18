@@ -186,31 +186,23 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $e
     }
     $sick = false;
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
+    $userid = processUserId($userid);
 
-    if (isset($userid)) {
-        $userid = processUserId($userid);
-
-        if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
-            $sick = true;
-            $userIdsFound = $userid;
-        } else {
-            $userIdsFound = array();
-            foreach ($sickNoteRaw as $sickNote) {
-                if (in_array(intval($sickNote['userid']), $userid)) {
-                    $userIdsFound[intval($sickNote['userid'])] = true;
-                    if (count($userIdsFound) === count($userid)) {
-                        $sick = true;
-                        break;
-                    }
+    if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
+        $sick = true;
+        $userIdsFound = $userid;
+    } else {
+        $userIdsFound = array();
+        foreach ($sickNoteRaw as $sickNote) {
+            if (in_array(intval($sickNote['userid']), $userid)) {
+                $userIdsFound[intval($sickNote['userid'])] = true;
+                if (count($userIdsFound) === count($userid)) {
+                    $sick = true;
+                    break;
                 }
             }
         }
-
-        $lesson_username    = processUserNames($userid, $pdo);
-
-    } else {
-        $lesson_username = false;
-        $userIdsFound = array();
+        $lesson_username = processUserNames($userid, $pdo);
     }
 
     $lesson_name        = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)));

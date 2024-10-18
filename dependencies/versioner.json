@@ -101,7 +101,14 @@
       "version": "3.2.0",
       "name": "Lesson deletions are not final anymore",
       "release_date": "2024-09-23",
-      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.1.0.zip"
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.2.0.zip"
+    },
+    {
+      "id": "15",
+      "version": "3.3.0",
+      "name": "Fix: Enabling lessons, displaying disabled lessons and limit db requests to 1",
+      "release_date": "2024-10-18",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.3.0.zip"
     }
   ]
 }

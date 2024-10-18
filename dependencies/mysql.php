@@ -164,7 +164,7 @@ function GetLessonInfo($day, $time, $room, $info, $pdo) {
 }
 function GetLessonInfoByID($id, $info, $pdo) {
     $identifier = GetSetting("identifier", $pdo);
-    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = ? AND identifier = ?");
+    $lessons = $pdo->prepare("SELECT * FROM angebot WHERE id = ? AND identifier = ? LIMIT 1");
     $lessons->execute(array($id, $identifier));
 
     while($sl = $lessons->fetch()) {
@@ -241,7 +241,7 @@ function ProcessInformation($sl, $info) {
     return "no further information";
 }
 function GetSickNoteByID($id, $info, $pdo) {
-    $sick = $pdo->prepare("SELECT * FROM sick WHERE id = ?");
+    $sick = $pdo->prepare("SELECT * FROM sick WHERE id = ? LIMIT 1");
     $sick->execute(array($id));
 
     while($sl = $sick->fetch()) {
@@ -272,13 +272,13 @@ function GetUserByID($UserID, $InformationType, $pdo) {
     if (!is_numeric($UserID)) {
         return "niemanden";
     }
-    $information = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $information = $pdo->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
     $information->execute(array($UserID));
     return Identify($InformationType, $information);
 
 }
 function GetUserByEmail($Email, $InformationType, $pdo) {
-    $information = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $information = $pdo->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
     $information->execute(array($Email));
     return Identify($InformationType, $information);
 
@@ -368,15 +368,29 @@ function CreateUser($vorname, $nachname, $passwort_hash, $email, $permission_lev
         'permission_level' => $permission_level
     ));
 }
-function EnableLesson($userID, $lessonID, $pdo): void {
+function EnableLesson($userID, $lessonId, $pdo): void {
     $stmt = $pdo->prepare("UPDATE angebot SET disabled = false, last_change_from_userid = ? WHERE id = ?");
-    $stmt->execute([$userID, $lessonID]);
+    $stmt->execute([$userID, $lessonId]);
 }
-function DisableLesson($userID, $lessonID, $pdo): void {
+function DisableLesson($userID, $lessonId, $pdo): void {
     $stmt = $pdo->prepare("UPDATE angebot SET disabled = true, last_change_from_userid = ? WHERE id = ?");
-    $stmt->execute([$userID, $lessonID]);
+    $stmt->execute([$userID, $lessonId]);
 }
+
+/**
+ * @throws DateMalformedStringException
+ */
 function DeleteLesson($lessonId, $pdo): bool|string {
+    if (GetLessonInfoByID($lessonId, "date_type", $pdo) == 1){
+        $lessonTime = new DateTime(GetLessonInfoByID($lessonId, "created_at", $pdo));
+        $currentTime = new DateTime();
+        $interval = $currentTime->diff($lessonTime);
+        if ($interval->days > ($grace_days ?? 2)) {
+            $stmt = $pdo->prepare("UPDATE angebot SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmt->execute([$lessonId]);
+            return true;
+        }
+    }
     try {
         $delete_lesson = $pdo->prepare("DELETE FROM angebot WHERE id = ?");
         $delete_lesson->execute(array($lessonId));
@@ -744,7 +758,7 @@ function GetAllUsersAndPrintForSelect($pdo, $OwnId, $OwnPermission, $create_less
 }
 function GetEmailFromToken($token, $pdo) {
 
-    $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
+    $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ? LIMIT 1");
     $tokens->execute(array($token));
     $sl = $tokens->fetch();
     return $sl['email'] ?? 'false';
@@ -753,21 +767,21 @@ function GetEmailFromToken($token, $pdo) {
 }
 function GetDateFromRegisterToken($token, $pdo) {
 
-    $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ?");
+    $tokens = $pdo->prepare("SELECT * FROM registertokens WHERE token = ? LIMIT 1");
     $tokens->execute(array($token));
     $sl = $tokens->fetch();
     return $sl['created'] ?? 'false';
 }
 function GetDateFromResetToken($token, $pdo) {
 
-    $tokens = $pdo->prepare("SELECT * FROM passwordresettokens WHERE token = ?");
+    $tokens = $pdo->prepare("SELECT * FROM passwordresettokens WHERE token = ? LIMIT 1");
     $tokens->execute(array($token));
     $sl = $tokens->fetch();
     return $sl['created'] ?? 'false';
 }
 function GetUserIDFromResetToken($token, $pdo) {
 
-    $tokens = $pdo->prepare("SELECT * FROM passwordresettokens WHERE token = ?");
+    $tokens = $pdo->prepare("SELECT * FROM passwordresettokens WHERE token = ? LIMIT 1");
     $tokens->execute(array($token));
     $sl = $tokens->fetch();
     return $sl['userid'] ?? 'false';
@@ -822,7 +836,7 @@ function DeleteLunchData($date, $pdo): bool|string {
 }
 
 function GetUserSettings($userid, $pdo) {
-    $information = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $information = $pdo->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
     $information->execute(array($userid));
     return $information->fetch()["settings"];
 }
