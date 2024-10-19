@@ -109,6 +109,13 @@
       "name": "Fix: Enabling lessons, displaying disabled lessons and limit db requests to 1",
       "release_date": "2024-10-18",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.3.0.zip"
+    },
+    {
+      "id": "16",
+      "version": "3.3.1",
+      "name": "Fix: displaying disabled lessons and lessons with no one assigned",
+      "release_date": "2024-10-19",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.3.1.zip"
     }
   ]
 }

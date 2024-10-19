@@ -186,23 +186,31 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $e
     }
     $sick = false;
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo);
-    $userid = processUserId($userid);
 
-    if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
-        $sick = true;
-        $userIdsFound = $userid;
-    } else {
-        $userIdsFound = array();
-        foreach ($sickNoteRaw as $sickNote) {
-            if (in_array(intval($sickNote['userid']), $userid)) {
-                $userIdsFound[intval($sickNote['userid'])] = true;
-                if (count($userIdsFound) === count($userid)) {
-                    $sick = true;
-                    break;
+    if (isset($userid)) {
+        $userid = processUserId($userid);
+        if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
+            $sick = true;
+            $userIdsFound = $userid;
+        } else {
+            $userIdsFound = array();
+            foreach ($sickNoteRaw as $sickNote) {
+                if (in_array(intval($sickNote['userid']), $userid)) {
+                    $userIdsFound[intval($sickNote['userid'])] = true;
+                    if (count($userIdsFound) === count($userid)) {
+                        $sick = true;
+                        break;
+                    }
                 }
             }
         }
-        $lesson_username = processUserNames($userid, $pdo);
+        $lesson_username    = processUserNames($userid, $pdo);
+    } else {
+        if (GetLessonInfo($date, $time, $room, "disabled", $pdo)) {
+            $sick = true;
+        }
+        $lesson_username = false;
+        $userIdsFound = array();
     }
 
     $lesson_name        = replacePlaceholders(DecodeFromJson(GetLessonInfo($date, $time, $room, "name", $pdo)));
@@ -222,16 +230,12 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $e
         $count = 0;
         foreach ($lesson_username as $key => $username) {
             $name = "";
-            if (array_key_exists($key, $userIdsFound)) {
-                if ($userIdsFound[$key]) {
-                    $name .= "<s>";
-                }
+            if (array_key_exists($key, $userIdsFound) AND $userIdsFound[$key] OR $sick) {
+                $name .= "<s>";
             }
             $name .= $username;
-            if (array_key_exists($key, $userIdsFound)) {
-                if ($userIdsFound[$key]) {
-                    $name .= "</s>";
-                }
+            if (array_key_exists($key, $userIdsFound) AND $userIdsFound[$key] OR $sick) {
+                $name .= "</s>";
             }
             $names[] = $name;
             $count = $count + 1;
