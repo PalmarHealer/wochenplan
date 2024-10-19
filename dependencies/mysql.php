@@ -128,8 +128,8 @@ function GetLessonInfo($day, $time, $room, $info, $pdo) {
 
     if (str_contains($day, "-")) {
         $db_day = $day . " 23:59:59";
-        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? AND created_at <= ? ORDER BY id DESC");
-        $lessons->execute(array($identifier, $db_day));
+        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? AND created_at <= ? AND deleted_at >= ? ORDER BY id DESC");
+        $lessons->execute(array($identifier, $db_day, $db_day));
     } else {
         $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? ORDER BY id DESC");
         $lessons->execute(array($identifier));

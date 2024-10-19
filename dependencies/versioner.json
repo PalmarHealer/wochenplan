@@ -116,6 +116,13 @@
       "name": "Fix: displaying disabled lessons and lessons with no one assigned",
       "release_date": "2024-10-19",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.3.1.zip"
+    },
+    {
+      "id": "17",
+      "version": "3.3.2",
+      "name": "Fix: displaying repeating lessons in their respecting date window",
+      "release_date": "2024-10-19",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.3.2.zip"
     }
   ]
 }
