@@ -8226,7 +8226,7 @@ svg.navbar-brand-img {
     width: 100%; }
     .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered .select2-search__field {
       width: 100% !important;
-      background-color: #ffffff; }
+      background-color: transparent; }
   .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
     color: #6c757d;
     border: 1px solid #dee2e6;
@@ -8246,7 +8246,7 @@ svg.navbar-brand-img {
     padding-left: 3px;
     float: left;
     border: none;
-    background: #ffffff; }
+    background: transparent; }
     .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove:hover {
       color: #343a40; }
   .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__clear {
