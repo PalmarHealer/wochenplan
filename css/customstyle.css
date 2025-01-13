@@ -260,6 +260,7 @@ body {
 
 .description {
     width: 100%;
+    max-width: 250px;
 }
 
 .profilename {
