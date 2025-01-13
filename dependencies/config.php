@@ -1,21 +1,21 @@
 <?php
 //----------General: ----------
 
-//Are new users able to use the software directly after register.
+//Are new users able to use the software directly after register?
 //"0" = Admin confirmation needed, "1" = no confirmation needed
 //Please only use 0 or 1 otherwise errors can happen.
 $permission_level = 0; //default 0
 
 
-//Where is the Webroot from this Software
-//ex. if it's reachable from my-host.com/test that its "/test"
-//or if it's on a subdomain installed that simply enter "/my-folder"
+//Where is the Webroot from this Software,
+//for example, if it's reachable from my-host.com/test that it's "/test"
+//or if it's on a subdomain installed, that simply enter "/my-folder"
 $webroot = "/wochenplan";  //default /wochenplan
 //Set this to "" when / is the webroot
 
 //Default website theming - CURRENTLY NOT FUNCTIONAL -
 //"light" for light, "dark" for dark...
-//Please only use light or dark otherwise errors can happen.
+//Please only use light or dark, otherwise errors can happen.
 $theme = "light"; //default light
 
 
@@ -35,7 +35,7 @@ $create_lessons_for_others = 6; //default 6
 //Default permission level to create repeating lessons and edit them as well
 $create_lessons_plus = 8; //default 8
 
-//Default permission level to manage other users (this also include creating and deleting)
+//Default permission level to manage other users (this also includes creating and deleting)
 $manage_other_users = 10; //default 10
 
 //---------- MittagessenAPI: ----------
@@ -58,9 +58,10 @@ $db_name = 'wochenplan';
 $db_user = "test";
 $db_password = "password";
 
-//If you don't want to use the default port you have to write it in the db_ip variable. For ex.: "my-host.com:3306"
-//and if the database is on the same server as the website then you can use "localhost"
-//specify the database to save everything like lessons and users.
+//If you don't want to use the default port, you have to write it in the db_ip variable.
+//For example, "my-host.com:3306"
+//and if the database is on the same server as the website, then you can use "localhost"
+//to specify the database to save everything like lessons and users.
 
 
 //---------- General information: ----------
@@ -122,18 +123,9 @@ $permission_level_names = array(
 //---------- DO NOT TOUCH (general software information) ----------
 $dsn = "mysql:host=$db_host;port=$db_port;dbname=$db_name";
 $pdo = new PDO($dsn, $db_user, $db_password);
-$db = array(
-    'host' => $db_host,
-    'port' => $db_port,
-    'name' => $db_name,
-    'user' => $db_user,
-    'password' => $db_password
-);
 $db_host = null;
 $db_port = null;
 $db_name = null;
-$db_user = null;
-$db_password = null;
 
 
 $keep_dpo = false;
