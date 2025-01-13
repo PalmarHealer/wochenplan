@@ -1,5 +1,11 @@
 <?php
-require __DIR__ . '/php-mailer/vendor/autoload.php';
+require __DIR__ . '/PHPMailer-6.9.3/src/Exception.php';
+require __DIR__ . '/PHPMailer-6.9.3/src/PHPMailer.php';
+require __DIR__ . '/PHPMailer-6.9.3/src/SMTP.php';
+
+
+use PHPMailer\PHPMailer\SMTP;
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 function SendMail($smtp, $recipient, $subject, $body, $altBody): bool|string {
@@ -8,16 +14,15 @@ function SendMail($smtp, $recipient, $subject, $body, $altBody): bool|string {
         //Server settings
         $mail->isSMTP();
         $mail->Host       = $smtp['host'];
-        $mail->SMTPAuth   = $smtp['SMTPAuth'];
         $mail->Username   = $smtp['username'];
         $mail->Password   = $smtp['password'];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->SMTPDebug  = $smtp['debug'];
+        $mail->SMTPAuth   = true;
+        $mail->AuthType   = "PLAIN";
         $mail->Port       = $smtp['port'];
 
         //Recipients
         $mail->setFrom($smtp['from'], $smtp['displayName']);
-        $mail->addAddress($recipient['mail']);
+        $mail->addAddress($recipient);
         $mail->addReplyTo($smtp['replyTo'], $smtp['replyToName']);
 
         //Content
@@ -60,7 +65,7 @@ function GetEmailTemplate($header, $text, $button, $link): string {
     <div id="iln1" height="100%" class="row align-items-center h-100" style="box-sizing: border-box; display: flex; flex-wrap: wrap; margin-left: 0; margin-right: 0; flex-direction: column; justify-content: center; align-items: center; min-height: 100%;">
       <form method="get" id="ipa3f" width="25%" align="center" class="col-lg-3 col-md-4 col-10 mx-auto text-center" style="box-sizing: border-box; flex: 0 0 83.33333%; padding-left: 15px; padding-right: 15px; position: relative; width: 25%; min-width: 300px; margin-left: auto; margin-right: auto; text-align: center;">
         <div id="irqi1" align="center" class="mx-auto text-center my-4" style="box-sizing: border-box; margin: 1.5rem auto; text-align: center;">
-          <img src="https://wochenplan.aktive-schule-leipzig.de/img/logo.svg" alt="Logo" id="ifqfh" valign="middle" class="logo" style="box-sizing: border-box; border-style: none; vertical-align: middle; width: 25%; height: 25%;">
+          <img src="https://wochenplan.aktive-schule-leipzig.de/img/logo.png" alt="Logo" id="ifqfh" valign="middle" class="logo" style="box-sizing: border-box; border-style: none; vertical-align: middle; width: 25%; height: 25%;">
           <h4 id="i9khv" class="my-3" style="box-sizing: border-box; font-size: 1.3125rem; color: #001a4e; font-weight: 600; line-height: 1.2; margin-bottom: 1rem; margin-top: 1rem;">' . convertSpecialCharsToEntities($header) . '
             <br id="i229a" style="box-sizing: border-box;">
           </h4>
