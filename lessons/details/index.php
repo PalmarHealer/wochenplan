@@ -71,11 +71,12 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
-    $dub_id = ($_GET['dub_id'] ?? null);
+    $dub_id = ($_POST['dub_id'] ?? null);
     $lesson_id = ($_POST["update_lesson_with_id"] ?? null);
     $tmp_plan_date = ($_POST['plan_date'] ?? '');
     $plan_date = date("Y-m-d", strtotime($tmp_plan_date));
-    $enable_disable_lesson = ($_GET['disable_enable_lesson'] ?? null);
+    $enable_disable_lesson = ($_POST['disable_enable_lesson'] ?? null);
+    $enable_disable_lesson_once = ($_POST['disable_enable_lesson_once'] ?? null);
 
     if($permission_level < $create_lessons_for_others) {
         $new_assigned_user_id = $id;
@@ -114,8 +115,8 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
         if ($date_type == 1) {
             CheckPermission($create_lessons_plus, $permission_level, "../?message=unauthorized");
         }
-
-        UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], GetLessonInfoByID($_POST["update_lesson_with_id"], "parent_lesson_id", $pdo),
+        $parent_id = GetLessonInfoByID($_POST["update_lesson_with_id"], "parent_lesson_id", $pdo);
+        UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], $parent_id,
             $date_type,
             $new_date,
             $new_name,
@@ -128,13 +129,9 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['asl_userid'],
             0
         );
-
         Redirect($return_to);
-
         // Create Lesson
     } elseif (($_POST['save'] ?? 0) == "1") {
-
-
         UpdateOrInsertLesson("create", $pdo, "", null,
             $date_type,
             $new_date,
@@ -150,14 +147,20 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
         );
         Redirect($return_to);
     }
-
     elseif (isset($enable_disable_lesson)) {
+        if (!GetLessonInfoByID($enable_disable_lesson, "disabled", $pdo)) {
+            DisableLesson($_SESSION['asl_userid'], $enable_disable_lesson, $pdo);
+        } else {
+            EnableLesson($_SESSION['asl_userid'], $enable_disable_lesson, $pdo);
+        }
+        Redirect($return_to);
+    } elseif (isset($enable_disable_lesson_once)) {
         if (GetLessonInfo($plan_date, $new_time, $new_location, "date_type", $pdo) == 1 AND
-            $plan_date != "" AND
-            GetLessonInfoByID($enable_disable_lesson, "disabled", $pdo
-            )) {
-                $parent_id = (is_numeric($enable_disable_lesson) ? $enable_disable_lesson : null);
-                UpdateOrInsertLesson("create", $pdo, "",
+            $plan_date != ""
+        ) {
+            $disable = GetLessonInfoByID($enable_disable_lesson_once, "disabled", $pdo);
+            $parent_id = (is_numeric($enable_disable_lesson_once) ? $enable_disable_lesson_once : null);
+            UpdateOrInsertLesson("create", $pdo, "",
                 $parent_id,
                 "2",
                 $plan_date,
@@ -169,20 +172,10 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
                 $new_notes,
                 $new_assigned_user_id,
                 $_SESSION['asl_userid'],
-                1
+                (int)!$disable
             );
         }
-        elseif (!GetLessonInfoByID($enable_disable_lesson, "disabled", $pdo)) {
-
-            DisableLesson($_SESSION['asl_userid'], $enable_disable_lesson, $pdo);
-
-        } else {
-
-            EnableLesson($_SESSION['asl_userid'], $enable_disable_lesson, $pdo);
-        }
-
         Redirect($return_to);
-
     }
 }
 
@@ -428,11 +421,25 @@ else $lesson_disabled_text = "";
                         <?php
                         $date_type = array();
 
-                        if(isset($lesson_details['date-type'])) {
+                        if (isset($lesson_details['date-type'])) {
                             $date_type[$lesson_details['date-type']] = "active";
                         } else {
                             $date_type[1] = "active";
                             $lesson_details['date-type'] = 1;
+                        }
+                        $date_single = "";
+                        $date_repeating = "style='display: none;'";
+                        $lesson_single_text = "";
+                        $lesson_repeating_text = "disabled";
+                        if (isset($lesson_details['date-type'])) {
+                            if ($lesson_details['date-type'] == "2") {
+                                $date_single = "style='display: none;'";
+                                $lesson_single_text = "disabled";
+                            }
+                            if ($lesson_details['date-type'] != "1") {
+                                $date_repeating = "";
+                                $lesson_repeating_text = "";
+                            }
                         }
                         ?>
 
@@ -448,14 +455,14 @@ else $lesson_disabled_text = "";
                                     <div class="form-group mb-3 full-percentage">
                                         <div class="card-body">
 
-                                            <label for="day">Tag des Angebotes</label>
 
-                                            <div class="repeating" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "2") echo "style='display: none;'"; ?>>
+                                            <div class="repeating" <?php echo $date_single; ?>>
+                                                <label for="day">Wochentag des Angebotes</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><span class="fe fe-16 fe-repeat"></span></span>
                                                     </div>
-                                                    <select <?php echo $lesson_disabled_text; ?> id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown <?php echo $lesson_disabled_text; ?>">
+                                                    <select <?php echo $lesson_disabled_text . $lesson_single_text; ?> id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown <?php echo $lesson_disabled_text; ?>">
                                                         <?php
                                                         $selected_date = array();
                                                         $selected_date[$lesson_details['date'] ?? date("N")] = "selected";
@@ -468,20 +475,13 @@ else $lesson_disabled_text = "";
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="once" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "style='display: none;'"; } ?>>
+                                            <div class="once" <?php echo $date_repeating; ?>>
+                                                <label for="day2">Tag des Angebotes</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><span class="fe fe-16 fe-calendar"></span></span>
                                                     </div>
-                                                    <input
-                                                            <?php
-                                                            if(
-                                                                (isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1") OR
-                                                                $lesson_deleted OR
-                                                                !isset($lesson_details['date-type'])) {
-                                                                echo "disabled";
-                                                            }
-                                                            ?>
+                                                    <input <?php echo $lesson_disabled_text . $lesson_repeating_text; ?>
                                                             id="day2"
                                                             onchange="updateAvailability()"
                                                             name="date"
@@ -512,13 +512,16 @@ else $lesson_disabled_text = "";
                                 <div class="card-body">
                                     <div class="form-group mb-3">
                                         <label for="creator">Wer macht dieses Angebot?</label>
-                                        <select multiple="multiple" id="creator" name="creator[]" class="form-control select-multi" <?php
-                                        if($lesson_deleted OR !CheckPermission($create_lessons_for_others, $permission_level, null)) {
-                                            echo "disabled";
-                                        }
-                                        ?>><?php
-                                        GetAllUsersAndPrintForSelect($pdo, $id, $permission_level, $create_lessons, $userArray);
-                                        ?>
+                                        <select multiple="multiple" id="creator" name="creator[]" class="form-control select-multi"
+                                            <?php
+                                            if($lesson_deleted OR !CheckPermission($create_lessons_for_others, $permission_level, null)) {
+                                                echo "disabled";
+                                            }
+                                            ?>
+                                        >
+                                            <?php
+                                            GetAllUsersAndPrintForSelect($pdo, $id, $permission_level, $create_lessons, $userArray);
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -545,12 +548,12 @@ else $lesson_disabled_text = "";
                         ?>
 
                         <div class="col-md-12 mb-4">
-                            <button <?php echo $buttons_attr; ?> type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
+                            <button type="button" onclick="history.back()" class="btn mb-2 btn-outline-primary">Zurück</button>
                             <?php
                             if(isset($_GET['id'])) {
 
-                                if ($lesson_details['date-type'] == 1 && isset($get_date)) {
-                                    echo '<button ' . $buttons_attr . ' style="float:right;" type="sumbit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date" value="' . $get_date . '" formaction="./?dub_id=' . $_GET['id'] . '">Aktualisieren</button>';
+                                if ($lesson_details['date-type'] == 1 AND isset($get_date)) {
+                                    echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date" value="' . $get_date . '" name="dub_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
                                     if (CheckPermission($create_lessons_plus, $permission_level, null)) {
                                         echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
                                     }
@@ -561,7 +564,12 @@ else $lesson_disabled_text = "";
 
 
 
-                                echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" formaction="./?disable_enable_lesson=' . $_GET['id'] . '">Angebot ' . $disable_enable_text . '</button>';
+                                if ($lesson_details['date-type'] == 1 AND isset($get_date) AND CheckPermission($create_lessons_plus, $permission_level, null)) {
+                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson_once" value="' . $_GET['id'] . '">' . $delete_text . " " . $disable_enable_text . '</button>';
+                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson" value="' . $_GET['id'] . '">' . $delete_text . " für alle Wochen " . $disable_enable_text . '</button>';
+                                } else {
+                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson" value="' . $_GET['id'] . '">' . $delete_text . " " . $disable_enable_text . '</button>';
+                                }
                                 echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">' . $delete_text . ' löschen</button>';
                             } else {
                                 echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';

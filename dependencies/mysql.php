@@ -18,7 +18,7 @@ function UpdateOrInsertLesson($type, $pdo, $id, $parent_lesson_id, $date_type, $
         if ($type == "update") {
             $stmt = $pdo->prepare(
                    "UPDATE angebot SET
-                   parent_lesson_id = NULL,
+                   parent_lesson_id = ?,
                    identifier = ?,
                    date_type = ?,
                    $set_date_column = ?,
@@ -35,6 +35,7 @@ function UpdateOrInsertLesson($type, $pdo, $id, $parent_lesson_id, $date_type, $
                    WHERE id = ?"
             );
             $stmt->execute([
+                $parent_lesson_id,
                 $identifier,
                 $date_type,
                 $new_date,
@@ -87,8 +88,7 @@ function UpdateOrInsertLesson($type, $pdo, $id, $parent_lesson_id, $date_type, $
         }
         return true;
     } catch(PDOException $e) {
-        // Handle errors here
-        echo "Error: " . $e->getMessage();
+        error_log("Error while " . $type . " lesson " . $e->getMessage());
         return false;
     }
 }
