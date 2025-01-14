@@ -75,12 +75,10 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
     $lesson_id = ($_POST["update_lesson_with_id"] ?? null);
     $tmp_plan_date = ($_POST['plan_date'] ?? '');
     $plan_date = date("Y-m-d", strtotime($tmp_plan_date));
-    $enable_disable_lesson = $_GET['disable_enable_lesson'];
+    $enable_disable_lesson = ($_GET['disable_enable_lesson'] ?? null);
 
     if($permission_level < $create_lessons_for_others) {
-        if ($new_assigned_user_id != $id) {
-            Redirect($return_to);
-        }
+        $new_assigned_user_id = $id;
     }
 
     if (!CodeToJson("Test" . $new_name . $new_description)) {
