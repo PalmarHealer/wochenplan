@@ -115,7 +115,7 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
             CheckPermission($create_lessons_plus, $permission_level, "../?message=unauthorized");
         }
 
-        UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], null,
+        UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], GetLessonInfoByID($_POST["update_lesson_with_id"], "parent_lesson_id", $pdo),
             $date_type,
             $new_date,
             $new_name,
@@ -236,7 +236,8 @@ if (isset($_GET['id'])) {
 
 if (isset($lesson_details['userid'])) $userArray = $lesson_details['userid'];
 else $userArray[] = $id;
-
+if ($lesson_deleted) $lesson_disabled_text = "disabled";
+else $lesson_disabled_text = "";
 ?>
 <!doctype html>
 <html lang="de">
@@ -396,7 +397,7 @@ else $userArray[] = $id;
                                 <div class="card-body">
                                     <div class="form-group mb-3">
                                         <label for="color-picker">Farbe</label>
-                                        <select id="color-picker" class="color_picker form-control" type="text" name="box-color">
+                                        <select <?php echo $lesson_disabled_text; ?> id="color-picker" class="color_picker form-control" type="text" name="box-color">
                                             <option disabled selected value="1">Farbe auswählen</option>
                                             <?php
                                             $array = GetSetting("colors", $pdo);
@@ -454,7 +455,7 @@ else $userArray[] = $id;
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><span class="fe fe-16 fe-repeat"></span></span>
                                                     </div>
-                                                    <select id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown" <?php if($lesson_details['date-type'] == "2") { echo "disabled"; } ?> id="type-select">
+                                                    <select <?php echo $lesson_disabled_text; ?> id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown <?php echo $lesson_disabled_text; ?>">
                                                         <?php
                                                         $selected_date = array();
                                                         $selected_date[$lesson_details['date'] ?? date("N")] = "selected";
@@ -472,8 +473,21 @@ else $userArray[] = $id;
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><span class="fe fe-16 fe-calendar"></span></span>
                                                     </div>
-                                                    <input id="day2" onchange="updateAvailability()" name="date" type="text" class="form-control drgpicker toggle_date_input2" <?php if(isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1" OR !isset($lesson_details['date-type'])) { echo "disabled"; } ?> id="date-input1" value="
-                                                      <?php
+                                                    <input
+                                                            <?php
+                                                            if(
+                                                                (isset($lesson_details['date-type']) AND $lesson_details['date-type'] == "1") OR
+                                                                $lesson_deleted OR
+                                                                !isset($lesson_details['date-type'])) {
+                                                                echo "disabled";
+                                                            }
+                                                            ?>
+                                                            id="day2"
+                                                            onchange="updateAvailability()"
+                                                            name="date"
+                                                            type="text"
+                                                            class="form-control drgpicker toggle_date_input2 <?php echo $lesson_disabled_text; ?>"
+                                                            value="<?php
                                                     if(isset($get_date) OR isset($_POST['date'])) {
                                                         $date_tmp = ($get_date ?? $_POST['date']);
                                                         echo date("d/m/Y", strtotime($date_tmp));
@@ -483,8 +497,7 @@ else $userArray[] = $id;
                                                         echo date("d/m/Y");
 
                                                     }
-                                                    ?>
-                                                      " aria-describedby="button-addon2">
+                                                    ?>" aria-describedby="button-addon2">
                                                 </div>
                                             </div>
                                         </div>
@@ -500,7 +513,7 @@ else $userArray[] = $id;
                                     <div class="form-group mb-3">
                                         <label for="creator">Wer macht dieses Angebot?</label>
                                         <select multiple="multiple" id="creator" name="creator[]" class="form-control select-multi" <?php
-                                        if(!CheckPermission($create_lessons_for_others, $permission_level, null)) {
+                                        if($lesson_deleted OR !CheckPermission($create_lessons_for_others, $permission_level, null)) {
                                             echo "disabled";
                                         }
                                         ?>><?php
@@ -521,7 +534,7 @@ else $userArray[] = $id;
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="notes"></label>
-                                        <input id="notes" name="notes" class="form-control form-control-lg" type="text" placeholder="Notizen" maxlength="255" value="<?php echo ($lesson_details['notes'] ?? '');?>">
+                                        <input <?php echo $lesson_disabled_text; ?> id="notes" name="notes" class="form-control form-control-lg" type="text" placeholder="Notizen" maxlength="255" value="<?php echo ($lesson_details['notes'] ?? '');?>">
                                     </div>
                                 </div>
                             </div>
@@ -639,20 +652,28 @@ else $userArray[] = $id;
 
         let time = $('#time').val();
         let location = $('#location').val();
+        let date_selector1 = $(".date_selector1");
+        let date_selector2 = $(".date_selector2");
+        let toggle_date_input1 = $(".toggle_date_input1");
+        let toggle_date_input2 = $(".toggle_date_input2");
         $(`[time="${time}"][room="${location}"]`).addClass("preview-selected");
 
-        $(".date_selector1").click(function(){
+        date_selector1.click(function(){
             $(".repeating").show();
-            $(".toggle_date_input1").removeAttr("disabled", "");
-            $(".toggle_date_input2").attr("disabled", "");
+            if (!toggle_date_input1.hasClass("disabled")) {
+                toggle_date_input1.removeAttr("disabled");
+            }
+            toggle_date_input2.attr("disabled", "");
             $(".once").hide();
             $("#date_type").attr("date_type", "1");
         });
 
-        $(".date_selector2").click(function(){
+        date_selector2.click(function(){
             $(".once").show();
-            $(".toggle_date_input2").removeAttr("disabled", "");
-            $(".toggle_date_input1").attr("disabled", "");
+            if (!toggle_date_input2.hasClass("disabled")) {
+                toggle_date_input2.removeAttr("disabled");
+            }
+            toggle_date_input1.attr("disabled", "");
             $(".repeating").hide();
             $("#date_type").attr("date_type", "2");
         });
