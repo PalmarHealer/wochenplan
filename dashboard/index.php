@@ -126,7 +126,7 @@ require $include_path . "/dependencies/framework.php";
         function detectBrowser() {
             if (navigator.userAgent.indexOf("Firefox") !== -1) {
                 // Browser is Firefox
-                const html = `<div class="alert alert-warning" role="alert">Der Wochenplan ist leider nicht für Firefox optimiert worden. Bitte überlege einen anderen Browser zu verwenden oder auf eventuelle Probleme zu stoßen. Danke!</div>`;
+                const html = `<div class="alert alert-warning" role="alert">Der Wochenplan ist leider nicht für Firefox optimiert. Bitte überlege einen anderen Browser zu verwenden oder auf Probleme zu stoßen. Danke!</div>`;
                 $(".unsupported-browser").html(html);
             }
 
