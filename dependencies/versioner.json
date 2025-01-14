@@ -123,6 +123,13 @@
       "name": "Fix: displaying repeating lessons in their respecting date window",
       "release_date": "2024-10-19",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.3.2.zip"
+    },
+    {
+      "id": "18",
+      "version": "3.4.0",
+      "name": "Disabling and enabling lessons work now and it can be once or for all future ones. And it is possible to visit deleted lessons",
+      "release_date": "2025-01-14",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.4.0.zip"
     }
   ]
 }
