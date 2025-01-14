@@ -89,7 +89,7 @@ if(isset($_GET['register'])) {
     if(!$error) {
 
 
-        ChangeUserPassword("$passwort", GetUserIDFromResetToken($token, $pdo), $pdo);
+        ChangeUserPassword($passwort, GetUserIDFromResetToken($token, $pdo), $pdo);
         DeleteResetToken($token, $pdo);
         Redirect($domain . '/login?message=reset_success');
     }
