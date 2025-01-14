@@ -3,7 +3,7 @@ $include_path = __DIR__ . "/../..";
 require $include_path . "/dependencies/config.php";
 require $include_path . "/dependencies/mysql.php";
 require $include_path . "/dependencies/framework.php";
-global $relative_path, $version, $pdo, $id;
+global $relative_path, $version, $pdo, $id, $vorname_neu, $vorname, $nachname_neu, $nachname;
 
 if (isset($_GET['save']) AND $_SERVER["REQUEST_METHOD"] == "POST") {
     $vorname_neu = $_POST['vorname'];
@@ -176,26 +176,12 @@ if (isset($_GET['save']) AND $_SERVER["REQUEST_METHOD"] == "POST") {
                 var button = $(this);
                 var currentValue = button.attr('value');
                 var newValue = (currentValue === 'true') ? 'false' : 'true';
-                $.ajax({
-                    url: 'ajax.php',
-                    type: 'POST',
-                    data: {
-                        type: 'setUserSetting',
-                        setting: $(this).attr("id"),
-                        value: $(this).attr("value")
-                    },
-                    success: function(response) {
-                        if (response.successful) {
-                            button.text(newValue === 'true' ? 'Aktivieren' : 'Deaktivieren');
-                            button.attr('value', newValue);
-                            var analyticsMessage = $('[for="' + button.attr('id') + '"]');
-                            analyticsMessage.show().delay(500).fadeOut();
-                        }
-                        console.log('Response:', response);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                    }
+
+                sendDataToServer($(this).attr("id"), $(this).attr("value"), function() {
+                    button.text(newValue === 'true' ? 'Aktivieren' : 'Deaktivieren');
+                    button.attr('value', newValue);
+                    var analyticsMessage = $('[for="' + button.attr('id') + '"]');
+                    analyticsMessage.show().delay(500).fadeOut();
                 });
             });
             $('#darkMode').on('click', function() {
@@ -211,6 +197,27 @@ if (isset($_GET['save']) AND $_SERVER["REQUEST_METHOD"] == "POST") {
                 }, 50);
             });
         });
+        function sendDataToServer(setting, value, onSuccess) {
+            $.ajax({
+                url: 'ajax.php',
+                type: 'POST',
+                data: {
+                    type: 'setUserSetting',
+                    setting: setting,
+                    value: value
+                },
+                success: function(response) {
+                    if (typeof onSuccess === 'function') {
+                        onSuccess(response);
+                    } else {
+                        console.log('Response:', response);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
     </script>
   </body>
 </html>
