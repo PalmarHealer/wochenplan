@@ -178,24 +178,12 @@ function random_string(): string {
     return $str;
 }
 
-function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $data, $usedIDs): array
+function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $data): string
 {
     $pdo = restorePDOifNeeded($pdo);
 
-    $returnData = array();
-
     if (!GetLessonInfo($date, $time, $room, "available", $pdo, $data)) {
-        $returnData["lesson"] = "";
-        $returnData["usedLessonIDs"] = $usedIDs;
-        return $returnData;
-    }
-    if (GetLessonInfo($date, $time, $room, "id", $pdo, $data) == 4039) error_log("Test Worked");
-    if (in_array(GetLessonInfo($date, $time, $room, "id", $pdo, $data), $usedIDs)) {
-        error_log(GetLessonInfo($date, $time, $room, "id", $pdo, $data) . " has children being displayed");
-        $w23 = "(Parent)";
-        $returnData["lesson"] = "";
-        $returnData["usedLessonIDs"] = $usedIDs;
-        return $returnData;
+        return "";
     }
     $sick = false;
     $userid = GetLessonInfo($date, $time, $room, "userid", $pdo, $data);
@@ -266,23 +254,12 @@ function PrintLessonToPlan($date, $time, $room, $pdo, $webroot, $sickNoteRaw, $d
     if ($sick) $return .= "<s>";
     $return .= "<b>" . $lesson_name . "</b>";
     if ($sick) $return .= "</s>";
-    $return .= ($w23 ?? "");
-    $tmp = GetLessonInfo($date, $time, $room, "parent_lesson_id", $pdo, $data);
-    if ($tmp != "") {
-        $return .= "(Child)";
-    }
     $return .= "<div class='description'>";
     if ($sick) $return .= "<s>";
     $return .= $lesson_description;
     if ($sick) $return .= "</s>";
     $return .= "</div></div>";
-    $returnData["lesson"] = $return;
-    $returnData["usedLessonIDs"] = $usedIDs;
-    $tmp = GetLessonInfo($date, $time, $room, "parent_lesson_id", $pdo, $data);
-    if ($tmp != "") {
-        $returnData["usedLessonIDs"][] = $tmp;
-    }
-    return $returnData;
+    return $return;
 }
 
 function processUserId($userid): array {
@@ -334,23 +311,34 @@ function prepareTableToDisplay($html, $current_day, $webroot, $pdo, $date, $sick
     if (str_contains($current_day, "-")) {
         $db_day = $current_day . " 23:59:59";
         $db_day2 = $current_day . " 00:00:00";
-        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? AND (created_at <= ? OR date_type = 2) AND (deleted_at >= ? OR deleted_at IS NULL) AND (date >= ? OR date IS NULL) ORDER BY date_type");
-        error_log("SELECT * FROM angebot WHERE identifier = \"$identifier\" AND (created_at >= \"$db_day\" OR date_type = 2) AND (deleted_at <= \"$db_day2\" OR deleted_at IS NULL) AND (date >= \"$current_day\" OR date IS NULL) ORDER BY date_type");
+        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? AND (created_at <= ? OR date_type = 2) AND (deleted_at >= ? OR deleted_at IS NULL) AND (date = ? OR date IS NULL) ORDER BY date_type DESC");
         $lessons->execute(array($identifier, $db_day, $db_day2, $current_day));
     } else {
         $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? ORDER BY id DESC");
         $lessons->execute(array($identifier));
     }
 
-    $usedLessonIDs = [];
     $lessons_stored = $lessons->fetchAll(PDO::FETCH_ASSOC);
+    $lessons_filtered = [];
+    $lessons_parents = [];
+    foreach ($lessons_stored as $lesson_data) {
+        $parentId = $lesson_data['parent_lesson_id'];
+        if ($parentId) {
+            $lessons_parents[] = $parentId;
+        }
+    }
+    foreach ($lessons_stored as $lesson_data) {
+        if (in_array($lesson_data['id'], $lessons_parents)) {
+            continue;
+        }
+        $lessons_filtered[] = $lesson_data;
+    }
     foreach ($elements as $element) {
         $room = $element->getAttribute('room');
         $time = $element->getAttribute('time');
 
-        $lesson = PrintLessonToPlan($current_day, $time, $room, $dbString, $webroot, $sickNoteRaw, $lessons_stored, $usedLessonIDs);
-        $usedLessonIDs = $lesson["usedLessonIDs"];
-        $script = $dom->createTextNode($lesson["lesson"]);
+        $lesson = PrintLessonToPlan($current_day, $time, $room, $dbString, $webroot, $sickNoteRaw, $lessons_filtered);
+        $script = $dom->createTextNode($lesson);
         $element->appendChild($script);
     }
 
