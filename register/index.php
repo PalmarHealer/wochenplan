@@ -60,13 +60,9 @@ if(isset($_GET['email'])) {
     //}
     if(!$error) {
         $token = CreateTokenForRegistrationAndSaveThem($email, $pdo);
-        $recipient = array('mail' => $email);
-        try {
-            SendVerificationMail($smtp, $recipient, $domain . "/register/?token=" . $token);
-            Redirect("./?email-send=" . $email);
-        } catch (\PHPMailer\PHPMailer\Exception $e) {
-            $errorMessage = "Beim senden der E-Mail ist ein Fehler aufgetreten. Wenn das wiederholt passiert, wende dich bitte an einen Administrator.";
-        }
+        error_log("Sending email to $email");
+        SendVerificationMail($smtp, $email, $domain . "/register/?token=" . $token);
+        Redirect("./?email-send=" . $email);
     }
 }
 
