@@ -22,14 +22,22 @@ if (isset($_GET["remove_lesson_with_id"])) {
     $lesson_to_delete = $_GET["remove_lesson_with_id"];
     $user_permission_level = GetUserByID($_SESSION['asl_userid'], "permission_level", $pdo);
     if ($user_permission_level >= $create_lessons_for_others) {
-        DeleteLesson($lesson_to_delete, $pdo);
+        try {
+            DeleteLesson($lesson_to_delete, $pdo);
+        } catch (DateMalformedStringException $e) {
+            Alert("Error while deleting lesson");
+        }
         if ($return_to == null) {
             GoPageBack();
         } else {
             Redirect($return_to);
         }
     } elseif ($_SESSION['asl_userid'] == GetLessonInfoByID($lesson_to_delete, "userid", $pdo) and $user_permission_level >= $create_lessons) {
-        DeleteLesson($lesson_to_delete, $pdo);
+        try {
+            DeleteLesson($lesson_to_delete, $pdo);
+        } catch (DateMalformedStringException $e) {
+            Alert("Error while deleting lesson");
+        }
         Redirect($return_to);
     } else {
         GoPageBack();
