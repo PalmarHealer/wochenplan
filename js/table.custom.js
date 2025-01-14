@@ -1,12 +1,11 @@
-
-var isSelecting = false;
-var startCell = null;
-var endCell = null;
+let isSelecting = false;
+let startCell = null;
+let endCell = null;
 
 function addColumn() {
-    var colCount = $("#editableTable tbody tr:first-child td").length + 1;
-    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var newColHeader = alphabet[colCount - 1];
+    const colCount = $("#editableTable tbody tr:first-child td").length + 1;
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const newColHeader = alphabet[colCount - 1];
 
     $("#tableHeader").append('<th class="Header">' + newColHeader + "</th>");
 
@@ -16,13 +15,13 @@ function addColumn() {
 }
 
 function addRow() {
-    var table = $("#editableTable");
-    var columnsCount = table.find("tr:first-child td").length;
-    var rowsCount = $("#editableTable tbody tr").length;
-    var newRow = $("<tr>");
+    const table = $("#editableTable");
+    const columnsCount = table.find("tr:first-child td").length;
+    const rowsCount = $("#editableTable tbody tr").length;
+    const newRow = $("<tr>");
     newRow.append('<th class="Header">' + (rowsCount + 1) + "</th>");
 
-    for (var i = 0; i < columnsCount; i++) {
+    for (let i = 0; i < columnsCount; i++) {
         newRow.append("<td></td>");
     }
     newRow.append("</tr>");
@@ -59,17 +58,17 @@ function highlightCells() {
 }
 
 function isBetween(cell, startCell, endCell) {
-    var startRowIndex = startCell.parentNode.rowIndex;
-    var startCellIndex = startCell.cellIndex;
-    var endRowIndex = endCell.parentNode.rowIndex;
-    var endCellIndex = endCell.cellIndex;
-    var rowIndex = cell.parentNode.rowIndex;
-    var cellIndex = cell.cellIndex;
+    const startRowIndex = startCell.parentNode.rowIndex;
+    const startCellIndex = startCell.cellIndex;
+    const endRowIndex = endCell.parentNode.rowIndex;
+    const endCellIndex = endCell.cellIndex;
+    const rowIndex = cell.parentNode.rowIndex;
+    const cellIndex = cell.cellIndex;
 
-    var minRowIndex = Math.min(startRowIndex, endRowIndex);
-    var maxRowIndex = Math.max(startRowIndex, endRowIndex);
-    var minCellIndex = Math.min(startCellIndex, endCellIndex);
-    var maxCellIndex = Math.max(startCellIndex, endCellIndex);
+    const minRowIndex = Math.min(startRowIndex, endRowIndex);
+    const maxRowIndex = Math.max(startRowIndex, endRowIndex);
+    const minCellIndex = Math.min(startCellIndex, endCellIndex);
+    const maxCellIndex = Math.max(startCellIndex, endCellIndex);
 
     return rowIndex >= minRowIndex && rowIndex <= maxRowIndex && cellIndex >= minCellIndex && cellIndex <= maxCellIndex;
 }
@@ -80,38 +79,39 @@ function endSelection(event) {
 
 
     if ($(event.target).closest("#editableTable").length > 0) {
-        var selectedCells = $('td.selected');
+        const selectedCells = $('td.selected');
 
         if (selectedCells.length === 1) {
-            $(".form-control").not("#color, #name").prop('disabled', false);
+            $(".form-control").not("#color").prop('disabled', false);
+            $(".form-group").not("#name").prop('disabled', false);
 
-            var time = selectedCells.attr('time');
-            var room = selectedCells.attr('room');
-            var label = $.trim(selectedCells.html());
+            const time = selectedCells.attr('time');
+            const room = selectedCells.attr('room');
+            const label = $.trim(selectedCells.html());
 
             $('.form-control#time').val(time);
             $('.form-control#room').val(room);
-            $('.form-control#label').val(label);
+            $('.form-group#name').val(label);
         } else {
 
-            $(".form-control").not("#color, #name").prop('disabled', true);
+            $(".form-control").not("#color").prop('disabled', true);
+            $(".form-group").not("#name").prop('disabled', true);
             $('.form-control#time').val(null);
             $('.form-control#room').val(null);
-            $('.form-control#label').val(null);
+            $('.form-group#name').val(null);
         }
     }
 
 }
 
 function updateSelectedCell() {
-    var selectedCells = $('td.selected');
+    const selectedCells = $('td.selected');
 
     if (selectedCells.length === 1) {
-        selectedCells.removeClass("show-info show-room-info show-time-info");
+        selectedCells.removeClass("show-info");
 
-        var timeValue = $('.form-control#time').val();
-        var roomValue = $('.form-control#room').val();
-
+        const timeValue = $('.form-control#time').val();
+        const roomValue = $('.form-control#room').val();
 
         if (!isNaN(timeValue) && !isNaN(roomValue)) {
             selectedCells.attr('time', timeValue);
@@ -124,25 +124,25 @@ function updateSelectedCell() {
 }
 
 function updateText() {
-    var selectedCells = $('td.selected');
+    const selectedCells = $('td.selected');
 
     if (selectedCells.length === 1) {
-        var labelValue = $('.form-control#label').val();
+        const labelValue = $('#name').val();
         selectedCells.html(labelValue);
     }
 }
 
 
 function mergeCells() {
-    var firstSelectedRow = $("#editableTable tbody tr")
+    const firstSelectedRow = $("#editableTable tbody tr")
         .filter(function () {
             return $(this).find("td.selected").length > 0;
         })
         .first();
-    var selectedCells = $("#editableTable tbody td.selected");
+    const selectedCells = $("#editableTable tbody td.selected");
     if (selectedCells.length > 1) {
         splitCells();
-        var firstCell = selectedCells.first();
+        const firstCell = selectedCells.first();
         firstCell.attr("colspan", firstSelectedRow.find("td.selected").length);
         firstCell.attr("rowspan", $("#editableTable tbody td.selected").closest("tr").length);
         selectedCells.slice(1).each(function () {
@@ -153,17 +153,17 @@ function mergeCells() {
 
 function splitCells() {
     $("#editableTable tbody td.selected").each(function () {
-        var cell = $(this);
-        var colspan = parseInt(cell.attr("colspan")) || 1;
-        var rowspan = parseInt(cell.attr("rowspan")) || 1;
-        var startRow = cell.closest("tr").index();
-        var startCol = cell.index();
-        var endRow = startRow + rowspan;
-        var endCol = startCol + colspan;
+        const cell = $(this);
+        let colspan = parseInt(cell.attr("colspan")) || 1;
+        let rowspan = parseInt(cell.attr("rowspan")) || 1;
+        const startRow = cell.closest("tr").index();
+        const startCol = cell.index();
+        const endRow = startRow + rowspan;
+        const endCol = startCol + colspan;
 
 // Loop through the cells and remove the 'hide' class
-        for (var i = startRow; i < endRow; i++) {
-            for (var j = startCol - 1; j < endCol; j++) {
+        for (let i = startRow; i < endRow; i++) {
+            for (let j = startCol - 1; j < endCol; j++) {
                 $("#editableTable tbody tr").eq(i).find("td").eq(j).removeClass("hideCell");
             }
         }
@@ -188,7 +188,7 @@ function deleteCells() {
         }
     });
 
-    var maxHeader = getMaximumCellCount() + 1;
+    const maxHeader = getMaximumCellCount() + 1;
     $("#editableTable thead th").each(function (index) {
         if (index >= maxHeader) {
             $(this).remove();
@@ -197,16 +197,16 @@ function deleteCells() {
 }
 
 function getMaximumCellCount() {
-    var maxCells = 0;
+    let maxCells = 0;
     $("#editableTable tbody tr").each(function () {
-        var cellsCount = $(this).find("td").length;
+        let cellsCount = $(this).find("td").length;
         maxCells = Math.max(maxCells, cellsCount);
     });
     return maxCells;
 }
 
 function dyeCells() {
-    var selectedValue = $('.form-control#color');
+    const selectedValue = $('.form-control#color');
     $('.selected').css('background-color', selectedValue.val());
     selectedValue.val('1');
 }
@@ -216,11 +216,11 @@ function toggleCenterText() {
 }
 
 function sendData() {
-    var clone = $("table").clone();
+    const clone = $("table").clone();
     clone.find("#tableHeader").addClass("hideCell");
     clone.find(".Header").addClass("hideCell");
-    var textContent = $.trim(clone.html());
-    var name = $('.form-control#name').val();
+    const textContent = $.trim(clone.html());
+    const name = $('.form-group#name').val();
     $.ajax({
         type: 'POST',
         url: '../save/ajax.php',
@@ -231,7 +231,7 @@ function sendData() {
         },
         dataType: 'json',
         success: function(response){
-            var btnText = $('.send').text();
+            const btnText = $('.send').text();
             $('.send').text(response.message).delay(3000).queue(function(){
                 $('.send').text(btnText);
                 $(this).dequeue();
