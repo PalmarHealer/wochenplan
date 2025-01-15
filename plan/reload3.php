@@ -8,39 +8,38 @@ require_once  $include_path . "/dependencies/mysql.php";
 require_once  $include_path . "/dependencies/framework.php";
 global $pdo, $webroot, $relative_path, $permission_level, $create_lessons, $weekday_names;
 
+$weekday = (new DateTime($current_day))->format('N');
+$date = '<p class="white_text modt bold">';
+$date .= $weekday_names[$weekday] . " " . date('d.m.Y', strtotime($current_day));
+$date .= '</b>';
+$names = array();
+$sick_return = '<p class="white_text modt">';
+$sickNoteRaw = GetAllSickNotesRaw($pdo, $current_day);
+foreach ($sickNoteRaw as &$sickNote) {
+    $dates = array();
+    $dates[1] = $sickNote['start_date'];
+    $dates[2] = $sickNote['end_date'];
+
+    if (IsDateBetween($dates, $current_day)) {
+        if (!in_array($sickNote['vorname'], $names)) {
+            $names[] = $sickNote['vorname'];
+        }
+    }
+
+}
+foreach ($names as $key => $name) {
+    $sick_return .= $name;
+    if ($key != count($names)-1) {
+        $sick_return .= ", ";
+    }
+}
+$sick_return .= '</p>';
 
 ?>
+<!--
 <div class="alert-message col-12 mb-4">
-    <?php
-    $weekday = (new DateTime($current_day))->format('N');
-    $date = '<p class="white_text modt bold">';
-    $date .= $weekday_names[$weekday] . " " . date('d.m.Y', strtotime($current_day));
-    $date .= '</b>';
-    $names = array();
-    $sick_return = '<p class="white_text modt">';
-    $sickNoteRaw = GetAllSickNotesRaw($pdo, $current_day);
-    foreach ($sickNoteRaw as &$sickNote) {
-        $dates = array();
-        $dates[1] = $sickNote['start_date'];
-        $dates[2] = $sickNote['end_date'];
-
-        if (IsDateBetween($dates, $current_day)) {
-            if (!in_array($sickNote['vorname'], $names)) {
-                $names[] = $sickNote['vorname'];
-            }
-        }
-
-    }
-    foreach ($names as $key => $name) {
-        $sick_return .= $name;
-        if ($key != count($names)-1) {
-            $sick_return .= ", ";
-        }
-    }
-    $sick_return .= '</p>';
-    ?>
-
 </div>
+-->
 <table class="full tg">
     <?php
     try {
