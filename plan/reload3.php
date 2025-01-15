@@ -6,7 +6,7 @@ $mode = ($_POST['mode'] ?? '');
 require_once $include_path . "/dependencies/config.php";
 require_once  $include_path . "/dependencies/mysql.php";
 require_once  $include_path . "/dependencies/framework.php";
-global $pdo, $db, $webroot, $relative_path, $permission_level, $create_lessons, $weekday_names;
+global $pdo, $webroot, $relative_path, $permission_level, $create_lessons, $weekday_names;
 
 
 ?>
@@ -41,26 +41,24 @@ global $pdo, $db, $webroot, $relative_path, $permission_level, $create_lessons, 
     ?>
 
 </div>
-<div style="overflow-y: auto">
-    <table class="full tg">
-        <?php
-        try {
-            echo prepareTableToDisplay(
-                GetSettingWithSuffix("plan", GetSettingWithSuffix("plan-template", "active", $pdo), $pdo),
-                $current_day,
-                $webroot,
-                $db,
-                $date,
-                $sick_return,
-                $sickNoteRaw
-            );
-        } catch (DOMException $e) {
-            ConsoleLog("Error while loading plan. Please contact an administrator");
-            Alert("Error while loading plan. Please contact an administrator");
-        }
-        ?>
-    </table>
-</div>
+<table class="full tg">
+    <?php
+    try {
+        echo prepareTableToDisplay(
+            GetSettingWithSuffix("plan", GetSettingWithSuffix("plan-template", "active", $pdo), $pdo),
+            $current_day,
+            $webroot,
+            $pdo,
+            $date,
+            $sick_return,
+            $sickNoteRaw
+        );
+    } catch (DOMException $e) {
+        ConsoleLog("Error while loading plan. Please contact an administrator");
+        Alert("Error while loading plan. Please contact an administrator");
+    }
+    ?>
+</table>
 <div class="btnPanel">
     <span onclick="openFullscreen()"    class="plan_btn open_fullscreen fe fe-24 fe-maximize-2 pointer"></span>
     <span onclick="closeFullscreen()"   class="plan_btn close_fullscreen fe fe-24 fe-minimize-2 pointer"></span>
