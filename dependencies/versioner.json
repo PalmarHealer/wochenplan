@@ -130,6 +130,13 @@
       "name": "Disabling and enabling lessons work now and it can be once or for all future ones. And it is possible to visit deleted lessons",
       "release_date": "2025-01-14",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.4.0.zip"
+    },
+    {
+      "id": "19",
+      "version": "3.4.1",
+      "name": "Fix: Updating lessons once and display error one mobile devices.",
+      "release_date": "2025-01-15",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.4.1.zip"
     }
   ]
 }
