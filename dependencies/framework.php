@@ -425,7 +425,7 @@ function PrintDays($date, $weekday_names_long): void {
                     </div>'; }
 }
 
-function displayChildLessons($parentId, $pdo) {
+function displayChildLessons($parentId, $pdo): string {
     $output = '
                             
                             <div class="col-md-12 mb-4">
