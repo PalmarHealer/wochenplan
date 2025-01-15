@@ -115,8 +115,8 @@ if(UserStayedOnSite() AND $_SERVER["REQUEST_METHOD"] == "POST") {
         if ($date_type == 1) {
             CheckPermission($create_lessons_plus, $permission_level, "../?message=unauthorized");
         }
-        $parent_id = GetLessonInfoByID($_POST["update_lesson_with_id"], "parent_lesson_id", $pdo);
-        UpdateOrInsertLesson("update", $pdo, $_POST["update_lesson_with_id"], $parent_id,
+        $parent_id = GetLessonInfoByID($lesson_id, "parent_lesson_id", $pdo);
+        UpdateOrInsertLesson("update", $pdo, $lesson_id, $parent_id,
             $date_type,
             $new_date,
             $new_name,
@@ -553,7 +553,8 @@ else $lesson_disabled_text = "";
                             if(isset($_GET['id'])) {
 
                                 if ($lesson_details['date-type'] == 1 AND isset($get_date)) {
-                                    echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="date" value="' . $get_date . '" name="dub_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
+                                    echo '<input name="date" value="' . $get_date . '" type="hidden">';
+                                    echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="dub_id" value="' . $_GET['id'] . '">Aktualisieren</button>';
                                     if (CheckPermission($create_lessons_plus, $permission_level, null)) {
                                         echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="update_lesson_with_id" value="' . $_GET['id'] . '">Angebot für alle Wochen Aktualisieren</button>';
                                     }
@@ -657,6 +658,7 @@ else $lesson_disabled_text = "";
     }
 
     $(document).ready(function() {
+        updateAvailability();
 
         let time = $('#time').val();
         let location = $('#location').val();
