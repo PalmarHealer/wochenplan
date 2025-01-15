@@ -361,7 +361,23 @@ function GetAllChildLessons($parendId, $pdo): string {
             $date_formatted = NumberOfWeekToText($date_day);
         }
 
-        $creator_formatted = GetUserByID($sl['assigned_user_id'], "name", $pdo);
+        if (str_contains($sl['assigned_user_id'], ':')) {
+            $sl['assigned_user_id'] = explode(':', $sl['assigned_user_id']);
+        } else {
+            $sl['assigned_user_id'] = array($sl['assigned_user_id']);
+        }
+
+        $creator_formatted = "";
+        $total_users = count($sl['assigned_user_id']);
+        $current_user = 0;
+
+        foreach ($sl['assigned_user_id'] as $assigned_user_id) {
+            $current_user++;
+            $creator_formatted .= GetUserByID($assigned_user_id, "name", $pdo);
+            if ($current_user < $total_users) {
+                $creator_formatted .= ", ";
+            }
+        }
 
         $output .= '
             <tr>
