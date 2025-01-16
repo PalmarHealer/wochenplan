@@ -137,6 +137,13 @@
       "name": "Fix: Updating lessons once and display error one mobile devices.",
       "release_date": "2025-01-15",
       "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.4.1.zip"
+    },
+    {
+      "id": "20",
+      "version": "3.4.2",
+      "name": "Hover on deleted lessons is now disabled and they are no longer displayed on the day of deletion.",
+      "release_date": "2025-01-16",
+      "download_link": "https://github.com/PalmarHealer/wochenplan/archive/refs/tags/v3.4.2.zip"
     }
   ]
 }
