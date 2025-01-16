@@ -12,8 +12,9 @@ CheckPermission($create_lessons, $permission_level, "../?message=unauthorized");
 $lesson_deleted = false;
 $lesson_disabled = false;
 $disable_enable_text = "deaktivieren";
-$delete_text = "Angebot";
+$aktion_text = "Angebot";
 $buttons_attr = "";
+$clickClass = "preview-hover";
 
 $return_to = ($_POST['return_to'] ?? "");
 $get_date = ($_GET['date'] ?? null);
@@ -206,11 +207,13 @@ if (isset($_GET['id'])) {
             $lesson_disabled = true;
         }
         if (is_numeric($lesson_details['parent_lesson_id'])) {
-            $delete_text = "Bearbeitung";
+            $aktion_text = "Bearbeitung";
         }
-        if (GetLessonInfoByID($lesson_id, "deleted_at", $pdo) !== null) {
+        $lesson_deleted_at = (GetLessonInfoByID($lesson_id, "deleted_at", $pdo) ?? "");
+        if ($lesson_deleted_at != null) {
             $lesson_deleted = true;
             $buttons_attr = "disabled";
+            $clickClass = "";
         }
         if (str_contains($lesson_details['date-raw'], "-")) {
             $lesson_details['date-type'] = 2;
@@ -242,7 +245,7 @@ else $lesson_disabled_text = "";
     <link rel="icon" href="<?php echo $relative_path; ?>/favicon.ico?version=<?php echo $version; ?>">
 
 
-    <title>Angebot Verwalten</title>
+    <title><?php echo $aktion_text; ?> Verwalten</title>
 
 
     <!-- Simple bar CSS -->
@@ -295,10 +298,10 @@ else $lesson_disabled_text = "";
                             echo '<button type="submit" class="lesson-details-btn btn mb-2 btn-outline-primary" formaction="./?id=' . $lesson_details['parent_lesson_id'] . '">Zurück zur Vorlage</button><br>';
                         }
                         echo "<div class='vertical-alignment align-items-center'>";
-                        echo "<h2 class='page-title'>Angebot bearbeiten</h2>";
+                        echo "<h2 class='page-title'>" . $aktion_text . " bearbeiten</h2>";
                         echo '<div class="alert alert-success lesson-type-indicator display-inherit">  <span class="fe fe-info fe-16 mr-2"></span><p class="no_margin""> ' . $lesson_details['lesson-type-text'] . ' </p></div>';
                         if ($lesson_deleted) {
-                            echo '<div class="alert alert-danger lesson-type-indicator display-inherit">  <span class="fe fe-alert-triangle fe-16 mr-2"></span><p class="no_margin"">Angebot gelöscht</p></div>';
+                            echo '<div class="alert alert-danger lesson-type-indicator display-inherit">  <span class="fe fe-alert-triangle fe-16 mr-2"></span><p class="no_margin"">Angebot gelöscht am ' . date("d.m.Y", strtotime($lesson_deleted_at)) . '</p></div>';
                         }
                         if ($lesson_disabled) {
                             echo '<div class="alert alert-warning lesson-type-indicator display-inherit">  <span class="fe fe-alert-triangle fe-16 mr-2"></span><p class="no_margin"">Angebot deaktiviert</p></div>';
@@ -376,7 +379,7 @@ else $lesson_disabled_text = "";
                                     </select>
                                     <table class="full tg-small-preview">
                                         <?php
-                                        echo prepareHtml(GetSettingWithSuffix("plan", GetSettingWithSuffix("plan-template", "active", $pdo), $pdo));
+                                        echo prepareHtml(GetSettingWithSuffix("plan", GetSettingWithSuffix("plan-template", "active", $pdo), $pdo), $clickClass);
                                         ?>
                                     </table>
                                 </div>
@@ -462,7 +465,7 @@ else $lesson_disabled_text = "";
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><span class="fe fe-16 fe-repeat"></span></span>
                                                     </div>
-                                                    <select <?php echo $lesson_disabled_text . $lesson_single_text; ?> id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown <?php echo $lesson_disabled_text; ?>">
+                                                    <select <?php echo $lesson_disabled_text . " " . $lesson_single_text; ?> id="day" onchange="updateAvailability()" name="date-repeat" class="form-control toggle_date_input1 dropdown <?php echo $lesson_disabled_text; ?>">
                                                         <?php
                                                         $selected_date = array();
                                                         $selected_date[$lesson_details['date'] ?? date("N")] = "selected";
@@ -481,7 +484,7 @@ else $lesson_disabled_text = "";
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><span class="fe fe-16 fe-calendar"></span></span>
                                                     </div>
-                                                    <input <?php echo $lesson_disabled_text . $lesson_repeating_text; ?>
+                                                    <input <?php echo $lesson_disabled_text . " " . $lesson_repeating_text; ?>
                                                             id="day2"
                                                             onchange="updateAvailability()"
                                                             name="date"
@@ -566,12 +569,12 @@ else $lesson_disabled_text = "";
 
 
                                 if ($lesson_details['date-type'] == 1 AND isset($get_date) AND CheckPermission($create_lessons_plus, $permission_level, null)) {
-                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson_once" value="' . $_GET['id'] . '">' . $delete_text . " " . $disable_enable_text . '</button>';
-                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson" value="' . $_GET['id'] . '">' . $delete_text . " für alle Wochen " . $disable_enable_text . '</button>';
+                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson_once" value="' . $_GET['id'] . '">' . $aktion_text . " " . $disable_enable_text . '</button>';
+                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson" value="' . $_GET['id'] . '">' . $aktion_text . " für alle Wochen " . $disable_enable_text . '</button>';
                                 } else {
-                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson" value="' . $_GET['id'] . '">' . $delete_text . " " . $disable_enable_text . '</button>';
+                                    echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-warning" name="disable_enable_lesson" value="' . $_GET['id'] . '">' . $aktion_text . " " . $disable_enable_text . '</button>';
                                 }
-                                echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">' . $delete_text . ' löschen</button>';
+                                echo '<button ' . $buttons_attr . ' type="submit" class="lesson-details-btn btn mb-2 btn-outline-danger" formaction="./?remove_lesson_with_id=' . $_GET['id'] . '">' . $aktion_text . ' löschen</button>';
                             } else {
                                 echo '<button ' . $buttons_attr . ' style="float:right;" type="submit" class="lesson-details-btn btn mb-2 btn-outline-success" name="save" value="1">Erstellen</button>';
                                 echo '<button ' . $buttons_attr . ' type="button" class="disabled_cursor lesson-details-btn btn mb-2 btn-outline-secondary" disabled="">Angebot löschen</button>';
@@ -626,7 +629,6 @@ else $lesson_disabled_text = "";
 
         $('#availability').html('<div class="alert alert-secondary center" role="alert"><span class="fe fe-alert-octagon fe-16 mr-2"></span>Lade Slot info...</div>');
 
-
         setTimeout(func, 100);
         function func() {
             let time = $('#time').val();
@@ -639,7 +641,6 @@ else $lesson_disabled_text = "";
             if (date_type === "2") {
                 date = $('#day2').val();
             }
-
 
             $.ajax({
                 url: './check.php',
@@ -659,6 +660,10 @@ else $lesson_disabled_text = "";
 
     $(document).ready(function() {
         updateAvailability();
+        <?php if ($lesson_deleted) { ?>
+        quill.disable();
+        quill2.disable();
+        <?php } ?>
 
         let time = $('#time').val();
         let location = $('#location').val();
@@ -688,6 +693,8 @@ else $lesson_disabled_text = "";
             $("#date_type").attr("date_type", "2");
         });
 
+
+        <?php if (!$lesson_deleted) { ?>
         $('.preview-hover').click(function() {
             const room = $(this).attr('room');
             const time = $(this).attr('time');
@@ -695,9 +702,8 @@ else $lesson_disabled_text = "";
             $(this).addClass("preview-selected");
             $('#location').val(room).change();
             $('#time').val(time).change();
-
-            enableAndDisableInputs(room, time);
         });
+        <?php } ?>
 
         $('.ql-toolbar').on('mousedown mouseup click', function() {
             $(this).closest('.form-group').find('input').val($(this).closest('.form-group').find('.ql-editor').html()).change();
