@@ -310,9 +310,8 @@ function prepareTableToDisplay($html, $current_day, $webroot, $pdo, $date, $sick
     $identifier = GetSetting("identifier", $pdo);
     if (str_contains($current_day, "-")) {
         $db_day = $current_day . " 23:59:59";
-        $db_day2 = $current_day . " 00:00:00";
-        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? AND (created_at <= ? OR date_type = 2) AND (deleted_at >= ? OR deleted_at IS NULL) AND (date = ? OR date IS NULL) ORDER BY date_type DESC");
-        $lessons->execute(array($identifier, $db_day, $db_day2, $current_day));
+        $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? AND (created_at <= ? OR date_type = 2) AND (deleted_at > ? OR deleted_at IS NULL) AND (date = ? OR date IS NULL) ORDER BY date_type DESC");
+        $lessons->execute(array($identifier, $db_day, $db_day, $current_day));
     } else {
         $lessons = $pdo->prepare("SELECT * FROM angebot WHERE identifier = ? ORDER BY id DESC");
         $lessons->execute(array($identifier));
