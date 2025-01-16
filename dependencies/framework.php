@@ -573,7 +573,7 @@ function deleteUpdateFolders($dir): void {
     }
     rmdir($dir);
 }
-function prepareHtml($html): array|string|null {
+function prepareHtml($html, $clickClass): array|string|null {
     if (is_array($html)) {
         $html2 = str_replace('"', '(quotes)', reset($html));
     } else {
@@ -598,7 +598,7 @@ function prepareHtml($html): array|string|null {
     $elements = $xpath->query('//*[@room or @time]');
     foreach ($elements as $element) {
         $class = $element->getAttribute('class');
-        $element->setAttribute('class', trim("$class preview-hover"));
+        $element->setAttribute('class', trim($class . " " . $clickClass));
     }
 
     // Get the modified HTML content
