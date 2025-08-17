@@ -1,3 +1,7 @@
+THIS REPO IS NO LONGER BEING MAINTAINED
+
+There is a successor to this with you can find [here](https://github.com/PalmarHealer/wochenplan-new).
+
 # Wochenplan
 
 Welcome to the GitHub of the Wochenplan. Here you can find the code and guiding how to use/contribute and setup the Wochenplan. Right now the README.md is in a rework so feel free to join an help out.
